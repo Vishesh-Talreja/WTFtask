@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(urlPatterns = {"/Add_Task"})
 public class Add_Task extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(Add_Task.class);
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -80,6 +82,7 @@ public class Add_Task extends HttpServlet {
             String query4 = "SELECT * FROM IS2560.WTFtasks WHERE TASKNAME='"+Tname+"'";
             ResultSet rs = stmt.executeQuery(query4);                               //Extract taskId
             rs.next();
+            logger.debug("Add Task Database Connected");
             int id = rs.getInt("TaskID");   
             for(int i=0;i<assignees.length;i++) {                                   //Assign each member to this task
                 String query5 = "SELECT * FROM WTFuser WHERE FIRSTNAME='"+assignees[i]+"'";

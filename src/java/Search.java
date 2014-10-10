@@ -52,23 +52,22 @@ public class Search extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    /** This servlet is responsible for searching the friends in the search field of add a friend modal*/
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //response.setContentType("text/html;charset=UTF-8");
         response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
         response.setCharacterEncoding("UTF-8"); // You want world domination, huh?
-        String searched_user = request.getParameter("searchname");
-        searched_user = searched_user.toLowerCase();
+        String searched_user = request.getParameter("searchname");//Is used to get the name of the user being searched from search modal
+        searched_user = searched_user.toLowerCase();//makes it lower case
         String main_username = request.getParameter("mainuser");
         main_username = main_username.toLowerCase();
-        System.out.println("SEARCHED USER"+searched_user);
-        System.out.println("MAIN USER "+main_username);
+        
         String username = "";
-        //System.out.println(name);
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-           String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+           String connectionURL = "jdbc:derby://localhost:1527/WTFtask";//Connection to server
            try {
                Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             Statement stmt=conn.createStatement(); 
@@ -80,14 +79,14 @@ public class Search extends HttpServlet {
                 }
             }
             if(isWhiteSpace) {
-                System.out.println("WHITE SPACE DETECTED");
-                System.out.println("Full name");
+               // System.out.println("WHITE SPACE DETECTED");
+               // System.out.println("Full name");
                 String[] parts = searched_user.split(" ");
                 String first_name = parts[0];
                 String last_name = parts[1];
-                System.out.println(first_name);
-                System.out.println(last_name);
-                String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+first_name+"' AND LASTNAME = '"+last_name+"'";
+               // System.out.println(first_name);
+                //System.out.println(last_name);
+                String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+first_name+"' AND LASTNAME = '"+last_name+"'";//query that obtains the set of searched user
                 Statement st = conn.createStatement();
                 ResultSet rs = st.executeQuery(query1);
                 boolean flag = rs.next();
@@ -101,32 +100,32 @@ public class Search extends HttpServlet {
             }
             else {
                 System.out.println("Either first or last");
-                String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+searched_user+"'";
+                String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+searched_user+"'";//query to get searched user list by firstname
                 Statement st = conn.createStatement();
                 ResultSet rs = st.executeQuery(query1);
                 boolean flag1 = rs.next();
                 if(flag1 == true) { 
-                    System.out.println("Firstname pe pakda");
+                    
                     username=rs.getString("username");
-                    System.out.println(username);
+                    
                     response.getWriter().write("true&"+username);
                     rs.close();
                 }
                 else {
-                    String query2="SELECT * FROM WTFuser where LASTNAME = '"+searched_user+"'";
+                    String query2="SELECT * FROM WTFuser where LASTNAME = '"+searched_user+"'";//query to get searched user list by Lastname
                     Statement st1 = conn.createStatement();
                     ResultSet rs1 = st.executeQuery(query2);
                     boolean flag2 = rs1.next();
                     if (flag2 == true) {
                         
-                        System.out.println("lastname pe pakda");
+                        
                         username=rs1.getString("username");
-                        System.out.println(username);
+                       
                         response.getWriter().write("true&"+username);
                         rs1.close();
                     }
                    
-                    st1.close();
+                    st1.close();//connection close
                 }
                 
             }

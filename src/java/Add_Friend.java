@@ -1,5 +1,5 @@
 
-
+import org.apache.log4j.Logger;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -14,7 +14,7 @@ import javax.servlet.annotation.WebServlet;
  */
 @WebServlet(urlPatterns = {"/Add_Friend"})
 public class Add_Friend extends HttpServlet {
-
+    private static final Logger logger = Logger.getLogger(Add_Friend.class);
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -29,6 +29,7 @@ public class Add_Friend extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
@@ -52,6 +53,7 @@ public class Add_Friend extends HttpServlet {
         props.put("mail.smtp.port","587");
         props.put("mail.smtp.auth","true");
         props.put("mail.smtp.starttls.enable","true");
+        logger.debug("Mail Properties Set");
         
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
 @Override
@@ -62,12 +64,13 @@ protected PasswordAuthentication getPasswordAuthentication(){return new Password
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(sub);
             message.setText(body);
-            
+            logger.debug("Message Created");
             Transport.send(message);
             request.setAttribute("Name",sender_name);
             request.setAttribute("username",username);
             request.setAttribute("rname",receiver_fname);
             request.setAttribute("send","yes");
+            logger.debug("E-mail Sent");
             RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");
             rd.forward(request, response);
         }

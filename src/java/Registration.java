@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -11,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(urlPatterns = {"/Registration"})
 public class Registration extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(Registration.class);
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -60,8 +61,7 @@ public class Registration extends HttpServlet {
             Statement stmt=conn.createStatement();
             String query2 = "INSERT INTO IS2560.WTFuser (LASTNAME,FIRSTNAME,USERNAME,EMAIL,PASSWORD) VALUES ('"+Lname+"','"+Fname+"','"+user+"','"+Email+"','"+pass+"')";
             stmt.executeUpdate(query2);
-            stmt.close();
-            out.print("Connection Successful!");
+            logger.debug("Regitration Database Connected");
             RequestDispatcher rd=request.getRequestDispatcher("task_login.jsp");
             rd.forward(request, response);
             conn.close();

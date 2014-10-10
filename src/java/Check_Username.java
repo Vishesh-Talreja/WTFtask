@@ -2,7 +2,8 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
- */ 
+ */
+import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 import java.io.*;
 import java.io.IOException;
@@ -12,7 +13,6 @@ import java.sql.*;
 import java.sql.DriverManager;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(urlPatterns = {"/Check_Username"})
 public class Check_Username extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(Check_Username.class);
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -70,15 +71,18 @@ public class Check_Username extends HttpServlet {
             Statement st = conn.createStatement();  //Query the database for availability
             ResultSet rs = st.executeQuery(query1);     //Store the results in a ResultSet
             boolean is = rs.next();     //Check is ResultSet is empty
+            logger.debug("Ajax Call for username made");
             if(!is) {   //The username is available
                 options.put("valid", "true");
                 String json = new Gson().toJson(options);
                 response.getWriter().write(json);
+                logger.debug("Check username found");
             }
             else if(is){    //The username is not available
                 options.put("valid", "false");
                 String json = new Gson().toJson(options);
                 response.getWriter().write(json);
+                logger.debug("Check username not found");
             }
             st.close();
             rs.close();
