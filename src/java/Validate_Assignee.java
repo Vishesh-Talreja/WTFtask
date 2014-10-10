@@ -64,13 +64,11 @@ public class Validate_Assignee extends HttpServlet {
         
         response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
         response.setCharacterEncoding("UTF-8"); // You want world domination, huh?
+        //Recieve input from form
         String adder = request.getParameter("curr_user").replaceAll(" ","");
         adder = adder.toLowerCase();
         String addedfriend = request.getParameter("addedfriend").replaceAll(" ","");
         addedfriend = addedfriend.toLowerCase();
-        System.out.println(adder);
-        System.out.println(addedfriend);
-        
         try (PrintWriter out = response.getWriter()){
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
         try{
@@ -79,28 +77,23 @@ public class Validate_Assignee extends HttpServlet {
             String query1 = "SELECT * FROM WTFuser where Firstname = '"+adder+"'";
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
-            boolean scam = rs.next();
+            boolean dummy = rs.next();
             String adder_username = rs.getString("username");
-            System.out.println("Adder username = "+adder_username);
             String query2 = "SELECT * FROM WTFFriends where mainusername = '"+adder_username+"'";
             ResultSet rs1 = st.executeQuery(query2);
             boolean is = rs1.next();
-            
-            if (!is) {
-                
+            if (!is) {      //The user does not have any friends in his list.
                 response.getWriter().write("Add friends first!");
             }
-            else {
-                
+            else { 
                 String query3 = "SELECT * FROM WTFFriends where mainusername = '"+adder_username+"' AND friendname IN (Select username FROM WTFuser WHERE Firstname = '"+addedfriend+"')";
                 ResultSet rs2 = st.executeQuery(query3);
                 boolean is1 = rs2.next();
                 System.out.println(is1);
-                if (is1) {
-                    response.getWriter().write("true");
-                }
+                if (is1)
+                    response.getWriter().write("true");     //The friend is authenticated.
                 else
-                    response.getWriter().write("false");
+                    response.getWriter().write("false");    //The entered name is not his friend.
                 rs2.close();
             }
             

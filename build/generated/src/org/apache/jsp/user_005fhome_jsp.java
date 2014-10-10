@@ -65,8 +65,8 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("    <title>Crib</title>\n");
       out.write("    <!-- Bootstrap -->\n");
       out.write("    <link href=\"css/bootstrap.min.css\" rel=\"stylesheet\">\n");
-      out.write("\t<link rel=\"stylesheet\" href=\"http://bsdp-assets.blackcherry.us/1.3.0/datepicker.min.css\">\n");
-      out.write("\t<!-- BootstrapValidator CSS -->\n");
+      out.write("    <link rel=\"stylesheet\" href=\"http://bsdp-assets.blackcherry.us/1.3.0/datepicker.min.css\">\n");
+      out.write("    <!-- BootstrapValidator CSS -->\n");
       out.write("    <link rel=\"stylesheet\" href=\"dist/css/bootstrapValidator.min.css\"/>\n");
       out.write("    \n");
       out.write("\t<style type=\"text/css\">\n");
@@ -74,19 +74,11 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("\t\t.datepicker{z-index:1151 !important;}\n");
       out.write("\t\t\n");
       out.write("\t\t.btn-primary  {\n");
-      out.write("\t\t\t\n");
       out.write("\t\t\tbackground-color:#336699;\n");
       out.write("\t\t\tborder-color:#336699;\n");
-      out.write("\t\n");
       out.write("\t\t}\n");
-      out.write("\t\t#break-inverse {display:none;}\n");
       out.write("\t\t\n");
-      out.write("\t\t@media (max-width: 480px) { \n");
-      out.write("                        #break-inverse {display:initial;}\n");
-      out.write("\t\t\t#break { display:none;}\n");
-      out.write("                        \n");
-      out.write("\t\t}\n");
-      out.write("\t\t\t\n");
+      out.write("                \t\n");
       out.write("\t\tbody {\n");
       out.write("\t\t  background: -webkit-gradient(#888888,white); /* Chrome,Safari4+ */\n");
       out.write("\t\t  background: -webkit-linear-gradient(#888888,white); /* Chrome10+,Safari5.1+ */\n");
@@ -194,43 +186,43 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("  <body>\n");
       out.write("  <div class=\"col-md-2\"></div>\n");
       out.write("  <div class=\"col-md-8 col-xs-12\" style='padding: 0'>\n");
-      out.write("\t<div style =\"height:100vh;background-color: white;padding: 2em\">\n");
+      out.write("    <div style =\"height:100vh;background-color: white;padding: 2em\">\n");
       out.write("\t\n");
-      out.write("\t\t<nav class=\"navbar navbar-default\" role=\"navigation\" style=\"border:hidden ;background-color:#7F7F7F;width: 100%;margin: -1\">\n");
-      out.write("\t\t  <div class=\"container-fluid\">\n");
-      out.write("\t\t\t<!-- Brand and toggle get grouped for better mobile display -->\n");
-      out.write("\t\t\t<div class=\"navbar-header\">\n");
-      out.write("\t\t\t  <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\">\n");
-      out.write("\t\t\t\t<span class=\"sr-only\">Toggle navigation</span>\n");
-      out.write("\t\t\t\t<span class=\"icon-bar\" style=\"background-color:white;\"></span>\n");
-      out.write("\t\t\t\t<span class=\"icon-bar\" style=\"background-color:white;\"></span>\n");
-      out.write("\t\t\t\t<span class=\"icon-bar\" style=\"background-color:white;\"></span>\n");
-      out.write("\t\t\t  </button>\n");
+      out.write("    <nav class=\"navbar navbar-default\" role=\"navigation\" style=\"border:hidden ;background-color:#7F7F7F;width: 100%;margin: -1\">\n");
+      out.write("      <div class=\"container-fluid\">\n");
+      out.write("        <!-- Brand and toggle get grouped for better mobile display -->\n");
+      out.write("        <div class=\"navbar-header\">\n");
+      out.write("          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\">\n");
+      out.write("            <span class=\"sr-only\">Toggle navigation</span>\n");
+      out.write("            <span class=\"icon-bar\" style=\"background-color:white;\"></span>\n");
+      out.write("            <span class=\"icon-bar\" style=\"background-color:white;\"></span>\n");
+      out.write("            <span class=\"icon-bar\" style=\"background-color:white;\"></span>\n");
+      out.write("          </button>\n");
       out.write("\n");
-      out.write("\t\t\t  <div class=\"navbar-brand\" style=\"padding-top:0px;\"><img  src=\"img/logo_nav.jpg\" style=\"height:140%;width50%;\"/></div>\n");
+      out.write("        <div class=\"navbar-brand\" style=\"padding-top:0px;\"><img  src=\"img/logo_nav.jpg\" style=\"height:140%;width50%;\"/></div>\n");
       out.write("\n");
-      out.write("\t\t\t</div>\n");
+      out.write("        </div>\n");
+      out.write("        <!-- Collect the nav links, forms, and other content for toggling -->\n");
+      out.write("        <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">\n");
+      out.write("            <ul class=\"nav navbar-nav navbar-right\" >\n");
+      out.write("                <li id=\"group\"><a id=\"showdisplayfriendmodal\" href=\"#displayfriendmodal\" class=\"btn-group-sm\" data-toggle=\"modal\"  style=\"color:white\">Friends</a></li>\n");
+      out.write("                <li id=\"group\"><a id=\"showaddtaskmodal\" href=\"#addtaskmodal\" class=\"btn-group-sm\" data-toggle=\"modal\"  style=\"color:white\">Add a Task</a></li>\n");
+      out.write("                <li id=\"friend\"><a id=\"showaddfriendmodal\" href=\"#addfriendmodal\" class=\"btn-group-sm\" data-toggle=\"modal\" style=\"color:white\">Add a Friend</a></li>\n");
+      out.write("                <li ><a href=\"task_login.jsp\" class=\"btn-group-sm\" style=\"color:white\">Log Out</a></li>\n");
+      out.write("            </ul> \n");
+      out.write("        </div><!-- /.navbar-collapse -->\n");
+      out.write("      </div><!-- /.container-fluid -->\n");
+      out.write("    </nav>\n");
       out.write("\n");
-      out.write("\t\t\t<!-- Collect the nav links, forms, and other content for toggling -->\n");
-      out.write("\t\t\t<div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">\n");
-      out.write("\t\t\t\t\t<ul class=\"nav navbar-nav navbar-right\" >\n");
-      out.write("                                                <li id=\"group\"><a id=\"showdisplayfriendmodal\" href=\"#displayfriendmodal\" class=\"btn-group-sm\" data-toggle=\"modal\"  style=\"color:white\">Friends</a></li>\n");
-      out.write("\t\t\t\t\t\t<li id=\"group\"><a id=\"showaddtaskmodal\" href=\"#addtaskmodal\" class=\"btn-group-sm\" data-toggle=\"modal\"  style=\"color:white\">Add a Task</a></li>\n");
-      out.write("\t\t\t\t\t\t<li id=\"friend\"><a id=\"showaddfriendmodal\" href=\"#addfriendmodal\" class=\"btn-group-sm\" data-toggle=\"modal\" style=\"color:white\">Add a Friend</a></li>\n");
-      out.write("\t\t\t\t\t\t<li ><a href=\"task_login.jsp\" class=\"btn-group-sm\" style=\"color:white\">Log Out</a></li>\n");
-      out.write("\t\t\t\t\t</ul> \n");
-      out.write("\t\t\t</div><!-- /.navbar-collapse -->\n");
-      out.write("\t\t  </div><!-- /.container-fluid -->\n");
-      out.write("\t\t</nav>\n");
-      out.write("\n");
-      out.write("      <h1 style=\"font-face:papyrus\">Welcome ");
+      out.write("    <h1 style=\"font-face:papyrus\">Welcome ");
       out.print(request.getAttribute("Name"));
       out.write("</h1><br>\n");
       out.write("\n");
-      out.write("      \n");
-      out.write("\n");
-      out.write("      ");
- if ((String)request.getAttribute("send")=="yes")
+      out.write("    ");
+
+         /*This block of java code would check the values returned from various servlets 
+        and based on that will display a particular alert message*/
+         if ((String)request.getAttribute("send")=="yes")
             {
                 out.println("<div class='alert alert-success alert-dismissible' role='alert'>");
                 out.println("<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>");
@@ -251,370 +243,344 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
                 out.println("<strong>&nbsp;Success! "+request.getAttribute("TName")+"</strong>&nbsp;has been added.");
                 out.println("</div>");
             }
-      
+    
       out.write("\n");
-      out.write("\t<div class=\"col-md-12\">\n");
-      out.write("            <div class=\"col-md-4 col-md-offset-4 text-center\"><h4><a  href=\"#myCarousel\" data-slide=\"prev\"><i class=\"glyphicon glyphicon-chevron-left\"></i></a>&nbsp;Task viewer&nbsp;<a  href=\"#myCarousel\" data-slide=\"next\"><i class=\"glyphicon glyphicon-chevron-right\"></i></a></h4></div>\n");
-      out.write("            <div class=\"col-md-12 col-xs-12\">\n");
-      out.write("                <div class=\"carousel slide\" id=\"myCarousel\">\n");
-      out.write("                    <div class=\"carousel-inner\">\n");
-      out.write("              ");
+      out.write("\t\n");
+      out.write("    <div class=\"col-md-12\">\n");
+      out.write("        <div class=\"col-md-4 col-md-offset-4 text-center\"><h4><a  href=\"#myCarousel\" data-slide=\"prev\"><i class=\"glyphicon glyphicon-chevron-left\"></i></a>&nbsp;Task viewer&nbsp;<a  href=\"#myCarousel\" data-slide=\"next\"><i class=\"glyphicon glyphicon-chevron-right\"></i></a></h4></div>\n");
+      out.write("        <div class=\"col-md-12 col-xs-12\">\n");
+      out.write("            <div class=\"carousel slide\" id=\"myCarousel\">\n");
+      out.write("                <div class=\"carousel-inner\">\n");
+      out.write("                    ");
 
-                  String user = (String)request.getAttribute("username");
-                  String sql,sql3;
-                  String connectionURL="jdbc:derby://localhost:1527/WTFtask";
-                  sql3 ="SELECT TASKID FROM WTFtaskallocation where USERNAME = '"+user+"'";
-            
-          
-                  try {
-                      Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-                      Statement s = conn.createStatement();
-                      Statement s1 = conn.createStatement();
-                      Statement s2 = conn.createStatement();
-                      ResultSet rs2 = s2.executeQuery(sql3);
-                      int count = 0;
-              
-                      while(rs2.next()){
-                          sql = "SELECT * FROM WTFtasks where TASKID ="+rs2.getInt("TASKID");
-                          ResultSet rs = s.executeQuery(sql);
-                          while (rs.next()) {
-                                String sql2 ="SELECT FIRSTNAME,LASTNAME FROM WTFuser WHERE USERNAME='"+rs.getString("OWNER")+"'";                       
-                                ResultSet rs1 = s1.executeQuery(sql2);
-                                rs1.next();
-                                if(count==0)
-                                {    
-                                out.println("<div class='item active'>");
-                                }
-                                else
-                                {
-                                   out.println("<div class='item'>"); 
-                                }
-                                out.println("<div class='col-lg-2 col-xs-12' >");
-                                out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
-                                out.println("<div class='caption'>");
-                                out.println("<h3>"+rs.getString("TASKNAME")+"</h3>");
-                                out.println("<p>POINTS: "+rs.getString("TASKPOINTS")+"<br>OWNER: "+rs1.getString("FIRSTNAME")+" "+rs1.getString("LASTNAME")+"<br>DUE-DATE: "+rs.getString("DUEDATE")+"</p>");
-                                out.println("<p><a href='#' class='btn btn-primary' role='button'>Wrap Up</a></p>");
-                                out.println("</div></div></div></div>");
-                                count++;
-                                rs1.close();
-                            }
-                            rs.close();
-                        }
-              
-                        s.close();
-                        s1.close();
-                        s2.close();
-                        conn.close();
-                    }
-                    catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    
+                    /*This block of java code displays the tasks the user has to complete, here it 
+                      first connects to the database and then displays them in the form of thumbnails*/
+                    String user = (String)request.getAttribute("username");
+                    String sql,sql3;
+                    String connectionURL="jdbc:derby://localhost:1527/WTFtask";
+                    sql3 ="SELECT TASKID FROM WTFtaskallocation where USERNAME = '"+user+"'";
+
+
+                    try {
+                        Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+                        Statement s = conn.createStatement();
+                        Statement s1 = conn.createStatement();
+                        Statement s2 = conn.createStatement();
+                        ResultSet rs2 = s2.executeQuery(sql3);
+                        int count = 0;
+
+                        while(rs2.next()){
+                            sql = "SELECT * FROM WTFtasks where TASKID ="+rs2.getInt("TASKID");
+                            ResultSet rs = s.executeQuery(sql);
+                            while (rs.next()) {
+                                  String sql2 ="SELECT FIRSTNAME,LASTNAME FROM WTFuser WHERE USERNAME='"+rs.getString("OWNER")+"'";                       
+                                  ResultSet rs1 = s1.executeQuery(sql2);
+                                  rs1.next();
+                                  if(count==0)
+                                  {    
+                                  out.println("<div class='item active'>");
+                                  }
+                                  else
+                                  {
+                                     out.println("<div class='item'>"); 
+                                  }
+                                  out.println("<div class='col-lg-2 col-xs-12' >");
+                                  out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
+                                  out.println("<div class='caption'>");
+                                  out.println("<h3>"+rs.getString("TASKNAME")+"</h3>");
+                                  out.println("<p>POINTS: "+rs.getString("TASKPOINTS")+"<br>OWNER: "+rs1.getString("FIRSTNAME")+" "+rs1.getString("LASTNAME")+"<br>DUE-DATE: "+rs.getString("DUEDATE")+"</p>");
+                                  out.println("<p><a href='#' class='btn btn-primary' role='button'>Wrap Up</a></p>");
+                                  out.println("</div></div></div></div>");
+                                  count++;
+                                  rs1.close();
+                              }
+                              rs.close();
+                          }
+
+                          s.close();
+                          s1.close();
+                          s2.close();
+                          conn.close();
+                      }
+                      catch (SQLException e) {
+                          e.printStackTrace();
+                      }
+                      catch (Exception e) {
+                          e.printStackTrace();
+                      }
+                      
       out.write("\n");
-      out.write("\t  \n");
-      out.write("                    </div>\n");
-      out.write("\n");
-      out.write("\t</div>\n");
-      out.write("     \n");
-      out.write("\t</div>\n");
-      out.write("      \n");
+      out.write("                </div>\n");
+      out.write("            </div>\n");
+      out.write("\t</div>  \n");
       out.write("    </div>\n");
       out.write("                    \n");
       out.write("    <div class=\"col-md-12\">\n");
-      out.write("            <div class=\"col-md-4 col-md-offset-4 text-center\"><h4><a  href=\"#myCarousel\" data-slide=\"prev\"><i class=\"glyphicon glyphicon-chevron-left\"></i></a>&nbsp;Task viewer&nbsp;<a  href=\"#myCarousel\" data-slide=\"next\"><i class=\"glyphicon glyphicon-chevron-right\"></i></a></h4></div>\n");
-      out.write("            <div class=\"col-md-12 col-xs-12\">\n");
-      out.write("                <div class=\"carousel slide\" id=\"myCarousel\">\n");
-      out.write("                    <div class=\"carousel-inner\">\n");
-      out.write("              ");
+      out.write("        <div class=\"col-md-4 col-md-offset-4 text-center\"><h4><a  href=\"#myCarousel1\" data-slide=\"prev\"><i class=\"glyphicon glyphicon-chevron-left\"></i></a>&nbsp;Tasks you own&nbsp;<a  href=\"#myCarousel1\" data-slide=\"next\"><i class=\"glyphicon glyphicon-chevron-right\"></i></a></h4></div>\n");
+      out.write("        <div class=\"col-md-12 col-xs-12\">\n");
+      out.write("            <div class=\"carousel slide\" id=\"myCarousel1\">\n");
+      out.write("                <div class=\"carousel-inner\">\n");
+      out.write("                    ");
+  
+                    /*This block of java code displays the tasks the user owns, here it 
+                      first connects to the database and then displays them in the form of thumbnails*/
 
-                  //String user = (String)request.getAttribute("username");
-                  //String sql,sql3;
-                  //String connectionURL="jdbc:derby://localhost:1527/WTFtask";
-                  sql3 ="SELECT TASKID FROM WTFtaskallocation where USERNAME = '"+user+"'";
-            
-          
-                  try {
-                      Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-                      Statement s = conn.createStatement();
-                      Statement s1 = conn.createStatement();
-                      Statement s2 = conn.createStatement();
-                      ResultSet rs2 = s2.executeQuery(sql3);
-                      int count = 0;
-              
-                      while(rs2.next()){
-                          sql = "SELECT * FROM WTFtasks where TASKID ="+rs2.getInt("TASKID");
-                          ResultSet rs = s.executeQuery(sql);
-                          while (rs.next()) {
-                                String sql2 ="SELECT FIRSTNAME,LASTNAME FROM WTFuser WHERE USERNAME='"+rs.getString("OWNER")+"'";                       
-                                ResultSet rs1 = s1.executeQuery(sql2);
-                                rs1.next();
-                                if(count==0)
-                                {    
-                                out.println("<div class='item active'>");
-                                }
-                                else
-                                {
-                                   out.println("<div class='item'>"); 
-                                }
-                                out.println("<div class='col-lg-2 col-xs-12' >");
-                                out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
-                                out.println("<div class='caption'>");
-                                out.println("<h3>"+rs.getString("TASKNAME")+"</h3>");
-                                out.println("<p>POINTS: "+rs.getString("TASKPOINTS")+"<br>OWNER: "+rs1.getString("FIRSTNAME")+" "+rs1.getString("LASTNAME")+"<br>DUE-DATE: "+rs.getString("DUEDATE")+"</p>");
-                                out.println("<p><a href='#' class='btn btn-primary' role='button'>Wrap Up</a></p>");
-                                out.println("</div></div></div></div>");
-                                count++;
-                                rs1.close();
-                            }
-                            rs.close();
-                        }
-              
-                        s.close();
-                        s1.close();
-                        s2.close();
-                        conn.close();
-                    }
-                    catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    
+                    String user2 = (String)request.getAttribute("username");
+                    String sql7;
+                    String connectionURL2="jdbc:derby://localhost:1527/WTFtask";
+                    sql7 ="SELECT * FROM WTFtasks WHERE OWNER  = '"+user2+"'";
+                    try {
+                        Connection conn2 = DriverManager.getConnection(connectionURL2, "IS2560","IS2560");
+                        Statement s6 = conn2.createStatement();
+                        ResultSet rs8 = s6.executeQuery(sql7);
+                        int count2 = 0;
+
+                        while(rs8.next()){
+
+                                  if(count2==0)
+                                  {    
+                                  out.println("<div class='item active'>");
+                                  }
+                                  else
+                                  {
+                                     out.println("<div class='item'>"); 
+                                  }
+                                  out.println("<div class='col-lg-2 col-xs-12' >");
+                                  out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
+                                  out.println("<div class='caption'>");
+                                  out.println("<h3>"+rs8.getString("TASKNAME")+"</h3>");
+                                  out.println("<p>POINTS: "+rs8.getString("TASKPOINTS")+"<br>DUE-DATE: "+rs8.getString("DUEDATE")+"</p>");
+                                  out.println("<p><a href='#' class='btn btn-primary' role='button'>Wrap Up</a></p>");
+                                  out.println("</div></div></div></div>");
+                                  count2++;
+
+                          }
+                          rs8.close();
+                          s6.close();
+                          conn2.close();
+                      }
+                      catch (SQLException e) {
+                          e.printStackTrace();
+                      }
+
+                      
       out.write("\n");
-      out.write("\t  \n");
-      out.write("                    </div>\n");
-      out.write("\n");
-      out.write("\t</div>\n");
-      out.write("     \n");
-      out.write("\t</div>\n");
-      out.write("      \n");
+      out.write("                </div>\n");
+      out.write("            </div>\n");
+      out.write("        </div>  \n");
       out.write("    </div>\n");
       out.write("   \n");
-      out.write("\n");
-      out.write("  <div class=\"col-md-2\"></div>\n");
-      out.write("<div id=\"displayfriendmodal\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n");
-      out.write("\t\t<div class=\"modal-dialog modal-lg\" style=\"border-radius:20px;\">\n");
-      out.write("\t\t\t<div class=\"modal-content\">\n");
-      out.write("\t\t\t\t<div class=\"modal-header\">\n");
-      out.write("\t\t\t\t\t<button type=\"button\" class=\"close\" data-dismiss=\"modal\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><br><br>\n");
-      out.write("\t\t\t\t\t<h3 class=\"modal-title\" align=\"center\">Your Friends</h3></br>\n");
-      out.write("                                        ");
+      out.write("    </div>\n");
+      out.write("    </div>\n");
+      out.write("    <div class=\"col-md-2\"></div>\n");
+      out.write("    <div id=\"displayfriendmodal\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n");
+      out.write("        <div class=\"modal-dialog modal-lg\" style=\"border-radius:20px;\">\n");
+      out.write("            <div class=\"modal-content\">\n");
+      out.write("                <div class=\"modal-header\">\n");
+      out.write("                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><br><br>\n");
+      out.write("                        <h3 class=\"modal-title\" align=\"center\">Your Friends</h3></br>\n");
+      out.write("                        ");
+  
+                            /*This piece of java code connects to the database and then displays the friends of the
+                            user that is logged on on a separate modal*/
 
-                                            String user1 = (String)request.getAttribute("username");
-                                            String sql4,sql5,sql6;
-                                            String connectionURL1="jdbc:derby://localhost:1527/WTFtask";
-                                            sql4 ="SELECT * FROM WTFFriends where MAINUSERNAME = '"+user1+"'";
-                                            try {
-                                                Connection conn1 = DriverManager.getConnection(connectionURL1, "IS2560","IS2560");
-                                                Statement s4 = conn1.createStatement();
-                                                Statement s5 = conn1.createStatement();
-                                                ResultSet rs3 = s4.executeQuery(sql4);
-                                                int count1=0;
-                                                while(rs3.next())
-                                                {
-                                                    sql5="SELECT * from WTFuser where USERNAME='"+rs3.getString("FRIENDNAME")+"'";
-                                                    ResultSet rs4 = s5.executeQuery(sql5);
-                                                    rs4.next();
-                                                    count1++;
-                                                    out.println("<div class='row'>");
-                                                    out.println("<div class='col-md-6' align='center'>");
-                                                    out.println("<div class='event' align='left'>");
-                                                    out.println("<span>#00"+count1+"</span>");
-                                                    out.println("<div class='info'>");
-                                                    out.println("<br />"+rs4.getString("FIRSTNAME")+" "+rs4.getString("LASTNAME")+"</div></div></div>");
-                                                    boolean flag1=rs3.next();
-                                                    if(flag1==true)
-                                                    {    
-                                                        sql6="SELECT * from WTFuser where USERNAME='"+rs3.getString("FRIENDNAME")+"'";
-                                                        ResultSet rs5 = s5.executeQuery(sql6);
-                                                        rs5.next();
-                                                        count1++;
-                                                        out.println("<div class='col-md-6' align='center'>");
-                                                        out.println("<div class='event' align='left'>");
-                                                        out.println("<span>#00"+count1+"</span>");
-                                                        out.println("<div class='info'>");
-                                                        out.println("<br />"+rs5.getString("FIRSTNAME")+" "+rs5.getString("LASTNAME")+"</div></div></div></div>");
-                                                        rs5.close();
-                                                    }
-                                                    else
-                                                    {
-                                                        out.println("</div>");
-                                                    }
-                                                    rs4.close();
-                                                    
-                                                }
-                                                s5.close();
-                                                rs3.close();
-                                                s4.close();
-                                                conn1.close();
-                                                
-                                            }
-                                            catch(SQLException e)
-                                            {
-                                                e.printStackTrace();
-                                            }
-                                            
-                  
-                                        
-                                        
+                            String user1 = (String)request.getAttribute("username");
+                            String sql4,sql5,sql6;
+                            String connectionURL1="jdbc:derby://localhost:1527/WTFtask";
+                            sql4 ="SELECT * FROM WTFFriends where MAINUSERNAME = '"+user1+"'";
+                            try {
+                                Connection conn1 = DriverManager.getConnection(connectionURL1, "IS2560","IS2560");
+                                Statement s4 = conn1.createStatement();
+                                Statement s5 = conn1.createStatement();
+                                ResultSet rs3 = s4.executeQuery(sql4);
+                                int count1=0;
+                                while(rs3.next())
+                                {
+                                    sql5="SELECT * from WTFuser where USERNAME='"+rs3.getString("FRIENDNAME")+"'";
+                                    ResultSet rs4 = s5.executeQuery(sql5);
+                                    rs4.next();
+                                    count1++;
+                                    out.println("<div class='row'>");
+                                    out.println("<div class='col-md-6' align='center'>");
+                                    out.println("<div class='event' align='left'>");
+                                    out.println("<span>#00"+count1+"</span>");
+                                    out.println("<div class='info'>");
+                                    out.println("<br />"+rs4.getString("FIRSTNAME")+" "+rs4.getString("LASTNAME")+"</div></div></div>");
+                                    boolean flag1=rs3.next();
+                                    if(flag1==true)
+                                    {    
+                                        sql6="SELECT * from WTFuser where USERNAME='"+rs3.getString("FRIENDNAME")+"'";
+                                        ResultSet rs5 = s5.executeQuery(sql6);
+                                        rs5.next();
+                                        count1++;
+                                        out.println("<div class='col-md-6' align='center'>");
+                                        out.println("<div class='event' align='left'>");
+                                        out.println("<span>#00"+count1+"</span>");
+                                        out.println("<div class='info'>");
+                                        out.println("<br />"+rs5.getString("FIRSTNAME")+" "+rs5.getString("LASTNAME")+"</div></div></div></div>");
+                                        rs5.close();
+                                    }
+                                    else
+                                    {
+                                        out.println("</div>");
+                                    }
+                                    rs4.close();
+
+                                }
+                                s5.close();
+                                rs3.close();
+                                s4.close();
+                                conn1.close();
+
+                            }
+                            catch(SQLException e)
+                            {
+                                e.printStackTrace();
+                            }
+
+
+
+                        
       out.write("\n");
-      out.write("\t\t\t\t</div>\n");
-      out.write("\t\t\t</div>\n");
-      out.write("\t\t</div>\n");
-      out.write("\t</div>\n");
+      out.write("                </div>\n");
+      out.write("            </div>\n");
+      out.write("        </div>\n");
+      out.write("    </div>\n");
       out.write("\t\n");
       out.write("\n");
-      out.write("<div id=\"addfriendmodal\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n");
-      out.write("\t\t<div class=\"modal-dialog\" style=\"border-radius:20px;\">\n");
-      out.write("\t\t\t<div class=\"modal-content\">\n");
-      out.write("\t\t\t\t<div class=\"modal-header\">\n");
-      out.write("\t\t\t\t\t<button type=\"button\" class=\"close\" data-dismiss=\"modal\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><br><br>\n");
-      out.write("\t\t\t\t\t<h3 class=\"modal-title\" align=\"center\">Add a Friend</h3></br>\n");
-      out.write("\t\t\t\t\n");
-      out.write("\n");
-      out.write("                                        <form id =\"searchForm\" class=\"form-inline\" align=\"center\" method=\"get\" action=\"New_friend\">\n");
-      out.write("\n");
-      out.write("\t\t\t\t\t\t<div class=\"form-group\">\n");
-      out.write("\t\t\t\t\t\t\t<div class=\"col-md-10 col-xs-10\">\n");
-      out.write("\t\t\t\t\t\t\t\t<input type=\"text\" name=\"searchname\" id=\"searchname\" class=\"form-control input-md\" Placeholder=\"Search...\" required>\n");
-      out.write("\t\t\t\t\t\t\t</div>\n");
-      out.write("                                                     \n");
-      out.write("\t\t\t\t\t\t\t<div class=\"col-md-1 col-xs-1\" style=\"padding-top:2px;\">\n");
-      out.write("                                                            <button id=\"SearchButton\" type=\"button\" onclick=\"Search()\"><span class=\"glyphicon glyphicon-search\"></span> </button> \n");
-      out.write("\t\t\t\t\t\t\t</div></br> </br>\n");
-      out.write("                                                       <input type=\"hidden\" class=\"form-control input-md\" name = \"mainuser\" id=\"mainuser\" value=\"");
+      out.write("    <div id=\"addfriendmodal\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n");
+      out.write("        <div class=\"modal-dialog\" style=\"border-radius:20px;\">\n");
+      out.write("            <div class=\"modal-content\">\n");
+      out.write("                <div class=\"modal-header\">\n");
+      out.write("                    <button type=\"button\" class=\"close\" data-dismiss=\"modal\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><br><br>\n");
+      out.write("                    <h3 class=\"modal-title\" align=\"center\">Add a Friend</h3></br>\n");
+      out.write("                    <form id =\"searchForm\" class=\"form-inline\" align=\"center\" method=\"get\" action=\"New_friend\">\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <div class=\"col-md-10 col-xs-10\">\n");
+      out.write("                                <input type=\"text\" name=\"searchname\" id=\"searchname\" class=\"form-control input-md\" Placeholder=\"Search...\" required>\n");
+      out.write("                            </div>\n");
+      out.write("                            <div class=\"col-md-1 col-xs-1\" style=\"padding-top:2px;\">\n");
+      out.write("                                <button id=\"SearchButton\" type=\"button\" onclick=\"Search()\"><span class=\"glyphicon glyphicon-search\"></span> </button> \n");
+      out.write("                            </div></br></br>\n");
+      out.write("                            <input type=\"hidden\" class=\"form-control input-md\" name = \"mainuser\" id=\"mainuser\" value=\"");
       out.print(request.getAttribute("username"));
       out.write("\">\n");
-      out.write("                                                       <input type=\"hidden\" class=\"form-control input-md\" name = \"mainuser_firstname\" id=\"mainuser\" value=\"");
+      out.write("                            <input type=\"hidden\" class=\"form-control input-md\" name = \"mainuser_firstname\" id=\"mainuser\" value=\"");
       out.print(request.getAttribute("Name"));
       out.write("\">\n");
-      out.write("                                                       <input type=\"hidden\" class=\"form-control input-md\" name = \"searched_username\" id=\"searched_username\" >\n");
-      out.write("                                                       <button class=\"btn btn-success\"  type=\"disable\" id=\"addfriend\" disabled >Add</button>\n");
-      out.write("                                                    \n");
-      out.write("                                                    \n");
-      out.write("\t\t\t\t\t\t</div><br>\n");
-      out.write("                                                 \n");
-      out.write("                                                 <div id=\"searchUpdate\" style=\"color:red;\"></div>\n");
-      out.write("\t\t\t\t\t\t<a align=\"center\" id=\"Invite\" href=\"#\" >Can't find your friend? Invite them!</a>  \n");
-      out.write("\t\t\t\t\t</form>\n");
-      out.write("\t\t\t\t\t\n");
-      out.write("\t\t\t\t\t<form id=\"inviteForm\" class=\"form-inline\" align=\"center\" method=\"get\" action = \"Add_Friend\" >\n");
-      out.write("\t\t\t\t\t\t\n");
-      out.write("\t\t\t\t\t\t<div class=\"form-group\">\n");
-      out.write("\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"firstname\" Placeholder=\"First name\" />\n");
-      out.write("\t\t\t\t\t\t</div>\n");
-      out.write("\t\t\t\t\t\t<div id=\"break\">\n");
-      out.write("\t\t\t\t\t\t\t<br>\n");
-      out.write("\t\t\t\t\t\t</div>\n");
-      out.write("\t\t\t\t\t\t<div class=\"form-group\">\n");
-      out.write("\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"lastname\" Placeholder=\"Last name\"/>\n");
-      out.write("\t\t\t\t\t\t</div>\n");
-      out.write("\t\t\t\t\t\t<div id=\"break\">\n");
-      out.write("\t\t\t\t\t\t\t<br>\n");
-      out.write("\t\t\t\t\t\t</div>\n");
-      out.write("\t\t\t\t\t\t<div class=>\n");
-      out.write("\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"email\" Placeholder=\"Email address\"/>\n");
-      out.write("\t\t\t\t\t\t</div>\n");
-      out.write("                                                <div class=\"form-group\">\n");
-      out.write("                                                            <input type=\"hidden\" class=\"form-control input-md\" name = \"user\" value=\"");
+      out.write("                            <input type=\"hidden\" class=\"form-control input-md\" name = \"searched_username\" id=\"searched_username\" >\n");
+      out.write("                            <button class=\"btn btn-success\"  type=\"disable\" id=\"addfriend\" disabled >Add</button>\n");
+      out.write("                        </div><br>\n");
+      out.write("\n");
+      out.write("                        <div id=\"searchUpdate\" style=\"color:red;\"></div>\n");
+      out.write("                        <a align=\"center\" id=\"Invite\" href=\"#\" >Can't find your friend? Invite them!</a>  \n");
+      out.write("                    </form>\n");
+      out.write("                    <form id=\"inviteForm\" class=\"form-inline\" align=\"center\" method=\"get\" action = \"Add_Friend\" >\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <input type=\"text\" class=\"form-control\" name=\"firstname\" Placeholder=\"First name\" />\n");
+      out.write("                        </div>\n");
+      out.write("                        <div id=\"break\">\n");
+      out.write("                            <br>\n");
+      out.write("                        </div>\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <input type=\"text\" class=\"form-control\" name=\"lastname\" Placeholder=\"Last name\"/>\n");
+      out.write("                        </div>\n");
+      out.write("                        <div id=\"break\">\n");
+      out.write("                            <br>\n");
+      out.write("                        </div>\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <input type=\"text\" class=\"form-control\" name=\"email\" Placeholder=\"Email address\"/>\n");
+      out.write("                        </div>\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <input type=\"hidden\" class=\"form-control input-md\" name = \"user\" value=\"");
       out.print(request.getAttribute("Name"));
       out.write("\">\n");
-      out.write("\t\t\t\t\t\t</div>\n");
-      out.write("                                                <div class=\"form-group\">\n");
-      out.write("                                                            <input type=\"hidden\" class=\"form-control input-md\" name = \"username\" value=\"");
+      out.write("                        </div>\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <input type=\"hidden\" class=\"form-control input-md\" name = \"username\" value=\"");
       out.print(request.getAttribute("username"));
       out.write("\">\n");
-      out.write("\t\t\t\t\t\t</div>\n");
-      out.write("\t\t\t\t\t\t<div id=\"break\">\n");
-      out.write("\t\t\t\t\t\t\t<br>\n");
-      out.write("\t\t\t\t\t\t</div>\n");
-      out.write("\t\t\t\t\t\t<div class=\"form-group\">\n");
-      out.write("\t\t\t\t\t\t\t<button type =\"submit\" id=\"login\" href=\"#\" class=\"btn btn-primary\" align=\"center\">Invite</button>\n");
-      out.write("\t\t\t\t\t\t</div><br>\n");
-      out.write("\t\t\t\t\t</form>\t\n");
-      out.write("\t\t\t\t</div>\n");
-      out.write("\t\t\t</div>\n");
-      out.write("\t\t</div>\n");
-      out.write("\t</div>\n");
+      out.write("                        </div>\n");
+      out.write("                        <div id=\"break\">\n");
+      out.write("                            <br>\n");
+      out.write("                        </div>\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <button type =\"submit\" id=\"login\" href=\"#\" class=\"btn btn-primary\" align=\"center\">Invite</button>\n");
+      out.write("                        </div><br>\n");
+      out.write("                    </form>\t\n");
+      out.write("                </div>\n");
+      out.write("            </div>\n");
+      out.write("        </div>\n");
+      out.write("    </div>\n");
       out.write("\t\n");
-      out.write("\t<div id=\"addtaskmodal\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel1\" aria-hidden=\"true\">\n");
+      out.write("    <div id=\"addtaskmodal\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel1\" aria-hidden=\"true\">\n");
       out.write("        <div class=\"modal-dialog\">\n");
-      out.write("\t\t<div class=\"modal-content\">\n");
-      out.write("\t\t\t\t<div class=\"modal-header\">\n");
-      out.write("\t\t\t\t\t\t<button type=\"button\" class=\"close\" data-dismiss=\"modal\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><br><br>\n");
-      out.write("\t\t\t\t\t\t<h3 class=\"modal-title\" align=\"center\">Add a task</h3></br>\n");
-      out.write("                                                    <form id=\"addtaskForm\" class=\"form-inline\" align=\"center\" method=\"get\" action=\"Add_Task\">\n");
-      out.write("\t\t\t\t\t\t\t<div class=\"form-group\">\n");
-      out.write("\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"taskname\" Placeholder=\"Task name\" />\n");
-      out.write("\t\t\t\t\t\t\t\t\n");
-      out.write("\t\t\t\t\t\t\t\t<div id=\"break\">\n");
-      out.write("\t\t\t\t\t\t\t\t\t<br>\n");
-      out.write("\t\t\t\t\t\t\t\t</div>\n");
-      out.write("                                                        </div><br>\n");
-      out.write("                                                        <div class=\"form-group\">\n");
-      out.write("\t\t\t\t\t\t\t\t\n");
-      out.write("\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Points\" name=\"taskpoints\"/>\n");
-      out.write("\t\t\t\t\t\t\t\t<div id=\"break\">\n");
-      out.write("\t\t\t\t\t\t\t\t\t<br>\n");
-      out.write("\t\t\t\t\t\t\t\t</div>\n");
-      out.write("                                                        </div><br>\n");
-      out.write("                                                        <div class=\"form-group\">\n");
-      out.write("\t\t\t\t\t\t\t\t\n");
-      out.write("\t\t\t\t\t\t\t\t<input type=\"hidden\" class=\"form-control\"  name=\"user\" value = \"");
+      out.write("            <div class=\"modal-content\">\n");
+      out.write("                <div class=\"modal-header\">\n");
+      out.write("                    <button type=\"button\" class=\"close\" data-dismiss=\"modal\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><br><br>\n");
+      out.write("                    <h3 class=\"modal-title\" align=\"center\">Add a task</h3></br>\n");
+      out.write("                    <form id=\"addtaskForm\" class=\"form-inline\" align=\"center\" method=\"get\" action=\"Add_Task\">\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <input type=\"text\" class=\"form-control\" name=\"taskname\" Placeholder=\"Task name\" />\n");
+      out.write("                            <div id=\"break\">\n");
+      out.write("                                <br>\n");
+      out.write("                            </div>\n");
+      out.write("                        </div><br>\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <input type=\"text\" class=\"form-control\" placeholder=\"Points\" name=\"taskpoints\"/>\n");
+      out.write("                            <div id=\"break\">\n");
+      out.write("                                <br>\n");
+      out.write("                            </div>\n");
+      out.write("                        </div><br>\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <input type=\"hidden\" class=\"form-control\"  name=\"user\" value = \"");
       out.print(request.getAttribute("username"));
       out.write("\"/>\n");
-      out.write("\t\t\t\t\t\t\t\t<div id=\"break\">\n");
-      out.write("\t\t\t\t\t\t\t\t\t<br>\n");
-      out.write("\t\t\t\t\t\t\t\t</div>\n");
-      out.write("                                                        </div><br>\n");
-      out.write("                                                        <div class=\"form-group\">\n");
-      out.write("\t\t\t\t\t\t\t\t\n");
-      out.write("\t\t\t\t\t\t\t\t<input type=\"hidden\" class=\"form-control\" id=\"Name\" name=\"Name\" value = \"");
+      out.write("                            <div id=\"break\">\n");
+      out.write("                                <br>\n");
+      out.write("                            </div>\n");
+      out.write("                        </div><br>\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <input type=\"hidden\" class=\"form-control\" id=\"Name\" name=\"Name\" value = \"");
       out.print(request.getAttribute("Name"));
       out.write("\"/>\n");
-      out.write("\t\t\t\t\t\t\t\t<div id=\"break\">\n");
-      out.write("\t\t\t\t\t\t\t\t\t<br>\n");
-      out.write("\t\t\t\t\t\t\t\t</div>\n");
-      out.write("                                                        </div><br>\n");
-      out.write("\t\t\t\t\t\t\t<div class=\"form-group\">\n");
-      out.write("                                                                    <div class=\"col-lg-12 col-xs-12\">\n");
-      out.write("                                                                        <div class=\"input-group date\" >\n");
-      out.write("                                                                            <input type=\"text\" class=\"form-control\"  id=\"duedate\" name=\"duedate\" Placeholder=\"Due date\" />\n");
-      out.write("                                                                            <span class=\"input-group-addon\">\n");
-      out.write("                                                                                <span class=\"glyphicon glyphicon-calendar\"></span>\n");
-      out.write("                                                                            </span>\n");
-      out.write("                                                                        </div>  \n");
-      out.write("                                                                    </div>\n");
-      out.write("\t\t\t\t\t\t\t</div>\n");
-      out.write("\t\t\t\t\t\t\t<br>\n");
-      out.write("\t\t\t\t\t\t\t<div id=\"break\">\n");
-      out.write("\t\t\t\t\t\t\t\t<br>\n");
-      out.write("\t\t\t\t\t\t\t</div>\n");
-      out.write("\t\t\t\t\t\t\t<div class=\"form-group\">\n");
-      out.write("\t\t\t\t\t\t\t\t<div class=\"col-md-9 col-xs-9\">\n");
-      out.write("\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" Placeholder=\"Add friends...\" id=\"addedfriend\" name=\"addedfriend\">\n");
-      out.write("\t\t\t\t\t\t\t\t</div>\n");
-      out.write("\t\t\t\t\t\t\t\t<div class=\"col-md-3 col-xs-3\">\n");
-      out.write("\t\t\t\t\t\t\t\t\t<button id=\"add\" type=\"button\" class=\"btn btn-success\" onclick=\"showFriend()\"> Add</button>\t\n");
-      out.write("\t\t\t\t\t\t\t\t</div>\n");
-      out.write("                                                        </div><br><br>\n");
-      out.write("                                                        <div id=\"somediv\"  style=\"color:red;\"></div>\n");
-      out.write("\t\t\t\t\t\t\t\n");
-      out.write("\t\t\t\t\t\t\t<div id=\"break-inverse\">\n");
-      out.write("\t\t\t\t\t\t\t\t<br><br>\n");
-      out.write("                                                        </div>\n");
-      out.write("                                                        <div id=\"content\"></div><br>\n");
-      out.write("\t\t\t\t\t\t\t<div class=\"form-group\">\n");
-      out.write("                                                            <button type=\"submit\" class=\"btn btn-primary\">Add task</button><br><br>\n");
-      out.write("\t\t\t\t\t\t\t</div><br>\n");
-      out.write("\t\t\t\t\t\t</form>\n");
-      out.write("\t\t\t\t</div>\n");
-      out.write("\t\t\t</div>\n");
+      out.write("                            <div id=\"break\">\n");
+      out.write("                                <br>\n");
+      out.write("                            </div>\n");
+      out.write("                        </div><br>\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <div class=\"col-lg-12 col-xs-12\">\n");
+      out.write("                                <div class=\"input-group date\" >\n");
+      out.write("                                    <input type=\"text\" class=\"form-control\"  id=\"duedate\" name=\"duedate\" Placeholder=\"Due date\" />\n");
+      out.write("                                    <span class=\"input-group-addon\">\n");
+      out.write("                                        <span class=\"glyphicon glyphicon-calendar\"></span>\n");
+      out.write("                                    </span>\n");
+      out.write("                                </div>  \n");
+      out.write("                            </div>\n");
+      out.write("                        </div>\n");
+      out.write("                        <br>\n");
+      out.write("                        <div id=\"break\">\n");
+      out.write("                            <br>\n");
+      out.write("                        </div>\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <div class=\"col-md-9 col-xs-9\">\n");
+      out.write("                                <input type=\"text\" class=\"form-control\" Placeholder=\"Add friends...\" id=\"addedfriend\" name=\"addedfriend\">\n");
+      out.write("                            </div>\n");
+      out.write("                            <div class=\"col-md-3 col-xs-3\">\n");
+      out.write("                               <button id=\"add\" type=\"button\" class=\"btn btn-success\" onclick=\"showFriend()\"> Add</button>\t\n");
+      out.write("                            </div>\n");
+      out.write("                        </div><br><br>\n");
+      out.write("                        <div id=\"somediv\"  style=\"color:red;\"></div>\n");
+      out.write("                        <div id=\"break-inverse\">\n");
+      out.write("                            <br><br>\n");
+      out.write("                        </div>\n");
+      out.write("                        <div id=\"content\"></div><br>\n");
+      out.write("                        <div class=\"form-group\">\n");
+      out.write("                            <button type=\"submit\" class=\"btn btn-primary\">Add task</button><br><br>\n");
+      out.write("                        </div><br>\n");
+      out.write("                    </form>\n");
+      out.write("                </div>\n");
+      out.write("            </div>\n");
       out.write("        </div>\n");
       out.write("    </div>\n");
       out.write("                                                              \n");
@@ -623,7 +589,7 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("    <!-- Include all compiled plugins (below), or include individual files as needed -->\n");
       out.write("    <script src=\"js/bootstrap.min.js\"></script>\n");
       out.write("    <script src=\"http://bsdp-assets.blackcherry.us/1.3.0/bootstrap-datepicker.min.js\"></script>\n");
-      out.write("\t\t<!-- BootstrapValidator JS -->\n");
+      out.write("                <!-- BootstrapValidator JS -->\n");
       out.write("    <script type=\"text/javascript\" src=\"dist/js/bootstrapValidator.min.js\"></script>\n");
       out.write("\n");
       out.write("    <script>\n");
@@ -809,7 +775,7 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("            });\n");
       out.write("        });\n");
       out.write("\t\n");
-      out.write("\t</script>\n");
+      out.write("    </script>\n");
       out.write("  </body>\n");
       out.write("</html>\n");
       out.write("\n");

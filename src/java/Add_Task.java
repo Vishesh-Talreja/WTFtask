@@ -58,8 +58,7 @@ public class Add_Task extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
         response.setContentType("text/html;charset=UTF-8");
-        
-        System.out.println("Inside");
+        //Recieve inputs from form
         String name=request.getParameter("Name").replaceAll(" ","");
         name = name.toLowerCase();
         String user=request.getParameter("user").replaceAll(" ","");
@@ -77,25 +76,22 @@ public class Add_Task extends HttpServlet {
             Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             Statement stmt=conn.createStatement();
             String query3 = "INSERT INTO IS2560.WTFtasks (TASKNAME,TASKPOINTS,DUEDATE,OWNER) VALUES ('"+Tname+"','"+Tpoints+"','"+Tduedate+"','"+user+"')";
-            stmt.executeUpdate(query3);
+            stmt.executeUpdate(query3);                                             //Insert task details into database
             String query4 = "SELECT * FROM IS2560.WTFtasks WHERE TASKNAME='"+Tname+"'";
-            System.out.println("here");
-            ResultSet rs = stmt.executeQuery(query4);
+            ResultSet rs = stmt.executeQuery(query4);                               //Extract taskId
             rs.next();
-            int id = rs.getInt("TaskID");
-            for(int i=0;i<assignees.length;i++) {
+            int id = rs.getInt("TaskID");   
+            for(int i=0;i<assignees.length;i++) {                                   //Assign each member to this task
                 String query5 = "SELECT * FROM WTFuser WHERE FIRSTNAME='"+assignees[i]+"'";
                 rs = stmt.executeQuery(query5);
                 rs.next();
                 String query6 = "INSERT INTO WTFTASKALLOCATION VALUES ("+id+",'"+rs.getString("USERNAME")+"')";
                 stmt.executeUpdate(query6);
-            }
-            
+            } 
             stmt.close();
-            out.print("Connection Successful!");
+            //Return required parameterts back to homepage
             request.setAttribute("Name", name);
             request.setAttribute("TName",Tname);
-            System.out.println(Tname);
             request.setAttribute("username",user);
             request.setAttribute("added", "yes");
             RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");

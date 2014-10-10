@@ -113,8 +113,8 @@ public final class task_005flogin_jsp extends org.apache.jasper.runtime.HttpJspB
       out.write("  <body>\n");
       out.write("\t\n");
       out.write("\t\n");
-      out.write("\t\t<div class=\"col-md-4\"></div>\n");
-      out.write("\t\t<div class=\"col-md-4\">\n");
+      out.write("            <div class=\"col-md-3\"></div>\n");
+      out.write("            <div class=\"col-md-6\">\n");
       out.write("\t\t\n");
       out.write("            ");
  if ((String)request.getAttribute("logon")=="fail")

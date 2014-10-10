@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author visheshtalreja
+ * @author Aashish
  */
 @WebServlet(urlPatterns = {"/Check_Email"})
 public class Check_Email extends HttpServlet {
@@ -55,9 +55,10 @@ public class Check_Email extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        //Recieve values from form
         String email=request.getParameter("remail").replaceAll(" ","");
         email = email.toLowerCase();
-        System.out.println(email);
+        //Create JSON object to pass back to bootsrap validator
         Map<String, String> options = new LinkedHashMap<String, String>();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -67,20 +68,20 @@ public class Check_Email extends HttpServlet {
             
             Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             String query1 = "SELECT * FROM WTFuser where email = '"+email+"'";
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(query1);
-            //HttpServletResponse.sendRedirect("/your/new/location.jsp")
-            boolean is = rs.next();
-            if(!is) {
+            Statement st = conn.createStatement();  //Query the database for availability
+            ResultSet rs = st.executeQuery(query1);     //Store the result in a ResultSet
+            boolean is = rs.next();  //Check if ResultSet is empty or not
+            if(!is) { //The email is unique
                 options.put("valid", "true");
                 String json = new Gson().toJson(options);
                 response.getWriter().write(json);
             }
-            else if(is){
+            else if(is){ //The email already exists
                 options.put("valid", "false");
                 String json = new Gson().toJson(options);
                 response.getWriter().write(json);
             }
+            //close resources
             st.close();
             rs.close();
             conn.close();

@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author visheshtalreja
+ * @author Aashish
  */
 @WebServlet(urlPatterns = {"/Check_Username"})
 public class Check_Username extends HttpServlet {
@@ -55,35 +55,34 @@ public class Check_Username extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        //Recieve inputs from form
         String user=request.getParameter("rusername").replaceAll(" ","");
         user = user.toLowerCase();
+        //Create JSON object to send back to validator
         Map<String, String> options = new LinkedHashMap<String, String>();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         try (PrintWriter out = response.getWriter()){
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
-        try{
-            
+        try{     
             Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             String query1 = "SELECT * FROM WTFuser where username = '"+user+"'";
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(query1);
-            //HttpServletResponse.sendRedirect("/your/new/location.jsp")
-            boolean is = rs.next();
-            if(!is) {
+            Statement st = conn.createStatement();  //Query the database for availability
+            ResultSet rs = st.executeQuery(query1);     //Store the results in a ResultSet
+            boolean is = rs.next();     //Check is ResultSet is empty
+            if(!is) {   //The username is available
                 options.put("valid", "true");
                 String json = new Gson().toJson(options);
                 response.getWriter().write(json);
             }
-            else if(is){
+            else if(is){    //The username is not available
                 options.put("valid", "false");
                 String json = new Gson().toJson(options);
                 response.getWriter().write(json);
             }
             st.close();
             rs.close();
-            conn.close();
-            
+            conn.close();            
         }
         catch(SQLException ex)
         {
