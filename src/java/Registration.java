@@ -37,6 +37,9 @@ public class Registration extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
+    /*This functions takes inputs from the user registration form and then inputs it into the databse
+    after which the user is redirected to the login page, and is asked to login*/
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");

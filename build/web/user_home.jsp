@@ -184,7 +184,10 @@
 
       
 
-      <% if ((String)request.getAttribute("send")=="yes")
+      <%
+         /*This block of java code would check the values returned from various servlets 
+        and based on that will display a particular alert message*/
+         if ((String)request.getAttribute("send")=="yes")
             {
                 out.println("<div class='alert alert-success alert-dismissible' role='alert'>");
                 out.println("<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>");
@@ -212,6 +215,8 @@
                 <div class="carousel slide" id="myCarousel">
                     <div class="carousel-inner">
               <%
+                  /*This block of java code displays the tasks the user has to complete, here it 
+                    first connects to the database and then displays them in the form of thumbnails*/
                   String user = (String)request.getAttribute("username");
                   String sql,sql3;
                   String connectionURL="jdbc:derby://localhost:1527/WTFtask";
@@ -273,7 +278,64 @@
      
 	</div>
       
-    </div> 
+    </div>
+                    
+    <div class="col-md-12">
+            <div class="col-md-4 col-md-offset-4 text-center"><h4><a  href="#myCarousel1" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>&nbsp;Tasks you own&nbsp;<a  href="#myCarousel1" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a></h4></div>
+            <div class="col-md-12 col-xs-12">
+                <div class="carousel slide" id="myCarousel1">
+                    <div class="carousel-inner">
+              <%  
+                  /*This block of java code displays the tasks the user owns, here it 
+                    first connects to the database and then displays them in the form of thumbnails*/
+                  
+                  String user2 = (String)request.getAttribute("username");
+                  String sql7;
+                  String connectionURL2="jdbc:derby://localhost:1527/WTFtask";
+                  sql7 ="SELECT * FROM WTFtasks WHERE OWNER  = '"+user2+"'";
+                  try {
+                      Connection conn2 = DriverManager.getConnection(connectionURL2, "IS2560","IS2560");
+                      Statement s6 = conn2.createStatement();
+                      ResultSet rs8 = s6.executeQuery(sql7);
+                      int count2 = 0;
+              
+                      while(rs8.next()){
+                         
+                                if(count2==0)
+                                {    
+                                out.println("<div class='item active'>");
+                                }
+                                else
+                                {
+                                   out.println("<div class='item'>"); 
+                                }
+                                out.println("<div class='col-lg-2 col-xs-12' >");
+                                out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
+                                out.println("<div class='caption'>");
+                                out.println("<h3>"+rs8.getString("TASKNAME")+"</h3>");
+                                out.println("<p>POINTS: "+rs8.getString("TASKPOINTS")+"<br>DUE-DATE: "+rs8.getString("DUEDATE")+"</p>");
+                                out.println("<p><a href='#' class='btn btn-primary' role='button'>Wrap Up</a></p>");
+                                out.println("</div></div></div></div>");
+                                count2++;
+                                
+                        }
+                        rs8.close();
+                        s6.close();
+                        conn2.close();
+                    }
+                    catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    
+                    %>
+	  
+                    </div>
+
+	</div>
+     
+	</div>
+      
+    </div>
    
 
   <div class="col-md-2"></div>
@@ -283,7 +345,10 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><br><br>
 					<h3 class="modal-title" align="center">Your Friends</h3></br>
-                                        <%
+                                        <%  
+                                            /*This piece of java code connects to the database and then displays the friends of the
+                                            user that is logged on on a separate modal*/
+                  
                                             String user1 = (String)request.getAttribute("username");
                                             String sql4,sql5,sql6;
                                             String connectionURL1="jdbc:derby://localhost:1527/WTFtask";
@@ -306,18 +371,26 @@
                                                     out.println("<span>#00"+count1+"</span>");
                                                     out.println("<div class='info'>");
                                                     out.println("<br />"+rs4.getString("FIRSTNAME")+" "+rs4.getString("LASTNAME")+"</div></div></div>");
-                                                    rs3.next();
-                                                    sql6="SELECT * from WTFuser where USERNAME='"+rs3.getString("FRIENDNAME")+"'";
-                                                    ResultSet rs5 = s5.executeQuery(sql6);
-                                                    rs5.next();
-                                                    count1++;
-                                                    out.println("<div class='col-md-6' align='center'>");
-                                                    out.println("<div class='event' align='left'>");
-                                                    out.println("<span>#00"+count1+"</span>");
-                                                    out.println("<div class='info'>");
-                                                    out.println("<br />"+rs5.getString("FIRSTNAME")+" "+rs5.getString("LASTNAME")+"</div></div></div></div>");
+                                                    boolean flag1=rs3.next();
+                                                    if(flag1==true)
+                                                    {    
+                                                        sql6="SELECT * from WTFuser where USERNAME='"+rs3.getString("FRIENDNAME")+"'";
+                                                        ResultSet rs5 = s5.executeQuery(sql6);
+                                                        rs5.next();
+                                                        count1++;
+                                                        out.println("<div class='col-md-6' align='center'>");
+                                                        out.println("<div class='event' align='left'>");
+                                                        out.println("<span>#00"+count1+"</span>");
+                                                        out.println("<div class='info'>");
+                                                        out.println("<br />"+rs5.getString("FIRSTNAME")+" "+rs5.getString("LASTNAME")+"</div></div></div></div>");
+                                                        rs5.close();
+                                                    }
+                                                    else
+                                                    {
+                                                        out.println("</div>");
+                                                    }
                                                     rs4.close();
-                                                    rs5.close();
+                                                    
                                                 }
                                                 s5.close();
                                                 rs3.close();

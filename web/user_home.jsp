@@ -184,7 +184,10 @@
 
       
 
-      <% if ((String)request.getAttribute("send")=="yes")
+      <%
+         /*This block of java code would check the values returned from various servlets 
+        and based on that will display a particular alert message*/
+         if ((String)request.getAttribute("send")=="yes")
             {
                 out.println("<div class='alert alert-success alert-dismissible' role='alert'>");
                 out.println("<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>");
@@ -212,6 +215,8 @@
                 <div class="carousel slide" id="myCarousel">
                     <div class="carousel-inner">
               <%
+                  /*This block of java code displays the tasks the user has to complete, here it 
+                    first connects to the database and then displays them in the form of thumbnails*/
                   String user = (String)request.getAttribute("username");
                   String sql,sql3;
                   String connectionURL="jdbc:derby://localhost:1527/WTFtask";
@@ -280,7 +285,10 @@
             <div class="col-md-12 col-xs-12">
                 <div class="carousel slide" id="myCarousel1">
                     <div class="carousel-inner">
-              <%
+              <%  
+                  /*This block of java code displays the tasks the user owns, here it 
+                    first connects to the database and then displays them in the form of thumbnails*/
+                  
                   String user2 = (String)request.getAttribute("username");
                   String sql7;
                   String connectionURL2="jdbc:derby://localhost:1527/WTFtask";
@@ -337,7 +345,10 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><br><br>
 					<h3 class="modal-title" align="center">Your Friends</h3></br>
-                                        <%
+                                        <%  
+                                            /*This piece of java code connects to the database and then displays the friends of the
+                                            user that is logged on on a separate modal*/
+                  
                                             String user1 = (String)request.getAttribute("username");
                                             String sql4,sql5,sql6;
                                             String connectionURL1="jdbc:derby://localhost:1527/WTFtask";

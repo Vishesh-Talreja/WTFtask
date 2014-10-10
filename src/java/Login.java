@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+//import org.apache.log4j.Logger;
 import java.io.*;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,7 +12,6 @@ import java.sql.*;
 import java.sql.DriverManager;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(urlPatterns = {"/Login"})
 public class Login extends HttpServlet {
+//private static final Logger logger = Logger.getLogger(Login.class);
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -68,6 +69,9 @@ public class Login extends HttpServlet {
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
             boolean flag = rs.next();
+            //logger.debug("HEllo");
+            /*Checks whether the query has returned some results, if not it will redirect to the login page
+            with an error message, else it will redirect the user to the his home page*/
             if(flag==false)
             {
                     request.setAttribute("logon","fail");

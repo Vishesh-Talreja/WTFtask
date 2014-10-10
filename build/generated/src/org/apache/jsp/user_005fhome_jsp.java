@@ -322,7 +322,78 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("     \n");
       out.write("\t</div>\n");
       out.write("      \n");
-      out.write("    </div> \n");
+      out.write("    </div>\n");
+      out.write("                    \n");
+      out.write("    <div class=\"col-md-12\">\n");
+      out.write("            <div class=\"col-md-4 col-md-offset-4 text-center\"><h4><a  href=\"#myCarousel\" data-slide=\"prev\"><i class=\"glyphicon glyphicon-chevron-left\"></i></a>&nbsp;Task viewer&nbsp;<a  href=\"#myCarousel\" data-slide=\"next\"><i class=\"glyphicon glyphicon-chevron-right\"></i></a></h4></div>\n");
+      out.write("            <div class=\"col-md-12 col-xs-12\">\n");
+      out.write("                <div class=\"carousel slide\" id=\"myCarousel\">\n");
+      out.write("                    <div class=\"carousel-inner\">\n");
+      out.write("              ");
+
+                  //String user = (String)request.getAttribute("username");
+                  //String sql,sql3;
+                  //String connectionURL="jdbc:derby://localhost:1527/WTFtask";
+                  sql3 ="SELECT TASKID FROM WTFtaskallocation where USERNAME = '"+user+"'";
+            
+          
+                  try {
+                      Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+                      Statement s = conn.createStatement();
+                      Statement s1 = conn.createStatement();
+                      Statement s2 = conn.createStatement();
+                      ResultSet rs2 = s2.executeQuery(sql3);
+                      int count = 0;
+              
+                      while(rs2.next()){
+                          sql = "SELECT * FROM WTFtasks where TASKID ="+rs2.getInt("TASKID");
+                          ResultSet rs = s.executeQuery(sql);
+                          while (rs.next()) {
+                                String sql2 ="SELECT FIRSTNAME,LASTNAME FROM WTFuser WHERE USERNAME='"+rs.getString("OWNER")+"'";                       
+                                ResultSet rs1 = s1.executeQuery(sql2);
+                                rs1.next();
+                                if(count==0)
+                                {    
+                                out.println("<div class='item active'>");
+                                }
+                                else
+                                {
+                                   out.println("<div class='item'>"); 
+                                }
+                                out.println("<div class='col-lg-2 col-xs-12' >");
+                                out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
+                                out.println("<div class='caption'>");
+                                out.println("<h3>"+rs.getString("TASKNAME")+"</h3>");
+                                out.println("<p>POINTS: "+rs.getString("TASKPOINTS")+"<br>OWNER: "+rs1.getString("FIRSTNAME")+" "+rs1.getString("LASTNAME")+"<br>DUE-DATE: "+rs.getString("DUEDATE")+"</p>");
+                                out.println("<p><a href='#' class='btn btn-primary' role='button'>Wrap Up</a></p>");
+                                out.println("</div></div></div></div>");
+                                count++;
+                                rs1.close();
+                            }
+                            rs.close();
+                        }
+              
+                        s.close();
+                        s1.close();
+                        s2.close();
+                        conn.close();
+                    }
+                    catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    
+      out.write("\n");
+      out.write("\t  \n");
+      out.write("                    </div>\n");
+      out.write("\n");
+      out.write("\t</div>\n");
+      out.write("     \n");
+      out.write("\t</div>\n");
+      out.write("      \n");
+      out.write("    </div>\n");
       out.write("   \n");
       out.write("\n");
       out.write("  <div class=\"col-md-2\"></div>\n");
@@ -356,18 +427,26 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
                                                     out.println("<span>#00"+count1+"</span>");
                                                     out.println("<div class='info'>");
                                                     out.println("<br />"+rs4.getString("FIRSTNAME")+" "+rs4.getString("LASTNAME")+"</div></div></div>");
-                                                    rs3.next();
-                                                    sql6="SELECT * from WTFuser where USERNAME='"+rs3.getString("FRIENDNAME")+"'";
-                                                    ResultSet rs5 = s5.executeQuery(sql6);
-                                                    rs5.next();
-                                                    count1++;
-                                                    out.println("<div class='col-md-6' align='center'>");
-                                                    out.println("<div class='event' align='left'>");
-                                                    out.println("<span>#00"+count1+"</span>");
-                                                    out.println("<div class='info'>");
-                                                    out.println("<br />"+rs5.getString("FIRSTNAME")+" "+rs5.getString("LASTNAME")+"</div></div></div></div>");
+                                                    boolean flag1=rs3.next();
+                                                    if(flag1==true)
+                                                    {    
+                                                        sql6="SELECT * from WTFuser where USERNAME='"+rs3.getString("FRIENDNAME")+"'";
+                                                        ResultSet rs5 = s5.executeQuery(sql6);
+                                                        rs5.next();
+                                                        count1++;
+                                                        out.println("<div class='col-md-6' align='center'>");
+                                                        out.println("<div class='event' align='left'>");
+                                                        out.println("<span>#00"+count1+"</span>");
+                                                        out.println("<div class='info'>");
+                                                        out.println("<br />"+rs5.getString("FIRSTNAME")+" "+rs5.getString("LASTNAME")+"</div></div></div></div>");
+                                                        rs5.close();
+                                                    }
+                                                    else
+                                                    {
+                                                        out.println("</div>");
+                                                    }
                                                     rs4.close();
-                                                    rs5.close();
+                                                    
                                                 }
                                                 s5.close();
                                                 rs3.close();
@@ -469,7 +548,7 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("\t\t\t\t<div class=\"modal-header\">\n");
       out.write("\t\t\t\t\t\t<button type=\"button\" class=\"close\" data-dismiss=\"modal\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><br><br>\n");
       out.write("\t\t\t\t\t\t<h3 class=\"modal-title\" align=\"center\">Add a task</h3></br>\n");
-      out.write("                                                            <form id=\"addtaskForm\" class=\"form-inline\" align=\"center\" method=\"get\" action=\"Add_Task\">\n");
+      out.write("                                                    <form id=\"addtaskForm\" class=\"form-inline\" align=\"center\" method=\"get\" action=\"Add_Task\">\n");
       out.write("\t\t\t\t\t\t\t<div class=\"form-group\">\n");
       out.write("\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"taskname\" Placeholder=\"Task name\" />\n");
       out.write("\t\t\t\t\t\t\t\t\n");

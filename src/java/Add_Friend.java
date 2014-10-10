@@ -23,6 +23,9 @@ public class Add_Friend extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
+    /*This function takes inputs from the user, and then uses the JAVA mail API to send an
+    email to a person who the user wants to invite */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
