@@ -48,14 +48,15 @@ public class New_friend extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    /** This servlet is responsible for adding a searched user in add a friend modal*/
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
         response.setContentType("text/html;charset=UTF-8");
 
-        String searched_username = request.getParameter("searched_username");
-        String main_username = request.getParameter("mainuser");
+        String searched_username = request.getParameter("searched_username");//Obtains searched username of the user
+        String main_username = request.getParameter("mainuser");//obtains the username who is logged in
         String main_user_firstname = request.getParameter("mainuser_firstname");
 
        //System.out.println(user);
@@ -66,7 +67,7 @@ public class New_friend extends HttpServlet {
         try{
             
             Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-            String query="INSERT INTO IS2560.WTFFriends (mainusername,friendname) VALUES ( '"+main_username+"' , '"+searched_username+"' )";
+            String query="INSERT INTO IS2560.WTFFriends (mainusername,friendname) VALUES ( '"+main_username+"' , '"+searched_username+"' )";//Inserts into WTFFriends database
             Statement st = conn.createStatement();
             st.executeUpdate(query);
 
@@ -76,18 +77,18 @@ public class New_friend extends HttpServlet {
             boolean is = rs.next();
             String searched_user_firstname = rs.getString("Firstname");
             System.out.println(searched_user_firstname);
-            request.setAttribute("FName",searched_user_firstname);
-            request.setAttribute("Name",main_user_firstname);
-            request.setAttribute("username",main_username);
+            request.setAttribute("FName",searched_user_firstname);//set the attribute feild fname to searched_user_firstname to be accessed from jsp
+            request.setAttribute("Name",main_user_firstname);//set the attribute feild Name to main_user_firstname to be accessed from jsp
+            request.setAttribute("username",main_username);//set the attribute feild username to main_username to be accessed from jsp
 
             request.setAttribute("added_friend","true");
 
-            RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp"); 
+            RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");//Loads the main page after friend has been added 
 
             rd.forward(request, response);
             rs.close();
             st.close();
-            conn.close();
+            conn.close();//connection closed
             
         }
         catch(SQLException ex)
