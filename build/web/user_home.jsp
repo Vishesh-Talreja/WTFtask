@@ -10,6 +10,7 @@
 <%@ page import="java.io.*" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="javax.servlet.*" %>
+<%@ page import="javax.servlet.http.Cookie;" %>
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
@@ -139,6 +140,21 @@
 	</style>	
   </head>
   <body>
+      
+      
+      <%
+        String userName = null;
+        Cookie[] cookies = request.getCookies();
+        if(cookies !=null){
+        for(Cookie cookie : cookies){
+            if(cookie.getName().equals("user")) userName = cookie.getValue();
+        }
+        }
+        if(userName == null) response.sendRedirect("task_login.jsp");
+      %>
+      
+      
+      
   <div class="col-md-2"></div>
   <div class="col-md-8 col-xs-12" style='padding: 0'>
     <!-- main container for page content-->
@@ -164,7 +180,7 @@
                     <li id="group"><a id="showdisplayfriendmodal" href="#displayfriendmodal" class="btn-group-sm" data-toggle="modal"  style="color:white">Friends</a></li>
                     <li id="group"><a id="showaddtaskmodal" href="#addtaskmodal" class="btn-group-sm" data-toggle="modal"  style="color:white">Add a Task</a></li>
                     <li id="friend"><a id="showaddfriendmodal" href="#addfriendmodal" class="btn-group-sm" data-toggle="modal" style="color:white">Add a Friend</a></li>
-                    <li ><a href="task_login.jsp" class="btn-group-sm" style="color:white">Log Out</a></li>
+                    <li ><a href="task_login.jsp" onclick="logout()" class="btn-group-sm" style="color:white;border:none;background-color:#7F7F7F">Log Out</a></li>
                 </ul> 
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
@@ -599,6 +615,10 @@
            });
         });
 	
+        function logout() {
+            $.get('Logout');
+        }
+        
         //Here the entered name is validated from the database via an ajax call to check whether the said person is a friend or not.
         function showFriend() {
                  var addedfriend = $("#addedfriend").val();

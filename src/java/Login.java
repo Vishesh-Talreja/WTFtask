@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 import java.io.*;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,6 +11,7 @@ import static java.lang.System.out;
 import java.sql.*;
 import java.sql.DriverManager;
 import java.util.*;
+import javax.servlet.http.Cookie;
 import java.util.logging.Level;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -25,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(urlPatterns = {"/Login"})
 public class Login extends HttpServlet {
-private static final Logger logger = Logger.getLogger(Login.class);
+//private static final Logger logger = Logger.getLogger(Login.class);
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -55,10 +56,11 @@ private static final Logger logger = Logger.getLogger(Login.class);
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        
         String user=request.getParameter("lusername").replaceAll(" ","");
         user = user.toLowerCase();
         String pass=request.getParameter("lpassword").replaceAll(" ","");
-
+        
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()){
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
@@ -69,13 +71,13 @@ private static final Logger logger = Logger.getLogger(Login.class);
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
             boolean flag = rs.next();
-            logger.debug("Login Database Connected");
+            //logger.debug("Login Database Connected");
             /*Checks whether the query has returned some results, if not it will redirect to the login page
             with an error message, else it will redirect the user to the his home page*/
             if(flag==false)
             {
                     request.setAttribute("logon","fail");
-                    logger.debug("Failed Login");
+                    //logger.debug("Failed Login");
                     RequestDispatcher rm=request.getRequestDispatcher("task_login.jsp");
                     rm.forward(request, response);
                     
@@ -84,17 +86,20 @@ private static final Logger logger = Logger.getLogger(Login.class);
             {
                 if(rs.getString("password").equals(pass))
                 {
+                    Cookie usernameCookie = new Cookie("user",user);
+                    response.addCookie(usernameCookie);
+                    
                     out.println("Welcome "+rs.getString("FirstName"));
                     request.setAttribute("Name",rs.getString("FirstName"));
                     request.setAttribute("username",rs.getString("username"));
-                    logger.debug("Login Successful");
+                    //logger.debug("Login Successful");
                     RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");
                     rd.forward(request, response);
                 }
                 else
                 {
                     request.setAttribute("logon","fail");
-                    logger.debug("Login Failed due to invalid password");
+                    //logger.debug("Login Failed due to invalid password");
                     RequestDispatcher rm=request.getRequestDispatcher("task_login.jsp");
                     rm.forward(request, response);
                 }

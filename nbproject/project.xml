@@ -7,14 +7,16 @@
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <web-module-libraries>
                 <library dirs="200">
-                    <file>${&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD}</file>
+                    <file>${file.reference.gson-2.2.4.jar}</file>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.java-mail-1.4.4.jar}</file>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.servlet-api.jar}</file>
                 </library>
                 <library dirs="200">
                     <file>${file.reference.gson-2.2.4.jar-2}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library dirs="200">
-                    <file>${file.reference.log4j-1.2.17.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>
