@@ -200,8 +200,9 @@
         %>
         
         <!-- View Tasks carousel-->
-        <div class="col-md-12">
-            <div class="col-md-4 col-md-offset-4 text-center"><h4><a  href="#myCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>&nbsp;Task viewer&nbsp;<a  href="#myCarousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a></h4></div>
+        <div class="row">
+        <div class="col-md-8">
+            <div class="col-md-4 col-md-offset-4 text-center"><h4><a  href="#myCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>&nbsp;Your Tasks&nbsp;<a  href="#myCarousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a></h4></div>
             <div class="col-md-12 col-xs-12">
                 <div class="carousel slide" id="myCarousel">
                     <div class="carousel-inner">
@@ -237,6 +238,7 @@
                                       {
                                          out.println("<div class='item'>"); 
                                       }
+                                      //#F5A9A9//#A9F5A9
                                       out.println("<div class='col-lg-2 col-xs-12' >");
                                       out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
                                       out.println("<div class='caption'>");
@@ -266,11 +268,37 @@
                 </div>
             </div>  
         </div>
+           <div class="col-md-4">
+               <canvas id="myCanvas"></canvas>
+                <script>
+                  var canvas = document.getElementById('myCanvas');
+                  var context = canvas.getContext('2d');
+
+                  context.beginPath();
+                  context.rect(0, 40, 50, 25);
+                  context.fillStyle = '#A9F5A9';
+                  context.fill();
+                  context.fillStyle = 'black';
+                  context.font = '16pt Calibri';
+                  context.fillText('Completed Tasks', 60, 60);
+                  
+                  context.beginPath();
+                  context.rect(0, 80, 50, 25);
+                  context.fillStyle = '#F5A9A9';
+                  context.fill();
+                  context.fillStyle = 'black';
+                  context.font = '16pt Calibri';
+                  context.fillText('Past Due Date', 60, 100);
+                </script>
+               
+           </div>
+        </div>
         <!-- End View tasks carousel-->
         
         <!-- View owned tasks carousel-->
-        <div class="col-md-12">
-            <div class="col-md-4 col-md-offset-4 text-center"><h4><a  href="#myCarousel1" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>&nbsp;Tasks you own&nbsp;<a  href="#myCarousel1" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a></h4></div>
+        <div class="row">
+        <div class="col-md-8">
+            <div class="col-md-6 col-md-offset-3 text-center"><h4><a  href="#myCarousel1" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>&nbsp;Tasks You Own&nbsp;<a  href="#myCarousel1" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a></h4></div>
             <div class="col-md-12 col-xs-12">
                 <div class="carousel slide" id="myCarousel1">
                     <div class="carousel-inner">
@@ -320,6 +348,15 @@
                     </div>
                 </div>
             </div>  
+        </div>
+                    <div class="col-md-4" style="padding-top:40px">
+                        Your progress:
+                        <div class="progress">
+                        <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                         60%<span class="sr-only">45% Complete</span>
+                        </div>
+                        </div>
+                    </div>
         </div>
         <!-- End owned tasks carousel-->
     </div>
@@ -627,9 +664,14 @@
         
         //Carousel slide code to display 2 tasks on one slide and move ahead by 1 task.
         $('#myCarousel').carousel({
-		  interval: 4000
+		  interval: 4000,
+                  wrap: false
 		})
-
+        $('#myCarousel1').carousel({
+		  interval: 4000,
+                  wrap: false
+		})
+                
 		$('.carousel .item').each(function(){
 			  var next = $(this).next();
 			  if (!next.length) {
@@ -641,6 +683,7 @@
         
         
         $(document).ready(function() {
+            $('.carousel').carousel('pause');
             // Bootstrap validator code for add task form.
             $('#addtaskForm').bootstrapValidator({
                     container:'tooltip',
