@@ -9,6 +9,7 @@
 <%@ page import="java.io.*" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="javax.servlet.*" %>
+<%@ page import="javax.servlet.http.Cookie;" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
 <html lang="en">
   <head>
@@ -30,10 +31,7 @@
     <![endif]-->
 	
 	<style type="text/css">
-		
-		
-		
-		.win {
+                .win {
 			background-color:white;
 			text-align:center;
 			border-radius:20px;
@@ -42,9 +40,9 @@
 		}
 			
 		body {
-		  background: -webkit-gradient(#888888,white); /* Chrome,Safari4+ */
-		  background: -webkit-linear-gradient(#888888,white); /* Chrome10+,Safari5.1+ */
-		  background-repeat:no-repeat;
+                        background: -webkit-gradient(#888888,white); /* Chrome,Safari4+ */
+                        background: -webkit-linear-gradient(#888888,white); /* Chrome10+,Safari5.1+ */
+                        background-repeat:no-repeat;
 		}
 		
 		html {height:100%;padding-top:5%;padding-bottom:10%;}
