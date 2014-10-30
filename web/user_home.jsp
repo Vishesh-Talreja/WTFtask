@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="http://bsdp-assets.blackcherry.us/1.3.0/datepicker.min.css">
     <!-- BootstrapValidator CSS -->
     <link rel="stylesheet" href="dist/css/bootstrapValidator.min.css"/>
+    <script type="text/javascript" src="js/canvasjs.min.js"></script>
     
 	<style type="text/css">
 		
@@ -177,6 +178,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right" >
+                    <li id="chart"> <a id="chartdisplaymodal" href="#chartdisplay" class="btn-group-sm" data-toggle="modal"  style="color:white" onclick="chartdisplay()">Chart</a></li>
                     <li id="group"><a id="showdisplayfriendmodal" href="#displayfriendmodal" class="btn-group-sm" data-toggle="modal"  style="color:white">Friends</a></li>
                     <li id="group"><a id="showaddtaskmodal" href="#addtaskmodal" class="btn-group-sm" data-toggle="modal"  style="color:white">Add a Task</a></li>
                     <li id="friend"><a id="showaddfriendmodal" href="#addfriendmodal" class="btn-group-sm" data-toggle="modal" style="color:white">Add a Friend</a></li>
@@ -512,7 +514,19 @@
         </div>
     </div>
     <!-- End add friend modal-->                    
-    
+    <div id="chartdisplay" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="border-radius:20px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><br><br>
+                    <form>
+                    <input type="hidden" class="form-control input-md" name = "mainuser" id="mainuser" value="<%=request.getAttribute("username")%>">
+                     </form>
+                    <div id="chartContainer" style="height: 500px; width: 100%;">  </div> 
+                 </div>
+            </div>
+        </div>
+    </div>
     <!-- modal for adding new tasks-->
     <div id="addtaskmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
         <div class="modal-dialog">
@@ -596,7 +610,106 @@
 	 $(function () {
                 $("#duedate").datepicker();
             });
-          
+          function chartdisplay(){
+             var mainuser = $("#mainuser").val();
+             console.log(mainuser);
+             var list =[];
+             var list1=[];
+             var list2=[];
+             var i=0;
+             $.get('DisplayChart',"&mainuser="+mainuser,function(ResponseText){
+               $.each(ResponseText, function(index, item)
+               {
+                   
+                 $.each(item,function(index,data){
+                    if(i===1)
+                    {
+                    list.push(data);
+                    }
+                    else if(i===2)
+                    {
+                        list1.push(data);
+               
+                    }
+                    else
+                    {
+                        list2.push(data);
+                    }
+                    
+                })
+                i++;
+               })
+               console.log(list);
+               console.log(list1);
+               console.log(list2);
+               var datapointsgraph=[[]];
+               var datapointsgraph2=[[]];
+               var data=[[]];
+               var j=0;
+               for (i=0;i<list.length;i++)
+               {
+                   datapointsgraph[j]={
+                       
+                       label:list1[i],y:Number(list2[i])
+                   }
+                   //console.log(datapoints[j]);
+                   j++;
+               }
+               var k=0;
+                for (i=0;i<list.length;i++)
+               {
+                   datapointsgraph2[k]={
+                       
+                       label:list1[i],y:Number(list[i]-list2[i])
+                   }
+                   //console.log(datapoints[j]);
+                   k++;
+               }
+               //var z=datapointsgraph[0].y;
+               //var q=datapointsgraph[1].y;
+              var chart = new CanvasJS.Chart("chartContainer", {
+                  
+                                title:{
+                                text:"Graphical Representaion"   
+                                },
+                                axisY:{
+                                  title:"Points"   
+                                },
+                                data: [
+                                {        
+                                  type: "stackedColumn",
+                                  toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
+                                  name: "Points Completed",
+                                  showInLegend: "true",
+                                  dataPoints: datapointsgraph
+                                },  {        
+                                  type: "stackedColumn",
+                                  toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
+                                  name: "Points Remaining",
+                                  showInLegend: "true",
+                                  dataPoints: datapointsgraph2
+                                }            
+                                ]
+                                
+                                /**legend:{
+                                  cursor:"pointer",
+                                  itemclick: function(e) {
+                                    if (typeof (e.dataSeries.visible) ===  "undefined" || e.dataSeries.visible) {
+                                            e.dataSeries.visible = false;
+                                    }
+                                    else
+                                    {
+                                      e.dataSeries.visible = true;
+                                    }
+                                    chart.render();
+                                  }
+                                }**/
+                              })
+
+     chart.render();
+              
+    })
+  }; 
         //Here the entered name is validated from the database via an ajax call to determine if the said person exists.
 	$("#SearchButton").click(function(){
            var searchname = $("#searchname").val();
