@@ -64,6 +64,7 @@ public class DisplayChart extends HttpServlet {
         ArrayList<String> pointsearnedlist=new ArrayList<String>();
         ArrayList<String> pointspossiblelist=new ArrayList<String>();
         ArrayList<String> list=new ArrayList<String>();
+        ArrayList<String> firstnamelist=new ArrayList<String>();
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
            String connectionURL = "jdbc:derby://localhost:1527/WTFtask";//Connection to server
@@ -97,15 +98,17 @@ public class DisplayChart extends HttpServlet {
                  String pointspossible=rs1.getString("pointpossible");
                  //System.out.println(pointspossible);
                 pointspossiblelist.add(pointspossible);
+                String firstname=rs1.getString("firstname");
+                firstnamelist.add(firstname);
                 }
                 st1.close();
                  
             }
             //System.out.println(pointsearnedlist);
-            //System.out.println(pointspossiblelist);
+            System.out.println(firstnamelist);
            //request.setAttribute("username",list);
             HashMap<String,ArrayList<String>> mapset=new HashMap<String,ArrayList<String>>();
-            mapset.put("username", list);
+            mapset.put("username", firstnamelist);
             mapset.put("pointsearned", pointsearnedlist);
             mapset.put("pointspossible", pointspossiblelist);
             String json=new Gson().toJson(mapset);
