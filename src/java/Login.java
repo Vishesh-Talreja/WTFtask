@@ -86,8 +86,8 @@ public class Login extends HttpServlet {
             {
                 if(rs.getString("password").equals(pass))
                 {
-                    Cookie usernameCookie = new Cookie("user",user);
-                    response.addCookie(usernameCookie);
+                    //Cookie usernameCookie = new Cookie("user",user);
+                    //response.addCookie(usernameCookie);
                     
                     out.println("Welcome "+rs.getString("FirstName"));
                     request.setAttribute("Name",rs.getString("FirstName"));

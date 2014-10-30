@@ -36,6 +36,12 @@ CONSTRAINT primary_key_friends PRIMARY KEY (mainusername,friendname)
 Alter table WTFtasks
 add column owner varchar(255)
 
+Alter table WTFtasks
+add column status varchar(255)
+
+UPDATE WTFtasks
+SET STATUS='Pending'
+WHERE TASKID=28;
 
 DELETE from WTFuser;
 DELETE from WTFtasks;

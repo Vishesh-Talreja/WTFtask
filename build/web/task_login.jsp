@@ -40,8 +40,8 @@
 		}
 			
 		body {
-                        background: -webkit-gradient(#888888,white); /* Chrome,Safari4+ */
-                        background: -webkit-linear-gradient(#888888,white); /* Chrome10+,Safari5.1+ */
+                        background: -webkit-gradient(#2ECCFA,white); /* Chrome,Safari4+ */
+                        background: -webkit-linear-gradient(#2ECCFA,white); /* Chrome10+,Safari5.1+ */
                         background-repeat:no-repeat;
 		}
 		

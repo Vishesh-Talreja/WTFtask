@@ -84,8 +84,8 @@ public final class task_005flogin_jsp extends org.apache.jasper.runtime.HttpJspB
       out.write("\t\t}\n");
       out.write("\t\t\t\n");
       out.write("\t\tbody {\n");
-      out.write("                        background: -webkit-gradient(#888888,white); /* Chrome,Safari4+ */\n");
-      out.write("                        background: -webkit-linear-gradient(#888888,white); /* Chrome10+,Safari5.1+ */\n");
+      out.write("                        background: -webkit-gradient(#2ECCFA,white); /* Chrome,Safari4+ */\n");
+      out.write("                        background: -webkit-linear-gradient(#2ECCFA,white); /* Chrome10+,Safari5.1+ */\n");
       out.write("                        background-repeat:no-repeat;\n");
       out.write("\t\t}\n");
       out.write("\t\t\n");

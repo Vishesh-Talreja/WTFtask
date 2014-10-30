@@ -5,11 +5,14 @@
 --%>
    
 
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
+<%@ page import="java.util.Date" %>
 <%@ page import="java.io.*" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="javax.servlet.*" %>
+<%@ page import="java.text.*" %>
 <%@ page import="javax.servlet.http.Cookie;" %>
 
 
@@ -38,8 +41,8 @@
 		
                 	
 		body {
-		  background: -webkit-gradient(#888888,white); /* Chrome,Safari4+ */
-		  background: -webkit-linear-gradient(#888888,white); /* Chrome10+,Safari5.1+ */
+		  background: -webkit-gradient(#2ECCFA,white); /* Chrome,Safari4+ */
+		  background: -webkit-linear-gradient(#2ECCFA,white); /* Chrome10+,Safari5.1+ */
 		 background-repeat: no-repeat;
 		}
                 
@@ -143,7 +146,7 @@
       
       
       <%
-        String userName = null;
+        /*String userName = null;
         Cookie[] cookies = request.getCookies();
         if(cookies !=null){
         for(Cookie cookie : cookies){
@@ -151,6 +154,7 @@
         }
         }
         if(userName == null) response.sendRedirect("task_login.jsp");
+        return;*/
       %>
       
       
@@ -160,7 +164,7 @@
     <!-- main container for page content-->
     <div style ="height:100vh;background-color: white;padding: 2em">
         <!-- top navbar-->
-        <nav class="navbar navbar-default" role="navigation" style="border:hidden ;background-color:#7F7F7F;width: 100%;margin: -1">
+        <nav class="navbar navbar-default" role="navigation" style="border:hidden ;background-color:#2E9AFE;width: 100%;margin: -1">
           <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -171,7 +175,7 @@
                 <span class="icon-bar" style="background-color:white;"></span>
               </button>
 
-            <div class="navbar-brand" style="padding-top:0px;"><img  src="img/logo_nav.jpg" style="height:140%;width50%;"/></div>
+            <div class="navbar-brand" style="padding-top:0px;"><img  src="img/logo_nav.gif" style="height:140%;width50%;"/></div>
 
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -180,7 +184,7 @@
                     <li id="group"><a id="showdisplayfriendmodal" href="#displayfriendmodal" class="btn-group-sm" data-toggle="modal"  style="color:white">Friends</a></li>
                     <li id="group"><a id="showaddtaskmodal" href="#addtaskmodal" class="btn-group-sm" data-toggle="modal"  style="color:white">Add a Task</a></li>
                     <li id="friend"><a id="showaddfriendmodal" href="#addfriendmodal" class="btn-group-sm" data-toggle="modal" style="color:white">Add a Friend</a></li>
-                    <li ><a href="task_login.jsp" onclick="logout()" class="btn-group-sm" style="color:white;border:none;background-color:#7F7F7F">Log Out</a></li>
+                    <li ><a href="task_login.jsp" onclick="logout()" class="btn-group-sm" style="color:white">Log Out</a></li>
                 </ul> 
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
@@ -225,7 +229,10 @@
                         <%
                         /*This block of java code displays the tasks the user has to complete, here it 
                           first connects to the database and then displays them in the form of thumbnails*/
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = new Date();
                         String user = (String)request.getAttribute("username");
+                        String Name = (String)request.getAttribute("Name");
                         String sql,sql3;
                         String connectionURL="jdbc:derby://localhost:1527/WTFtask";
                         sql3 ="SELECT TASKID FROM WTFtaskallocation where USERNAME = '"+user+"'";
@@ -254,13 +261,34 @@
                                       {
                                          out.println("<div class='item'>"); 
                                       }
-                                      //#F5A9A9//#A9F5A9
+                                      String duedate=rs.getString("DUEDATE");
+                                      Date date1 = dateFormat.parse(duedate);
                                       out.println("<div class='col-lg-2 col-xs-12' >");
+                                      if(rs.getString("STATUS").equalsIgnoreCase("Complete"))
+                                      {
+                                          out.println("<div class='thumbnail' style = 'background-color:#A9F5A9;color:white;' align='center'>");
+                                      }
+                                      else
+                                      {    
+                                      if(date1.before(date)){
+                                            out.println("<div class='thumbnail' style = 'background-color:#F5A9A9;color:white;' align='center'>");
+                                      }
+                                      else
+                                      {    
                                       out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
+                                      }
+                                      }
                                       out.println("<div class='caption'>");
                                       out.println("<h3>"+rs.getString("TASKNAME")+"</h3>");
                                       out.println("<p>POINTS: "+rs.getString("TASKPOINTS")+"<br>OWNER: "+rs1.getString("FIRSTNAME")+" "+rs1.getString("LASTNAME")+"<br>DUE-DATE: "+rs.getString("DUEDATE")+"</p>");
-                                      out.println("<p><a href='#' class='btn btn-primary' role='button'>Wrap Up</a></p>");
+                                      if(rs.getString("STATUS").equalsIgnoreCase("Complete"))
+                                      {
+                                          out.println("<p><form method = 'get' action = 'Complete_Task'><button type ='submit' disabled='disabled' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></p>");
+                                      }
+                                      else
+                                      {
+                                          out.println("<p><form method = 'get' action = 'Complete_Task'><input type='hidden' name='Tname' value = '"+rs.getString("TASKNAME")+"'/><input type='hidden' name='Name' value = '"+Name+"'/><input type='hidden' name='user' value = '"+user+"'/><button type ='submit' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></p>");
+                                      }
                                       out.println("</div></div></div></div>");
                                       count++;
                                       rs1.close();
@@ -272,6 +300,7 @@
                               s1.close();
                               s2.close();
                               conn.close();
+                              
                           }
                           catch (SQLException e) {
                               e.printStackTrace();
@@ -280,6 +309,9 @@
                               e.printStackTrace();
                           }
                           %>
+                    
+                          
+                    
                     </div>
                 </div>
             </div>  
@@ -322,10 +354,10 @@
                         /*This block of java code displays the tasks the user owns, here it 
                           first connects to the database and then displays them in the form of thumbnails*/
 
-                        String user2 = (String)request.getAttribute("username");
+                        //String user2 = (String)request.getAttribute("username");
                         String sql7;
                         String connectionURL2="jdbc:derby://localhost:1527/WTFtask";
-                        sql7 ="SELECT * FROM WTFtasks WHERE OWNER  = '"+user2+"'";
+                        sql7 ="SELECT * FROM WTFtasks WHERE OWNER  = '"+user+"'";
                         try {
                             Connection conn2 = DriverManager.getConnection(connectionURL2, "IS2560","IS2560");
                             Statement s6 = conn2.createStatement();
@@ -342,12 +374,34 @@
                                       {
                                          out.println("<div class='item'>"); 
                                       }
+                                      String duedate1=rs8.getString("DUEDATE");
+                                      Date date2 = dateFormat.parse(duedate1);
                                       out.println("<div class='col-lg-2 col-xs-12' >");
-                                      out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
+                                      if(rs8.getString("STATUS").equalsIgnoreCase("Complete"))
+                                      {
+                                          out.println("<div class='thumbnail' style = 'background-color:#A9F5A9;color:white;' align='center'>");
+                                      }
+                                      else
+                                      {
+                                      if(date2.before(date)){
+                                          out.println("<div class='thumbnail' style = 'background-color:#F5A9A9;color:white;' align='center'>");
+                                      }
+                                      else
+                                      { 
+                                          out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
+                                      }
+                                      }
                                       out.println("<div class='caption'>");
                                       out.println("<h3>"+rs8.getString("TASKNAME")+"</h3>");
                                       out.println("<p>POINTS: "+rs8.getString("TASKPOINTS")+"<br>DUE-DATE: "+rs8.getString("DUEDATE")+"</p>");
-                                      out.println("<p><a href='#' class='btn btn-primary' role='button'>Wrap Up</a></p>");
+                                      if(rs8.getString("STATUS").equalsIgnoreCase("Complete"))
+                                      {
+                                          out.println("<p><form method = 'get' action = 'Complete_Task'><button type ='submit' disabled='disabled' id='login' href='#' class='btn btn-primary' align='center'>Remind</button></form></p>");
+                                      }
+                                      else
+                                      {
+                                          out.println("<p><form method = 'get' action = 'Complete_Task'><button type ='submit' id='login' href='#' class='btn btn-primary' align='center'>Remind</button></form></p>");
+                                      }
                                       out.println("</div></div></div></div>");
                                       count2++;
 
@@ -391,10 +445,10 @@
                             /*This piece of java code connects to the database and then displays the friends of the
                             user that is logged on on a separate modal*/
 
-                            String user1 = (String)request.getAttribute("username");
+                            //String user1 = (String)request.getAttribute("username");
                             String sql4,sql5,sql6;
                             String connectionURL1="jdbc:derby://localhost:1527/WTFtask";
-                            sql4 ="SELECT * FROM WTFFriends where MAINUSERNAME = '"+user1+"'";
+                            sql4 ="SELECT * FROM WTFFriends where MAINUSERNAME = '"+user+"'";
                             try {
                                 Connection conn1 = DriverManager.getConnection(connectionURL1, "IS2560","IS2560");
                                 Statement s4 = conn1.createStatement();
