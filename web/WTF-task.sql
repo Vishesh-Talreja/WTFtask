@@ -33,16 +33,16 @@ FOREIGN KEY(mainusername) REFERENCES WTFuser(username),
 CONSTRAINT primary_key_friends PRIMARY KEY (mainusername,friendname)
 );
 
-Alter table WTFtasks
-add column owner varchar(255)
-
-
-Alter table WTFtasks
+Alter table WTFtaskallocation
 add column status varchar(255)
 
-UPDATE WTFtasks
+
+Alter table WTFtasks
+drop column status
+
+UPDATE WTFtaskallocation
 SET STATUS='Pending'
-WHERE TASKID=28;
+WHERE USERNAME="vtalreja" and TASKID=21;
 
 Alter table WTFuser
 add column pointearned varchar(255)
@@ -53,7 +53,7 @@ add column pointpossible varchar(255)
 Update WTFuser set PointEarned='90',PointPossible='100' where username='vtalreja';
 Update WTFuser set PointEarned='70',PointPossible='100' where username='vinaraja';
 Update WTFuser set PointEarned='60',PointPossible='100' where username='akanade';
-Update WTFuser set PointEarned='80',PointPossible='100' where username='vtalrejaa';
+
 Update WTFuser set PointEarned='64',PointPossible='100' where username='mkothari';
 
 
@@ -67,6 +67,8 @@ select * from WTFtasks;
 select * from WTFtaskallocation;
 select * FROM WTFFriends;
 
+SELECT STATUS FROM WTFtaskallocation WHERE USERNAME = 'vtalreja' and TASKID = 22
+
 ALTER TABLE WTFuser
 DROP COLUMN USERID
 
@@ -76,6 +78,7 @@ DROP TABLE WTFuser;
 DROP TABLE WTFtasks;
 DROP TABLE WTFtaskallocation;
 DROP TABLE WTFFriends;
+Delete from WTFtaskallocation
 
 
 INSERT INTO WTFuser VALUES ('talreja', 'vishesh', 'vtalreja', 'vtalreja@indiana.edu', 'firewaterthunder');
@@ -85,12 +88,17 @@ INSERT INTO WTFuser VALUES ('kanade', 'aashish', 'akanade', 'akanade@indiana.edu
 INSERT INTO WTFtasks(Taskname,Taskpoints,Duedate,owner) VALUES ('Clean', '50', '09/10/2014', 'vtalreja');
 INSERT INTO WTFtasks(Taskname,Taskpoints,Duedate,owner) VALUES ('Cook', '50', '09/10/2014', 'vinaraja');
 
-INSERT INTO WTFtaskallocation VALUES (18,'vtalreja');
-INSERT INTO WTFtaskallocation VALUES (18,'akanade');
-INSERT INTO WTFtaskallocation VALUES (18,'vinaraja');
-INSERT INTO WTFtaskallocation VALUES (19,'vtalreja');
-INSERT INTO WTFtaskallocation VALUES (19,'vinaraja');
-
+INSERT INTO WTFtaskallocation VALUES (22,'vtalreja','Pending');
+INSERT INTO WTFtaskallocation VALUES (23,'akanade','Pending');
+INSERT INTO WTFtaskallocation VALUES (24,'vinaraja','Pending');
+INSERT INTO WTFtaskallocation VALUES (25,'vtalreja','Pending');
+INSERT INTO WTFtaskallocation VALUES (26,'vinaraja','Pending');
+INSERT INTO WTFtaskallocation VALUES (27,'vtalreja','Pending');
+INSERT INTO WTFtaskallocation VALUES (28,'akanade','Pending');
+INSERT INTO WTFtaskallocation VALUES (29,'vinaraja','Pending');
+INSERT INTO WTFtaskallocation VALUES (30,'vtalreja','Pending');
+INSERT INTO WTFtaskallocation VALUES (31,'akanade','Pending');
+INSERT INTO WTFtaskallocation VALUES (33,'vinaraja','Pending');
 INSERT INTO WTFFriends VALUES('akanade','vtalreja');
 INSERT INTO WTFFriends VALUES('akanade','vinaraja');
 

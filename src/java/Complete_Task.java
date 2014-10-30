@@ -63,7 +63,11 @@ public class Complete_Task extends HttpServlet {
            try{
             Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             Statement stmt=conn.createStatement();
-            String query = "UPDATE IS2560.WTFtasks SET STATUS = 'Complete' WHERE TASKNAME ='"+Tname+"'";
+            String query1 = "SELECT * FROM IS2560.WTFtasks WHERE TASKNAME='"+Tname+"'";
+            ResultSet rs = stmt.executeQuery(query1);                               //Extract taskId
+            rs.next();
+            int id = rs.getInt("TaskID");
+            String query = "UPDATE IS2560.WTFtaskallocation SET STATUS = 'Complete' WHERE USERNAME ='"+user+"' and TASKID="+id;
             stmt.executeUpdate(query);
             stmt.close();
             conn.close();

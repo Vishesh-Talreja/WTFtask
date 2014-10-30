@@ -81,7 +81,7 @@ public class Add_Task extends HttpServlet {
             Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             Statement stmt=conn.createStatement();
 
-            String query3 = "INSERT INTO IS2560.WTFtasks (TASKNAME,TASKPOINTS,DUEDATE,OWNER,STATUS) VALUES ('"+Tname+"','"+Tpoints+"','"+Tduedate+"','"+user+"','Pending')";
+            String query3 = "INSERT INTO IS2560.WTFtasks (TASKNAME,TASKPOINTS,DUEDATE,OWNER,RECUR) VALUES ('"+Tname+"','"+Tpoints+"','"+Tduedate+"','"+user+"','"+recur+"')";
 
             stmt.executeUpdate(query3);                                             //Insert task details into database
             String query4 = "SELECT * FROM IS2560.WTFtasks WHERE TASKNAME='"+Tname+"'";
@@ -93,7 +93,7 @@ public class Add_Task extends HttpServlet {
                 String query5 = "SELECT * FROM WTFuser WHERE FIRSTNAME='"+assignees[i]+"'";
                 rs = stmt.executeQuery(query5);
                 rs.next();
-                String query6 = "INSERT INTO WTFTASKALLOCATION VALUES ("+id+",'"+rs.getString("USERNAME")+"')";
+                String query6 = "INSERT INTO WTFTASKALLOCATION VALUES ("+id+",'"+rs.getString("USERNAME")+"','Pending')";
                 stmt.executeUpdate(query6);
             } 
             stmt.close();

@@ -310,7 +310,7 @@
                         String Name = (String)request.getAttribute("Name");
                         String sql,sql3;
                         
-                        sql3 ="SELECT TASKID FROM WTFtaskallocation where USERNAME = '"+user+"'";
+                        sql3 ="SELECT TASKID,STATUS FROM WTFtaskallocation where USERNAME = '"+user+"'";
                         int task_year,task_month,task_day;
                         try {
                             
@@ -344,7 +344,7 @@
                                       String duedate=rs.getString("DUEDATE");
                                       Date date1 = dateFormat.parse(duedate);
                                       out.println("<div class='col-lg-2 col-xs-12' >");
-                                      if(rs.getString("STATUS").equalsIgnoreCase("Complete"))
+                                      if(rs2.getString("STATUS").equalsIgnoreCase("Complete"))
                                       {
                                           out.println("<div class='thumbnail' style = 'background-color:#A9F5A9;color:white;' align='center'>");
                                       }
@@ -361,7 +361,7 @@
                                       out.println("<div class='caption'>");
                                       out.println("<h3>"+rs.getString("TASKNAME")+"</h3>");
                                       out.println("<p>POINTS: "+rs.getString("TASKPOINTS")+"<br>OWNER: "+rs1.getString("FIRSTNAME")+" "+rs1.getString("LASTNAME")+"<br>DUE-DATE: "+rs.getString("DUEDATE")+"</p>");
-                                      if(rs.getString("STATUS").equalsIgnoreCase("Complete"))
+                                      if(rs2.getString("STATUS").equalsIgnoreCase("Complete"))
                                       {
                                           out.println("<p><form method = 'get' action = 'Complete_Task'><button type ='submit' disabled='disabled' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></p>");
                                       }
@@ -435,17 +435,24 @@
                           first connects to the database and then displays them in the form of thumbnails*/
 
                         //String user2 = (String)request.getAttribute("username");
-                        String sql7;
+                        String sql7,sql10;
                         String connectionURL2="jdbc:derby://localhost:1527/WTFtask";
+                        
                         sql7 ="SELECT * FROM WTFtasks WHERE OWNER  = '"+user+"'";
                         try {
                             Connection conn2 = DriverManager.getConnection(connectionURL2, "IS2560","IS2560");
                             Statement s6 = conn2.createStatement();
                             ResultSet rs8 = s6.executeQuery(sql7);
+                            
+                            
                             int count2 = 0;
 
                             while(rs8.next()){
-
+                                      Statement s15 = conn2.createStatement();
+                                      sql10= "SELECT STATUS FROM WTFtaskallocation WHERE USERNAME = '"+user+"' and TASKID = "+rs8.getString("TASKID")+"";
+                                      ResultSet rs10 = s15.executeQuery(sql10);
+                                      while(rs10.next())
+                                      {
                                       if(count2==0)
                                       {    
                                       out.println("<div class='item active'>");
@@ -457,7 +464,7 @@
                                       String duedate1=rs8.getString("DUEDATE");
                                       Date date2 = dateFormat.parse(duedate1);
                                       out.println("<div class='col-lg-2 col-xs-12' >");
-                                      if(rs8.getString("STATUS").equalsIgnoreCase("Complete"))
+                                      if(rs10.getString("STATUS").equalsIgnoreCase("Complete"))
                                       {
                                           out.println("<div class='thumbnail' style = 'background-color:#A9F5A9;color:white;' align='center'>");
                                       }
@@ -474,7 +481,7 @@
                                       out.println("<div class='caption'>");
                                       out.println("<h3>"+rs8.getString("TASKNAME")+"</h3>");
                                       out.println("<p>POINTS: "+rs8.getString("TASKPOINTS")+"<br>DUE-DATE: "+rs8.getString("DUEDATE")+"</p>");
-                                      if(rs8.getString("STATUS").equalsIgnoreCase("Complete"))
+                                      if(rs10.getString("STATUS").equalsIgnoreCase("Complete"))
                                       {
                                           out.println("<p><form method = 'get' action = 'Complete_Task'><button type ='submit' disabled='disabled' id='login' href='#' class='btn btn-primary' align='center'>Remind</button></form></p>");
                                       }
@@ -484,6 +491,9 @@
                                       }
                                       out.println("</div></div></div></div>");
                                       count2++;
+                                      }
+                                      rs10.close();
+                                      s15.close();
 
                               }
                               rs8.close();
