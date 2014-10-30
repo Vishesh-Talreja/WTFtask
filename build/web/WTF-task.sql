@@ -36,12 +36,26 @@ CONSTRAINT primary_key_friends PRIMARY KEY (mainusername,friendname)
 Alter table WTFtasks
 add column owner varchar(255)
 
+
 Alter table WTFtasks
 add column status varchar(255)
 
 UPDATE WTFtasks
 SET STATUS='Pending'
 WHERE TASKID=28;
+
+Alter table WTFuser
+add column pointearned varchar(255)
+
+Alter table WTFuser
+add column pointpossible varchar(255)
+
+Update WTFuser set PointEarned='90',PointPossible='100' where username='vtalreja';
+Update WTFuser set PointEarned='70',PointPossible='100' where username='vinaraja';
+Update WTFuser set PointEarned='60',PointPossible='100' where username='akanade';
+Update WTFuser set PointEarned='80',PointPossible='100' where username='vtalrejaa';
+Update WTFuser set PointEarned='64',PointPossible='100' where username='mkothari';
+
 
 DELETE from WTFuser;
 DELETE from WTFtasks;
@@ -56,8 +70,10 @@ select * FROM WTFFriends;
 ALTER TABLE WTFuser
 DROP COLUMN USERID
 
-DROP TABLE WTFuser
-DROP TABLE WTFtasks
+ALTER TABLE WTFtasks ADD recur VARCHAR(20) DEFAULT 'none'
+
+DROP TABLE WTFuser;
+DROP TABLE WTFtasks;
 DROP TABLE WTFtaskallocation;
 DROP TABLE WTFFriends;
 
