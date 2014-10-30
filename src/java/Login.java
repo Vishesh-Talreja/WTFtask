@@ -89,12 +89,12 @@ public class Login extends HttpServlet {
                     Cookie usernameCookie = new Cookie("user",user);
                     response.addCookie(usernameCookie);
                     
-                    out.println("Welcome "+rs.getString("FirstName"));
+                    //out.println("Welcome "+rs.getString("FirstName"));
                     request.setAttribute("Name",rs.getString("FirstName"));
                     request.setAttribute("username",rs.getString("username"));
                     //logger.debug("Login Successful");
                     RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");
-                    rd.forward(request, response);
+                    rd.include(request, response);
                 }
                 else
                 {

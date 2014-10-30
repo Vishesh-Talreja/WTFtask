@@ -6,11 +6,11 @@
    
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*,java.util.Calendar.*" %>
 <%@ page import="java.io.*" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="javax.servlet.*" %>
-<%@ page import="javax.servlet.http.Cookie;" %>
+<%@ page import="javax.servlet.http.Cookie,org.joda.time.format.*,org.joda.time.LocalDate" %>
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
@@ -23,7 +23,8 @@
     <title>Crib</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://bsdp-assets.blackcherry.us/1.3.0/datepicker.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+    <!--<link rel="stylesheet" href="http://bsdp-assets.blackcherry.us/1.3.0/datepicker.min.css">-->
     <!-- BootstrapValidator CSS -->
     <link rel="stylesheet" href="dist/css/bootstrapValidator.min.css"/>
     <script type="text/javascript" src="js/canvasjs.min.js"></script>
@@ -154,6 +155,72 @@
         if(userName == null) response.sendRedirect("task_login.jsp");
       %>
       
+      <%
+         Calendar cal = Calendar.getInstance(); 
+         int year = cal.get(Calendar.YEAR);
+         int month = cal.get(Calendar.MONTH)+1;
+         int day = cal.get(Calendar.DAY_OF_MONTH);
+         String currdate = Integer.toString(year)+"-"+Integer.toString(month)+"-"+Integer.toString(day);
+         DateTimeFormatter formatter = DateTimeFormat.forPattern( "yyyy-MM-dd" );
+         LocalDate curr_date = formatter.parseLocalDate( currdate );
+    
+      %>
+      
+      <%
+          String connectionURL="jdbc:derby://localhost:1527/WTFtask";
+          Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+          boolean flag = false;
+         try {
+            
+            Statement getTask = conn.createStatement();
+            Statement updateTask = conn.createStatement();
+            String getTasksQuery = "SELECT * FROM WTFtasks";
+            ResultSet getTaskSet = getTask.executeQuery(getTasksQuery);
+            ResultSet updateTaskSet;
+            while(getTaskSet.next()) {
+                
+                
+                if(getTaskSet.getString("RECUR").equals("weekly") ||getTaskSet.getString("RECUR").equals("monthly") ) {
+                    
+                    LocalDate task_date = formatter.parseLocalDate( getTaskSet.getString("DUEDATE"));
+                    if (curr_date.isAfter(task_date)) {
+                        flag = true;
+                        String curr_task_date = task_date.toString();
+                        String new_task_date = "";
+                        if (getTaskSet.getString("RECUR").equals("weekly")) {
+                            System.out.println("GOING TO ADD BY 7 "+getTaskSet.getString("TASKNAME"));
+                            task_date = task_date.plusDays(7);
+                            new_task_date = task_date.toString(); 
+                            System.out.println("ADDED 7 days to "+getTaskSet.getString("TASKNAME")+ "OLD TASK DATE WAS "+ curr_task_date +" NEW DUE DATE IS " + new_task_date); 
+                        }
+                        else if (getTaskSet.getString("RECUR").equals("monthly")) {
+                            System.out.println("GOING TO ADD BY 30 "+getTaskSet.getString("TASKNAME"));
+                            task_date = task_date.plusDays(30);
+                            new_task_date = task_date.toString();
+                            System.out.println("ADDED 30 days to "+getTaskSet.getString("TASKNAME")+ "OLD TASK DATE WAS "+ curr_task_date +" NEW DUE DATE IS " + new_task_date); 
+                        }
+                        String updateTaskDate = "UPDATE IS2560.WTFtasks SET DUEDATE='"+ new_task_date +"' WHERE DUEDATE= '"+ curr_task_date +"'";
+                        updateTask.executeUpdate(updateTaskDate);
+                    }
+                    else
+                        flag = false;
+                }
+                
+            }
+            if (flag == false)
+                System.out.println("No tasks to update");
+            System.out.println("END WHILE");
+            getTaskSet.close();
+            getTask.close();
+         }
+          catch (SQLException e) {
+              e.printStackTrace();
+          }
+          catch (Exception e) {
+              e.printStackTrace();
+          }
+         
+      %>
       
       
   <div class="col-md-2"></div>
@@ -182,7 +249,7 @@
                     <li id="group"><a id="showdisplayfriendmodal" href="#displayfriendmodal" class="btn-group-sm" data-toggle="modal"  style="color:white">Friends</a></li>
                     <li id="group"><a id="showaddtaskmodal" href="#addtaskmodal" class="btn-group-sm" data-toggle="modal"  style="color:white">Add a Task</a></li>
                     <li id="friend"><a id="showaddfriendmodal" href="#addfriendmodal" class="btn-group-sm" data-toggle="modal" style="color:white">Add a Friend</a></li>
-                    <li ><a href="task_login.jsp" onclick="logout()" class="btn-group-sm" style="color:white;border:none;background-color:#7F7F7F">Log Out</a></li>
+                    <li ><a href="task_login.jsp" onclick="logout()" class="btn-group-sm" style="color:white;">Log Out</a></li>
                 </ul> 
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
@@ -219,53 +286,58 @@
         
         <!-- View Tasks carousel-->
         <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8" >
             <div class="col-md-4 col-md-offset-4 text-center"><h4><a  href="#myCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>&nbsp;Your Tasks&nbsp;<a  href="#myCarousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a></h4></div>
-            <div class="col-md-12 col-xs-12">
+            <div class="col-md-12 col-xs-12" >
                 <div class="carousel slide" id="myCarousel">
-                    <div class="carousel-inner">
+                    <div class="carousel-inner" style="overflow:hidden;">
                         <%
                         /*This block of java code displays the tasks the user has to complete, here it 
                           first connects to the database and then displays them in the form of thumbnails*/
                         String user = (String)request.getAttribute("username");
                         String sql,sql3;
-                        String connectionURL="jdbc:derby://localhost:1527/WTFtask";
+                        
                         sql3 ="SELECT TASKID FROM WTFtaskallocation where USERNAME = '"+user+"'";
-
-
+                        int task_year,task_month,task_day;
                         try {
-                            Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+                            
                             Statement s = conn.createStatement();
                             Statement s1 = conn.createStatement();
                             Statement s2 = conn.createStatement();
                             ResultSet rs2 = s2.executeQuery(sql3);
                             int count = 0;
-
+                            
                             while(rs2.next()){
                                 sql = "SELECT * FROM WTFtasks where TASKID ="+rs2.getInt("TASKID");
                                 ResultSet rs = s.executeQuery(sql);
                                 while (rs.next()) {
-                                      String sql2 ="SELECT FIRSTNAME,LASTNAME FROM WTFuser WHERE USERNAME='"+rs.getString("OWNER")+"'";                       
-                                      ResultSet rs1 = s1.executeQuery(sql2);
-                                      rs1.next();
-                                      if(count==0)
-                                      {    
-                                      out.println("<div class='item active'>");
-                                      }
-                                      else
-                                      {
-                                         out.println("<div class='item'>"); 
-                                      }
-                                      //#F5A9A9//#A9F5A9
-                                      out.println("<div class='col-lg-2 col-xs-12' >");
-                                      out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
-                                      out.println("<div class='caption'>");
-                                      out.println("<h3>"+rs.getString("TASKNAME")+"</h3>");
-                                      out.println("<p>POINTS: "+rs.getString("TASKPOINTS")+"<br>OWNER: "+rs1.getString("FIRSTNAME")+" "+rs1.getString("LASTNAME")+"<br>DUE-DATE: "+rs.getString("DUEDATE")+"</p>");
-                                      out.println("<p><a href='#' class='btn btn-primary' role='button'>Wrap Up</a></p>");
-                                      out.println("</div></div></div></div>");
-                                      count++;
-                                      rs1.close();
+                                      //String date[] = rs.getString("DUEDATE").split("-");
+                                      //task_year = Integer.parseInt(date[0]);
+                                      //task_month = Integer.parseInt(date[1]);
+                                      //task_day = Integer.parseInt(date[2]);
+                                      //if (year == task_year && month == task_month && day == task_day) {
+                                        String sql2 ="SELECT FIRSTNAME,LASTNAME FROM WTFuser WHERE USERNAME='"+rs.getString("OWNER")+"'";                       
+                                        ResultSet rs1 = s1.executeQuery(sql2);
+                                        rs1.next();
+                                        if(count==0)
+                                        {    
+                                        out.println("<div class='item active'>");
+                                        }
+                                        else
+                                        {
+                                           out.println("<div class='item'>"); 
+                                        }
+                                        //#F5A9A9//#A9F5A9
+                                        out.println("<div class='col-lg-2 col-xs-12' >");
+                                        out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
+                                        out.println("<div class='caption'>");
+                                        out.println("<h3>"+rs.getString("TASKNAME")+"</h3>");
+                                        out.println("<p>POINTS: "+rs.getString("TASKPOINTS")+"<br>OWNER: "+rs1.getString("FIRSTNAME")+" "+rs1.getString("LASTNAME")+"<br>DUE-DATE: "+rs.getString("DUEDATE")+"</p>");
+                                        out.println("<p><a href='#' class='btn btn-primary' role='button'>Wrap Up</a></p>");
+                                        out.println("</div></div></div></div>");
+                                        count++;
+                                        rs1.close();
+                                      //}
                                   }
                                   rs.close();
                               }
@@ -319,7 +391,7 @@
             <div class="col-md-6 col-md-offset-3 text-center"><h4><a  href="#myCarousel1" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>&nbsp;Tasks You Own&nbsp;<a  href="#myCarousel1" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a></h4></div>
             <div class="col-md-12 col-xs-12">
                 <div class="carousel slide" id="myCarousel1">
-                    <div class="carousel-inner">
+                    <div class="carousel-inner" style="overflow:hidden;">
                         <%  
                         /*This block of java code displays the tasks the user owns, here it 
                           first connects to the database and then displays them in the form of thumbnails*/
@@ -528,67 +600,76 @@
         </div>
     </div>
     <!-- modal for adding new tasks-->
-    <div id="addtaskmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+   <div id="addtaskmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><br><br>
-                    <h3 class="modal-title" align="center">Add a task</h3></br>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <br><br>
+                    <h3 class="modal-title" align="center">Add a task</h3>
+                    <br>
                     <form id="addtaskForm" class="form-inline" align="center" method="get" action="Add_Task">
                         <div class="form-group">
-                            <input type="text" class="form-control" name="taskname" Placeholder="Task name" />
-                            <div id="break">
-                                <br>
-                            </div>
-                        </div><br>
+                            <input type="text" class="form-control" name="taskname" Placeholder="Task name" /> 
+                        </div>
+                        <br><br>
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="Points" name="taskpoints"/>
-                            <div id="break">
-                                <br>
-                            </div>
-                        </div><br>
+                        </div>
+                        <br><br>
                         <div class="form-group">
                             <input type="hidden" class="form-control"  name="user" value = "<%=request.getAttribute("username")%>"/>
-                            <div id="break">
-                                <br>
-                            </div>
-                        </div><br>
+                        </div>
+                        
                         <div class="form-group">
                             <input type="hidden" class="form-control" id="Name" name="Name" value = "<%=request.getAttribute("Name")%>"/>
-                            <div id="break">
-                                <br>
-                            </div>
-                        </div><br>
+                        </div>
+                     
                         <div class="form-group">
-                            <div class="col-lg-12 col-xs-12">
-                                <div class="input-group date" >
-                                    <input type="text" class="form-control"  id="duedate" name="duedate" Placeholder="Due date" />
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div>  
+                                <input type="text" class="form-control form-inline" name="duedate" id="datepicker" Placeholder="Due date"/>
+                                &nbsp;<span class="glyphicon glyphicon-calendar form-inline"></span>
+                        </div>
+                        <br><br>
+                        <div class="form-group">
+                            <div class="radio">
+                                <b>Recurring :</b>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="recur" id="weekly" value="weekly">
+                                    Weekly
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="recur" id="monthly" value="monthly">
+                                    Monthly
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="" id="none" value="none">
+                                    None
+                                </label>
                             </div>
                         </div>
-                        <br>
-                        <div id="break">
-                            <br>
-                        </div>
+                        <br><br>
                         <div class="form-group">
                             <div class="col-md-9 col-xs-9">
                                 <input type="text" class="form-control" Placeholder="Add friends..." id="addedfriend" name="addedfriend">
                             </div>
                             <div class="col-md-3 col-xs-3">
-                               <button id="add" type="button" class="btn btn-success" onclick="showFriend()"> Add</button>	
+                                <button id="add" type="button" class="btn btn-success" onclick="showFriend()"> Add</button>	
                             </div>
-                        </div><br><br>
-                        <div id="somediv"  style="color:red;"></div>
-                        <div id="break-inverse">
-                            <br><br>
                         </div>
-                        <div id="content"></div><br>
+                        <br><br>
+                        <div id="somediv"  style="color:red;"></div>
+                        <div id="content"></div>
+                        <br>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Add task</button><br><br>
-                        </div><br>
+                        </div>
+                        <br>
                     </form>
                 </div>
             </div>
@@ -599,7 +680,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
-    <script src="http://bsdp-assets.blackcherry.us/1.3.0/bootstrap-datepicker.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <!--<script src="http://bsdp-assets.blackcherry.us/1.3.0/bootstrap-datepicker.min.js"></script>-->
     <!-- BootstrapValidator JS -->
     <script type="text/javascript" src="dist/js/bootstrapValidator.min.js"></script>
 
@@ -607,9 +689,14 @@
 
 	i = 0;
 	
-	 $(function () {
-                $("#duedate").datepicker();
+	$(function() {
+            
+            $( "#datepicker" ).datepicker({
+                minDate:0,
+                showAnim: "clip",
             });
+          });
+            
           function chartdisplay(){
              var mainuser = $("#mainuser").val();
              console.log(mainuser);

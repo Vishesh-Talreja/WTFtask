@@ -68,6 +68,8 @@ public class Add_Task extends HttpServlet {
         String Tname=request.getParameter("taskname");
         String Tpoints=request.getParameter("taskpoints").replaceAll(" ","");
         String Tduedate=request.getParameter("duedate").replaceAll(" ","");
+        String recur = request.getParameter("recur").replace(" "," ");
+        System.out.println("The task is selected to recur "+recur+"!!!!!!!");
         String[] assignees = request.getParameterValues("list");
         for(int i=0; i<assignees.length;i++) {
             assignees[i] = assignees[i].toLowerCase();
@@ -77,7 +79,7 @@ public class Add_Task extends HttpServlet {
         try{
             Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             Statement stmt=conn.createStatement();
-            String query3 = "INSERT INTO IS2560.WTFtasks (TASKNAME,TASKPOINTS,DUEDATE,OWNER) VALUES ('"+Tname+"','"+Tpoints+"','"+Tduedate+"','"+user+"')";
+            String query3 = "INSERT INTO IS2560.WTFtasks (TASKNAME,TASKPOINTS,DUEDATE,OWNER,RECUR) VALUES ('"+Tname+"','"+Tpoints+"','"+Tduedate+"','"+user+"','"+recur+"')";
             stmt.executeUpdate(query3);                                             //Insert task details into database
             String query4 = "SELECT * FROM IS2560.WTFtasks WHERE TASKNAME='"+Tname+"'";
             ResultSet rs = stmt.executeQuery(query4);                               //Extract taskId
