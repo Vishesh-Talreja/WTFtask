@@ -256,6 +256,7 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("\n");
       out.write("\n");
       out.write("\n");
+      out.write("\n");
       out.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\" \"http://www.w3.org/TR/html4/frameset.dtd\">\n");
       out.write("<html lang=\"en\">\n");
       out.write("    \n");
@@ -266,8 +267,7 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("    <title>Crib</title>\n");
       out.write("    <!-- Bootstrap -->\n");
       out.write("    <link href=\"css/bootstrap.min.css\" rel=\"stylesheet\">\n");
-      out.write("    <link rel=\"stylesheet\" href=\"//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css\">\n");
-      out.write("    <!--<link rel=\"stylesheet\" href=\"http://bsdp-assets.blackcherry.us/1.3.0/datepicker.min.css\">-->\n");
+      out.write("    <link rel=\"stylesheet\" href=\"http://bsdp-assets.blackcherry.us/1.3.0/datepicker.min.css\">\n");
       out.write("    <!-- BootstrapValidator CSS -->\n");
       out.write("    <link rel=\"stylesheet\" href=\"dist/css/bootstrapValidator.min.css\"/>\n");
       out.write("    <script type=\"text/javascript\" src=\"js/canvasjs.min.js\"></script>\n");
@@ -516,7 +516,6 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       
       out.write("\n");
       out.write("      \n");
-      out.write("      \n");
       out.write("  <div class=\"col-md-2\"></div>\n");
       out.write("  <div class=\"col-md-8 col-xs-12\" style='padding: 0'>\n");
       out.write("    <!-- main container for page content-->\n");
@@ -543,7 +542,7 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("                    <li id=\"group\"><a id=\"showdisplayfriendmodal\" href=\"#displayfriendmodal\" class=\"btn-group-sm\" data-toggle=\"modal\"  style=\"color:white\">Friends</a></li>\n");
       out.write("                    <li id=\"group\"><a id=\"showaddtaskmodal\" href=\"#addtaskmodal\" class=\"btn-group-sm\" data-toggle=\"modal\"  style=\"color:white\">Add a Task</a></li>\n");
       out.write("                    <li id=\"friend\"><a id=\"showaddfriendmodal\" href=\"#addfriendmodal\" class=\"btn-group-sm\" data-toggle=\"modal\" style=\"color:white\">Add a Friend</a></li>\n");
-      out.write("                    <li ><a href=\"task_login.jsp\" onclick=\"logout()\" class=\"btn-group-sm\" style=\"color:white;\">Log Out</a></li>\n");
+      out.write("                    <li ><a href=\"task_login.jsp\" onclick=\"logout()\" class=\"btn-group-sm\" style=\"color:white;border:none;background-color:#7F7F7F\">Log Out</a></li>\n");
       out.write("                </ul> \n");
       out.write("            </div><!-- /.navbar-collapse -->\n");
       out.write("          </div><!-- /.container-fluid -->\n");
@@ -552,7 +551,7 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("        <!-- Welcome message-->\n");
       out.write("        <h1 style=\"font-face:papyrus\">Welcome ");
       out.print(request.getAttribute("Name"));
-      out.write("</h1><br>\n");
+      out.write(" </h1><br>\n");
       out.write("\n");
       out.write("        ");
 >>>>>>> faa763d7554afec212dc727575248f22381471c3
@@ -598,11 +597,11 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("        \n");
       out.write("        <!-- View Tasks carousel-->\n");
       out.write("        <div class=\"row\">\n");
-      out.write("        <div class=\"col-md-8\" >\n");
+      out.write("        <div class=\"col-md-8\">\n");
       out.write("            <div class=\"col-md-4 col-md-offset-4 text-center\"><h4><a  href=\"#myCarousel\" data-slide=\"prev\"><i class=\"glyphicon glyphicon-chevron-left\"></i></a>&nbsp;Your Tasks&nbsp;<a  href=\"#myCarousel\" data-slide=\"next\"><i class=\"glyphicon glyphicon-chevron-right\"></i></a></h4></div>\n");
-      out.write("            <div class=\"col-md-12 col-xs-12\" >\n");
+      out.write("            <div class=\"col-md-12 col-xs-12\">\n");
       out.write("                <div class=\"carousel slide\" id=\"myCarousel\">\n");
-      out.write("                    <div class=\"carousel-inner\" style=\"overflow:hidden;\">\n");
+      out.write("                    <div class=\"carousel-inner\">\n");
       out.write("                        ");
 >>>>>>> faa763d7554afec212dc727575248f22381471c3
 
@@ -628,11 +627,11 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
                                 sql = "SELECT * FROM WTFtasks where TASKID ="+rs2.getInt("TASKID");
                                 ResultSet rs = s.executeQuery(sql);
                                 while (rs.next()) {
-                                      //String date[] = rs.getString("DUEDATE").split("-");
-                                      //task_year = Integer.parseInt(date[0]);
-                                      //task_month = Integer.parseInt(date[1]);
-                                      //task_day = Integer.parseInt(date[2]);
-                                      //if (year == task_year && month == task_month && day == task_day) {
+                                      String date[] = rs.getString("DUEDATE").split("-");
+                                      task_year = Integer.parseInt(date[0]);
+                                      task_month = Integer.parseInt(date[1]);
+                                      task_day = Integer.parseInt(date[2]);
+                                      if (year == task_year && month == task_month && day == task_day) {
                                         String sql2 ="SELECT FIRSTNAME,LASTNAME FROM WTFuser WHERE USERNAME='"+rs.getString("OWNER")+"'";                       
                                         ResultSet rs1 = s1.executeQuery(sql2);
                                         rs1.next();
@@ -654,7 +653,7 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
                                         out.println("</div></div></div></div>");
                                         count++;
                                         rs1.close();
-                                      //}
+                                      }
                                   }
                                   rs.close();
                               }
@@ -752,7 +751,7 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("            <div class=\"col-md-6 col-md-offset-3 text-center\"><h4><a  href=\"#myCarousel1\" data-slide=\"prev\"><i class=\"glyphicon glyphicon-chevron-left\"></i></a>&nbsp;Tasks You Own&nbsp;<a  href=\"#myCarousel1\" data-slide=\"next\"><i class=\"glyphicon glyphicon-chevron-right\"></i></a></h4></div>\n");
       out.write("            <div class=\"col-md-12 col-xs-12\">\n");
       out.write("                <div class=\"carousel slide\" id=\"myCarousel1\">\n");
-      out.write("                    <div class=\"carousel-inner\" style=\"overflow:hidden;\">\n");
+      out.write("                    <div class=\"carousel-inner\">\n");
       out.write("                        ");
 >>>>>>> faa763d7554afec212dc727575248f22381471c3
   
@@ -1380,7 +1379,7 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("        </div>\n");
       out.write("    </div>\n");
       out.write("    <!-- modal for adding new tasks-->\n");
-      out.write("   <div id=\"addtaskmodal\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel1\" aria-hidden=\"true\">\n");
+      out.write("    <div id=\"addtaskmodal\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel1\" aria-hidden=\"true\">\n");
       out.write("        <div class=\"modal-dialog\">\n");
       out.write("            <div class=\"modal-content\">\n");
       out.write("                <div class=\"modal-header\">\n");
@@ -1391,8 +1390,9 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("                    <form id=\"addtaskForm\" class=\"form-inline\" align=\"center\" method=\"get\" action=\"Add_Task\">\n");
       out.write("                        <div class=\"form-group\">\n");
       out.write("                            <input type=\"text\" class=\"form-control\" name=\"taskname\" Placeholder=\"Task name\" /> \n");
+      out.write("                            <br>\n");
       out.write("                        </div>\n");
-      out.write("                        <br><br>\n");
+      out.write("                        <br>\n");
       out.write("                        <div class=\"form-group\">\n");
       out.write("                            <input type=\"text\" class=\"form-control\" placeholder=\"Points\" name=\"taskpoints\"/>\n");
       out.write("                        </div>\n");
@@ -1402,16 +1402,22 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.print(request.getAttribute("username"));
       out.write("\"/>\n");
       out.write("                        </div>\n");
-      out.write("                        \n");
+      out.write("                        <br>\n");
       out.write("                        <div class=\"form-group\">\n");
       out.write("                            <input type=\"hidden\" class=\"form-control\" id=\"Name\" name=\"Name\" value = \"");
       out.print(request.getAttribute("Name"));
       out.write("\"/>\n");
       out.write("                        </div>\n");
-      out.write("                     \n");
+      out.write("                        <br>\n");
       out.write("                        <div class=\"form-group\">\n");
-      out.write("                                <input type=\"text\" class=\"form-control form-inline\" name=\"duedate\" id=\"datepicker\" Placeholder=\"Due date\"/>\n");
-      out.write("                                &nbsp;<span class=\"glyphicon glyphicon-calendar form-inline\"></span>\n");
+      out.write("                            <div class=\"col-lg-12 col-xs-12\">\n");
+      out.write("                                <div class=\"input-group date\" >\n");
+      out.write("                                    <input type=\"text\" class=\"form-control\"  id=\"duedate\" name=\"duedate\" Placeholder=\"Due date\" />\n");
+      out.write("                                    <span class=\"input-group-addon\">\n");
+      out.write("                                        <span class=\"glyphicon glyphicon-calendar\"></span>\n");
+      out.write("                                    </span>\n");
+      out.write("                                </div>  \n");
+      out.write("                            </div>\n");
       out.write("                        </div>\n");
       out.write("                        <br><br>\n");
       out.write("                        <div class=\"form-group\">\n");
@@ -1432,7 +1438,7 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("                            </div>\n");
       out.write("                            <div class=\"radio\">\n");
       out.write("                                <label>\n");
-      out.write("                                    <input type=\"radio\" name=\"\" id=\"none\" value=\"none\">\n");
+      out.write("                                    <input type=\"radio\" name=\"\" id=\"none\" value=\"none\" checked>\n");
       out.write("                                    None\n");
       out.write("                                </label>\n");
       out.write("                            </div>\n");
@@ -1459,13 +1465,16 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("            </div>\n");
       out.write("        </div>\n");
       out.write("    </div>\n");
-      out.write("     <!-- end add task modal-->                                                         \n");
-      out.write("     \n");
+      out.write("    <!-- end add task modal-->                                                         \n");
+      out.write("    \n");
+      out.write("    \n");
+      out.write("    \n");
+      out.write("    \n");
+      out.write("\n");
       out.write("    <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js\"></script>\n");
       out.write("    <!-- Include all compiled plugins (below), or include individual files as needed -->\n");
       out.write("    <script src=\"js/bootstrap.min.js\"></script>\n");
-      out.write("    <script src=\"//code.jquery.com/ui/1.11.2/jquery-ui.js\"></script>\n");
-      out.write("    <!--<script src=\"http://bsdp-assets.blackcherry.us/1.3.0/bootstrap-datepicker.min.js\"></script>-->\n");
+      out.write("    <script src=\"http://bsdp-assets.blackcherry.us/1.3.0/bootstrap-datepicker.min.js\"></script>\n");
       out.write("    <!-- BootstrapValidator JS -->\n");
       out.write("    <script type=\"text/javascript\" src=\"dist/js/bootstrapValidator.min.js\"></script>\n");
       out.write("\n");
@@ -1473,14 +1482,9 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("\n");
       out.write("\ti = 0;\n");
       out.write("\t\n");
-      out.write("\t$(function() {\n");
-      out.write("            \n");
-      out.write("            $( \"#datepicker\" ).datepicker({\n");
-      out.write("                minDate:0,\n");
-      out.write("                showAnim: \"clip\",\n");
+      out.write("\t $(function () {\n");
+      out.write("                $(\"#duedate\").datepicker();\n");
       out.write("            });\n");
-      out.write("          });\n");
-      out.write("            \n");
       out.write("          function chartdisplay(){\n");
       out.write("             var mainuser = $(\"#mainuser\").val();\n");
       out.write("             console.log(mainuser);\n");
