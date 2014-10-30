@@ -8,6 +8,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*,java.util.Calendar.*" %>
 <%@ page import="java.io.*" %>
+
 <%@ page import="java.sql.*" %>
 <%@ page import="javax.servlet.*" %>
 <%@ page import="javax.servlet.http.Cookie,org.joda.time.format.*,org.joda.time.LocalDate" %>
@@ -23,8 +24,7 @@
     <title>Crib</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-    <!--<link rel="stylesheet" href="http://bsdp-assets.blackcherry.us/1.3.0/datepicker.min.css">-->
+    <link rel="stylesheet" href="http://bsdp-assets.blackcherry.us/1.3.0/datepicker.min.css">
     <!-- BootstrapValidator CSS -->
     <link rel="stylesheet" href="dist/css/bootstrapValidator.min.css"/>
     <script type="text/javascript" src="js/canvasjs.min.js"></script>
@@ -222,7 +222,6 @@
          
       %>
       
-      
   <div class="col-md-2"></div>
   <div class="col-md-8 col-xs-12" style='padding: 0'>
     <!-- main container for page content-->
@@ -249,14 +248,14 @@
                     <li id="group"><a id="showdisplayfriendmodal" href="#displayfriendmodal" class="btn-group-sm" data-toggle="modal"  style="color:white">Friends</a></li>
                     <li id="group"><a id="showaddtaskmodal" href="#addtaskmodal" class="btn-group-sm" data-toggle="modal"  style="color:white">Add a Task</a></li>
                     <li id="friend"><a id="showaddfriendmodal" href="#addfriendmodal" class="btn-group-sm" data-toggle="modal" style="color:white">Add a Friend</a></li>
-                    <li ><a href="task_login.jsp" onclick="logout()" class="btn-group-sm" style="color:white;">Log Out</a></li>
+                    <li ><a href="task_login.jsp" onclick="logout()" class="btn-group-sm" style="color:white;border:none;background-color:#7F7F7F">Log Out</a></li>
                 </ul> 
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
         </nav><!-- end navbar-->
         
         <!-- Welcome message-->
-        <h1 style="font-face:papyrus">Welcome <%=request.getAttribute("Name")%></h1><br>
+        <h1 style="font-face:papyrus">Welcome <%=request.getAttribute("Name")%> </h1><br>
 
         <%
              /*This block of java code would check the values returned from various servlets 
@@ -286,11 +285,11 @@
         
         <!-- View Tasks carousel-->
         <div class="row">
-        <div class="col-md-8" >
+        <div class="col-md-8">
             <div class="col-md-4 col-md-offset-4 text-center"><h4><a  href="#myCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>&nbsp;Your Tasks&nbsp;<a  href="#myCarousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a></h4></div>
-            <div class="col-md-12 col-xs-12" >
+            <div class="col-md-12 col-xs-12">
                 <div class="carousel slide" id="myCarousel">
-                    <div class="carousel-inner" style="overflow:hidden;">
+                    <div class="carousel-inner">
                         <%
                         /*This block of java code displays the tasks the user has to complete, here it 
                           first connects to the database and then displays them in the form of thumbnails*/
@@ -311,11 +310,11 @@
                                 sql = "SELECT * FROM WTFtasks where TASKID ="+rs2.getInt("TASKID");
                                 ResultSet rs = s.executeQuery(sql);
                                 while (rs.next()) {
-                                      //String date[] = rs.getString("DUEDATE").split("-");
-                                      //task_year = Integer.parseInt(date[0]);
-                                      //task_month = Integer.parseInt(date[1]);
-                                      //task_day = Integer.parseInt(date[2]);
-                                      //if (year == task_year && month == task_month && day == task_day) {
+                                      String date[] = rs.getString("DUEDATE").split("-");
+                                      task_year = Integer.parseInt(date[0]);
+                                      task_month = Integer.parseInt(date[1]);
+                                      task_day = Integer.parseInt(date[2]);
+                                      if (year == task_year && month == task_month && day == task_day) {
                                         String sql2 ="SELECT FIRSTNAME,LASTNAME FROM WTFuser WHERE USERNAME='"+rs.getString("OWNER")+"'";                       
                                         ResultSet rs1 = s1.executeQuery(sql2);
                                         rs1.next();
@@ -337,7 +336,7 @@
                                         out.println("</div></div></div></div>");
                                         count++;
                                         rs1.close();
-                                      //}
+                                      }
                                   }
                                   rs.close();
                               }
@@ -391,7 +390,7 @@
             <div class="col-md-6 col-md-offset-3 text-center"><h4><a  href="#myCarousel1" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>&nbsp;Tasks You Own&nbsp;<a  href="#myCarousel1" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a></h4></div>
             <div class="col-md-12 col-xs-12">
                 <div class="carousel slide" id="myCarousel1">
-                    <div class="carousel-inner" style="overflow:hidden;">
+                    <div class="carousel-inner">
                         <%  
                         /*This block of java code displays the tasks the user owns, here it 
                           first connects to the database and then displays them in the form of thumbnails*/
@@ -600,7 +599,7 @@
         </div>
     </div>
     <!-- modal for adding new tasks-->
-   <div id="addtaskmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+    <div id="addtaskmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -611,8 +610,9 @@
                     <form id="addtaskForm" class="form-inline" align="center" method="get" action="Add_Task">
                         <div class="form-group">
                             <input type="text" class="form-control" name="taskname" Placeholder="Task name" /> 
+                            <br>
                         </div>
-                        <br><br>
+                        <br>
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="Points" name="taskpoints"/>
                         </div>
@@ -620,14 +620,20 @@
                         <div class="form-group">
                             <input type="hidden" class="form-control"  name="user" value = "<%=request.getAttribute("username")%>"/>
                         </div>
-                        
+                        <br>
                         <div class="form-group">
                             <input type="hidden" class="form-control" id="Name" name="Name" value = "<%=request.getAttribute("Name")%>"/>
                         </div>
-                     
+                        <br>
                         <div class="form-group">
-                                <input type="text" class="form-control form-inline" name="duedate" id="datepicker" Placeholder="Due date"/>
-                                &nbsp;<span class="glyphicon glyphicon-calendar form-inline"></span>
+                            <div class="col-lg-12 col-xs-12">
+                                <div class="input-group date" id="duedate">
+                                    <input type="text" class="form-control"   name="duedate" Placeholder="Due date" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>  
+                            </div>
                         </div>
                         <br><br>
                         <div class="form-group">
@@ -675,28 +681,31 @@
             </div>
         </div>
     </div>
-     <!-- end add task modal-->                                                         
-     
+    <!-- end add task modal-->                                                         
+    
+    
+    
+    
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-    <!--<script src="http://bsdp-assets.blackcherry.us/1.3.0/bootstrap-datepicker.min.js"></script>-->
+    <script src="http://bsdp-assets.blackcherry.us/1.3.0/bootstrap-datepicker.min.js"></script>
     <!-- BootstrapValidator JS -->
     <script type="text/javascript" src="dist/js/bootstrapValidator.min.js"></script>
 
     <script>
 
 	i = 0;
-	
-	$(function() {
-            
-            $( "#datepicker" ).datepicker({
-                minDate:0,
-                showAnim: "clip",
+	var date = new Date();
+        date.setDate(date.getDate());
+	 $(function () {
+                $("#duedate").datepicker({startDate: date});
+                
+                $('#duedate').on('changeDate', function(ev){
+                    $(this).datepicker('hide');
+                });
             });
-          });
-            
           function chartdisplay(){
              var mainuser = $("#mainuser").val();
              console.log(mainuser);

@@ -58,6 +58,7 @@ public class Add_Task extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        System.out.println("scam");
         processRequest(request, response);
         response.setContentType("text/html;charset=UTF-8");
         //Recieve inputs from form
