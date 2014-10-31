@@ -88,13 +88,21 @@ public class Add_Task extends HttpServlet {
             ResultSet rs = stmt.executeQuery(query4);                               //Extract taskId
             rs.next();
             //logger.debug("Add Task Database Connected");
-            int id = rs.getInt("TaskID");   
+            int id = rs.getInt("TaskID");
+            int Tpoint = Integer.parseInt(Tpoints);
+            
             for(int i=0;i<assignees.length;i++) {                                   //Assign each member to this task
                 String query5 = "SELECT * FROM WTFuser WHERE FIRSTNAME='"+assignees[i]+"'";
                 rs = stmt.executeQuery(query5);
                 rs.next();
-                String query6 = "INSERT INTO WTFTASKALLOCATION VALUES ("+id+",'"+rs.getString("USERNAME")+"','Pending')";
+                int pointsNow=Integer.parseInt(rs.getString("POINTPOSSIBLE"));
+                String userNow=rs.getString("USERNAME");
+                String query6 = "INSERT INTO WTFTASKALLOCATION VALUES ("+id+",'"+userNow+"','Pending')";
                 stmt.executeUpdate(query6);
+                pointsNow=pointsNow+Tpoint;
+                String newPointsNow = Integer.toString(pointsNow);
+                String query7 = "Update WTFuser set PointPossible= '"+newPointsNow+"' where username='"+userNow+"'";
+                stmt.executeUpdate(query7);
             } 
             stmt.close();
             //Return required parameterts back to homepage

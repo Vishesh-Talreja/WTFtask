@@ -53,6 +53,7 @@ public class Complete_Task extends HttpServlet {
         processRequest(request, response);
         response.setContentType("text/html;charset=UTF-8");
         String Tname=request.getParameter("Tname");
+        String Tpoints=request.getParameter("Tpoints");
         String name=request.getParameter("Name").replaceAll(" ","");
         name = name.toLowerCase();
         String user=request.getParameter("user").replaceAll(" ","");
@@ -67,6 +68,15 @@ public class Complete_Task extends HttpServlet {
             ResultSet rs = stmt.executeQuery(query1);                               //Extract taskId
             rs.next();
             int id = rs.getInt("TaskID");
+            String query2 = "SELECT * FROM IS2560.WTFuser WHERE USERNAME='"+user+"'";
+            rs = stmt.executeQuery(query2);
+            rs.next();
+            int TpointsBefore=Integer.parseInt(rs.getString("POINTEARNED"));
+            int TpointsNow = Integer.parseInt(Tpoints);
+            TpointsNow =TpointsNow+TpointsBefore;
+            String NewTpoints = Integer.toString(TpointsNow);
+            String query3 = "UPDATE IS2560.WTFuser SET POINTEARNED = '"+NewTpoints+"' WHERE USERNAME ='"+user+"'";
+            stmt.executeUpdate(query3);
             String query = "UPDATE IS2560.WTFtaskallocation SET STATUS = 'Complete' WHERE USERNAME ='"+user+"' and TASKID="+id;
             stmt.executeUpdate(query);
             stmt.close();

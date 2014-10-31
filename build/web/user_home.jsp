@@ -361,13 +361,14 @@
                                       out.println("<div class='caption'>");
                                       out.println("<h3>"+rs.getString("TASKNAME")+"</h3>");
                                       out.println("<p>POINTS: "+rs.getString("TASKPOINTS")+"<br>OWNER: "+rs1.getString("FIRSTNAME")+" "+rs1.getString("LASTNAME")+"<br>DUE-DATE: "+rs.getString("DUEDATE")+"</p>");
+                                      //String Tpoints=rs.getString("TASKPOINTS");
                                       if(rs2.getString("STATUS").equalsIgnoreCase("Complete"))
                                       {
                                           out.println("<p><form method = 'get' action = 'Complete_Task'><button type ='submit' disabled='disabled' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></p>");
                                       }
                                       else
                                       {
-                                          out.println("<p><form method = 'get' action = 'Complete_Task'><input type='hidden' name='Tname' value = '"+rs.getString("TASKNAME")+"'/><input type='hidden' name='Name' value = '"+Name+"'/><input type='hidden' name='user' value = '"+user+"'/><button type ='submit' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></p>");
+                                          out.println("<p><form method = 'get' action = 'Complete_Task'><input type='hidden' name='Tname' value = '"+rs.getString("TASKNAME")+"'/><input type='hidden' name='Tpoints' value = '"+rs.getString("TASKPOINTS")+"'/><input type='hidden' name='Name' value = '"+Name+"'/><input type='hidden' name='user' value = '"+user+"'/><button type ='submit' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></p>");
                                       }
                                       out.println("</div></div></div></div>");
                                       count++;
