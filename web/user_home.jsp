@@ -17,8 +17,9 @@
 <%@ page import="java.text.*" %>
 <%@ page import="javax.servlet.http.Cookie;" %>
 <%@ page import="java.util.Calendar.*" %>
-<%@ page import="javax.servlet.http.Cookie,org.joda.time.format.*,org.joda.time.LocalDate" %>
-
+<%@ page import="javax.servlet.http.Cookie" %>
+<%@ page import="org.joda.time.format.*" %>
+<%@ page import="org.joda.time.LocalDate" %>
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
@@ -826,9 +827,11 @@
                var k=0;
                 for (i=0;i<list.length;i++)
                {
+                   //console.log(list[i]-list2[i]);
                    datapointsgraph2[k]={
                        
                        label:list1[i],y:Number(list[i]-list2[i])
+                       
                    }
                    //console.log(datapoints[j]);
                    k++;
@@ -849,12 +852,14 @@
                                   toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
                                   name: "Points Completed",
                                   showInLegend: "true",
+                                  color:"#A9F5A9",
                                   dataPoints: datapointsgraph
                                 },  {        
                                   type: "stackedColumn",
                                   toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
                                   name: "Points Remaining",
                                   showInLegend: "true",
+                                  color:"#F5A9A9",
                                   dataPoints: datapointsgraph2
                                 }            
                                 ]
@@ -890,9 +895,16 @@
                     $("#searchUpdate").text("User Found");
                     $("#addfriend").removeAttr("disabled");     
               }
+              else if(response=="false1")
+              {
+                   $("#searchUpdate").text("You can't add yourself");
+                   $("#searched_username").attr('value',username);
+              }
               else
+              {
                   $("#searchUpdate").text("User not Found");
               $("#searched_username").attr('value',username);
+          }
            });
         });
 	
