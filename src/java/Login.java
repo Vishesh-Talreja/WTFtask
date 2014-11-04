@@ -57,8 +57,8 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
         
-        String user=request.getParameter("lusername").replaceAll(" ","");
-        user = user.toLowerCase();
+        String userName=request.getParameter("lusername").replaceAll(" ","");
+        userName = userName.toLowerCase();
         String pass=request.getParameter("lpassword").replaceAll(" ","");
         
         response.setContentType("text/html;charset=UTF-8");
@@ -67,7 +67,7 @@ public class Login extends HttpServlet {
         try{
             
             Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-            String query1 = "SELECT * FROM WTFuser where username = '"+user+"'";
+            String query1 = "SELECT * FROM WTFuser where username = '"+userName+"'";
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
             boolean flag = rs.next();
@@ -86,15 +86,20 @@ public class Login extends HttpServlet {
             {
                 if(rs.getString("password").equals(pass))
                 {
-                    //Cookie usernameCookie = new Cookie("user",user);
-                    //response.addCookie(usernameCookie);
                     
+                    //Cookie usernameCookie = new Cookie("userName",userName);
+                    //response.addCookie(usernameCookie);
+                    //Cookie firstNameCookie = new Cookie("firstName",rs.getString("FIRSTNAME"));
+                    //response.addCookie(firstNameCookie);
+                    //Cookie lastNameCookie = new Cookie("lastName",rs.getString("LastNAME"));
+                    //response.addCookie(lastNameCookie);
                     //out.println("Welcome "+rs.getString("FirstName"));
                     request.setAttribute("Name",rs.getString("FirstName"));
                     request.setAttribute("username",rs.getString("username"));
                     //logger.debug("Login Successful");
                     RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");
                     rd.include(request, response);
+                    //response.sendRedirect("user_home.jsp");
                 }
                 else
                 {

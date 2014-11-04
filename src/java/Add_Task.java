@@ -113,7 +113,7 @@ public class Add_Task extends HttpServlet {
             conn.close();
             RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");
             rd.forward(request, response);
-            
+            //response.sendRedirect("user_home.jsp");
             
         }
         catch(SQLException ex)

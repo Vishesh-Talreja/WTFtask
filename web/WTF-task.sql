@@ -62,21 +62,23 @@ WHERE USERNAME="vtalreja" and TASKID=21;
 
 UPDATE WTFuser
 SET POINTEARNED='0'
-WHERE USERNAME='akanade';
+WHERE USERNAME='';
 
 UPDATE WTFuser
-SET POINTPOSSIBLE='0'
-WHERE USERNAME='akanade';
+SET POINTPOSSIBLE='680'
+WHERE username = 'vtalreja';
+
 
 UPDATE WTFuser
-SET POINTEARNED='0'
-WHERE USERNAME='vinaraja';
+SET POINTEARNED='0';    
+
 
 SELECT STATUS FROM WTFtaskallocation WHERE USERNAME = 'vtalreja' and TASKID = 22
 
-Delete from WTFtaskallocation
+Delete from WTFtaskallocation;
 Delete from WTFuser
-
+Delete from WTFtasks
+Delete from WTFFriends
 
 INSERT INTO WTFuser VALUES ('talreja', 'vishesh', 'vtalreja', 'vtalreja@indiana.edu', 'firewaterthunder','0','0');
 INSERT INTO WTFuser VALUES ('rajagopalan', 'vinay', 'vinaraja', 'vinaraja@indiana.edu', 'firewaterthunder','0','0');
@@ -102,4 +104,4 @@ INSERT INTO WTFtaskallocation VALUES (8,'akanade','Pending');
 INSERT INTO WTFtaskallocation VALUES (8,'vinaraja','Pending');
 
 
-
+SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = 'akanade'
