@@ -37,59 +37,16 @@ public class Check_EmailTest {
     public void tearDown() {
     }
 
-    
     /**
-     * Test of doGet method, of class Check_Email.
-     */
-    @Test
-    public void testDoGet() throws Exception {
-        System.out.println("doGet");
-        boolean flag = false;
-        Check_Email instance = new Check_Email();
-        //flag = instance.JUNIT(flag);
-        assertEquals(true,flag);
-    }
-
-    /**
-     * Test of processRequest method, of class Check_Email.
+     * Test of processRequest method, of class Registration.
      */
     @org.junit.Test
     public void testProcessRequest() throws Exception {
         System.out.println("processRequest");
-        HttpServletRequest request = null;
-        HttpServletResponse response = null;
         Check_Email instance = new Check_Email();
-        instance.processRequest(request, response);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of doPost method, of class Check_Email.
-     */
-    @org.junit.Test
-    public void testDoPost() throws Exception {
-        System.out.println("doPost");
-        HttpServletRequest request = null;
-        HttpServletResponse response = null;
-        Check_Email instance = new Check_Email();
-        instance.doPost(request, response);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getServletInfo method, of class Check_Email.
-     */
-    @org.junit.Test
-    public void testGetServletInfo() {
-        System.out.println("getServletInfo");
-        Check_Email instance = new Check_Email();
-        String expResult = "";
-        String result = instance.getServletInfo();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        boolean flag = false;
+        flag = instance.JUNIT(flag);
+        assertEquals(true,flag);
     }
 
     

@@ -3,6 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -48,7 +50,34 @@ public class Validate_Assignee extends HttpServlet {
             
         }
     }
-
+    public boolean JUNIT(boolean flag)
+    {
+        String user="vtalreja";
+        user = user.toLowerCase();
+        String friend = "akanade";
+        String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+        Connection conn;
+        try {
+            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            String query1 = "SELECT * FROM WTFFriends where mainusername = '"+user+"' and friendname = '"+friend+"'";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            boolean flag1 = rs.next();
+            st.close();
+            conn.close();
+            if(flag1==true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -69,11 +98,32 @@ public class Validate_Assignee extends HttpServlet {
         adder = adder.toLowerCase();
         String addedfriend = request.getParameter("addedfriend").replaceAll(" ","");
         addedfriend = addedfriend.toLowerCase();
+        String connection,username,password;
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+                
+            }
+            String everything = sb.toString();
+            String arg[] = everything.split(" ");
+            connection = arg[2];
+            username = arg[0];
+            password = arg[1];
+            
+        } finally {
+            br.close();
+        }
         try (PrintWriter out = response.getWriter()){
-        String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+        
         try{
 
-            Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            Connection conn = DriverManager.getConnection(connection,username,password);
             String query1 = "SELECT * FROM WTFuser where Firstname = '"+adder+"'";
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);

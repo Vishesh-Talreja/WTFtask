@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 //import org.apache.log4j.Logger;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -54,13 +56,13 @@ public class Registration extends HttpServlet {
         try {
             Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             Statement stmt=conn.createStatement();
-            String query = "DELETE FROM IS2560.WTFuser WHERE USERNAME = '"+user+"'";
-            stmt.executeUpdate(query);
             String query2 = "INSERT INTO IS2560.WTFuser (LASTNAME,FIRSTNAME,USERNAME,EMAIL,PASSWORD) VALUES ('"+Lname+"','"+Fname+"','"+user+"','"+Email+"','"+pass+"')";
             stmt.executeUpdate(query2);
             String query1 = "SELECT * FROM WTFuser where username = '"+user+"'";
             ResultSet rs = stmt.executeQuery(query1);
             boolean flag1 = rs.next();
+            if (flag1 == true)
+                stmt.executeUpdate("DELETE FROM IS2560.WTFuser WHERE username='test'");
             stmt.close();
             rs.close();
             conn.close();  
@@ -94,10 +96,31 @@ public class Registration extends HttpServlet {
         String pass=request.getParameter("rpassword").replaceAll(" ","");
         Connection conn=null;
         Statement stmt=null;
+        String connection,username,password;
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+                
+            }
+            String everything = sb.toString();
+            String arg[] = everything.split(" ");
+            connection = arg[2];
+            username = arg[0];
+            password = arg[1];
+            
+        } finally {
+            br.close();
+        }
         try (PrintWriter out = response.getWriter()) {
-            String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+            
         try{
-            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            conn = DriverManager.getConnection(connection,username,password);
             stmt=conn.createStatement();
             String query2 = "INSERT INTO IS2560.WTFuser (LASTNAME,FIRSTNAME,USERNAME,EMAIL,PASSWORD) VALUES ('"+Lname+"','"+Fname+"','"+user+"','"+Email+"','"+pass+"')";
             stmt.executeUpdate(query2);

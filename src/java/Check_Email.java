@@ -42,6 +42,33 @@ public class Check_Email extends HttpServlet {
         
     }
     
+    public boolean JUNIT(boolean flag)
+    {
+        String email="test@indiana.edu";
+        email = email.toLowerCase();
+        String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+        Connection conn;
+        try {
+            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            String query1 = "SELECT * FROM WTFuser where email = '"+email+"'";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            boolean flag1 = rs.next();
+            st.close();
+            conn.close();
+            if(flag1==false)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
     
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -64,11 +91,32 @@ public class Check_Email extends HttpServlet {
         Map<String, String> options = new LinkedHashMap<String, String>();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        String connection,username,password;
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+                
+            }
+            String everything = sb.toString();
+            String arg[] = everything.split(" ");
+            connection = arg[2];
+            username = arg[0];
+            password = arg[1];
+            
+        } finally {
+            br.close();
+        }
         try (PrintWriter out = response.getWriter()){
-        String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+        
         try{
             
-            Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            Connection conn = DriverManager.getConnection(connection, username,password);
             String query1 = "SELECT * FROM WTFuser where email = '"+email+"'";
             Statement st = conn.createStatement();  //Query the database for availability
             ResultSet rs = st.executeQuery(query1);     //Store the result in a ResultSet
