@@ -100,11 +100,32 @@ public class DisplayChart extends HttpServlet {
         ArrayList<String> pointspossiblelist=new ArrayList<String>();
         ArrayList<String> list=new ArrayList<String>();
         ArrayList<String> firstnamelist=new ArrayList<String>();
+        String connection,dusername,password;
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+                
+            }
+            String everything = sb.toString();
+            String arg[] = everything.split(" ");
+            connection = arg[2];
+            dusername = arg[0];
+            password = arg[1];
+            
+        } finally {
+            br.close();
+        }
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-           String connectionURL = "jdbc:derby://localhost:1527/WTFtask";//Connection to server
+           
            try {
-            Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            Connection conn = DriverManager.getConnection(connection,dusername,password);
             Statement stmt=conn.createStatement(); 
             String query1="SELECT * FROM WTFFriends where MAINUSERNAME='"+main_username+"'";//query that obtains the set of searched user
             Statement st = conn.createStatement();

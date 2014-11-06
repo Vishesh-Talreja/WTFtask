@@ -3,6 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -84,15 +86,33 @@ public class New_friend extends HttpServlet {
         String searched_username = request.getParameter("searched_username");//Obtains searched username of the user
         String main_username = request.getParameter("mainuser");//obtains the username who is logged in
         String main_user_firstname = request.getParameter("mainuser_firstname");
+        String connection,username,password;
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
 
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+                
+            }
+            String everything = sb.toString();
+            String arg[] = everything.split(" ");
+            connection = arg[2];
+            username = arg[0];
+            password = arg[1];
+            
+        } finally {
+            br.close();
+        }
        //System.out.println(user);
        try (PrintWriter out = response.getWriter()){
 
-          
-        String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
         try{
             
-            Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            Connection conn = DriverManager.getConnection(connection,username,password);
             String query="INSERT INTO IS2560.WTFFriends (mainusername,friendname) VALUES ( '"+main_username+"' , '"+searched_username+"' )";//Inserts into WTFFriends database
             Statement st = conn.createStatement();
             st.executeUpdate(query);
