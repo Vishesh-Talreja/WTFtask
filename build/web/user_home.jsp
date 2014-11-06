@@ -364,7 +364,7 @@
                                       out.println("<div class='caption'>");
                                       out.println("<h3>"+rs.getString("TASKNAME")+"</h3>");
                                       out.println("<p>POINTS: "+rs.getString("TASKPOINTS")+"<br>OWNER: "+rs1.getString("FIRSTNAME")+" "+rs1.getString("LASTNAME")+"<br>DUE-DATE: "+rs.getString("DUEDATE")+"</p>");
-                                      //String Tpoints=rs.getString("TASKPOINTS");
+                                      //Part of code to display completed tasks
                                       if(rs2.getString("STATUS").equalsIgnoreCase("Complete"))
                                       {
                                           out.println("<p><form method = 'get' action = 'Complete_Task'><button type ='submit' disabled='disabled' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></p>");
@@ -403,6 +403,7 @@
            <div class="col-md-4">
                <canvas id="myCanvas"></canvas>
                 <script>
+                  /*This part of code is to represent the canvas on the home page*/
                   var canvas = document.getElementById('myCanvas');
                   var context = canvas.getContext('2d');
 

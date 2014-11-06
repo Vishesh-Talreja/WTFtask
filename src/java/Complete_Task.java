@@ -77,6 +77,7 @@ public class Complete_Task extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    /*This function is used to change a status of a task from Pending to complete*/
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -97,10 +98,12 @@ public class Complete_Task extends HttpServlet {
            try{
             conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             stmt=conn.createStatement();
+            //Slecting data from the tasks table
             String query1 = "SELECT * FROM IS2560.WTFtasks WHERE TASKNAME='"+Tname+"'";
             rs = stmt.executeQuery(query1);                               //Extract taskId
             rs.next();
             int id = rs.getInt("TaskID");
+            //Slecting data from the user table
             String query2 = "SELECT * FROM IS2560.WTFuser WHERE USERNAME='"+user+"'";
             rs = stmt.executeQuery(query2);
             rs.next();
@@ -108,12 +111,11 @@ public class Complete_Task extends HttpServlet {
             int TpointsNow = Integer.parseInt(Tpoints);
             TpointsNow =TpointsNow+TpointsBefore;
             String NewTpoints = Integer.toString(TpointsNow);
+            //Adding taskpoints to the user table 
             String query3 = "UPDATE IS2560.WTFuser SET POINTEARNED = '"+NewTpoints+"' WHERE USERNAME ='"+user+"'";
             stmt.executeUpdate(query3);
             String query = "UPDATE IS2560.WTFtaskallocation SET STATUS = 'Complete' WHERE USERNAME ='"+user+"' and TASKID="+id;
             stmt.executeUpdate(query);
-            stmt.close();
-            conn.close();
             request.setAttribute("Name", name);
             request.setAttribute("username",user);
             RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");
@@ -126,6 +128,7 @@ public class Complete_Task extends HttpServlet {
            finally
            {
                 try {
+                    //Releasing all the resources
                     rs.close();
                     stmt.close();
                     conn.close();
