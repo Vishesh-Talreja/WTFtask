@@ -16,6 +16,7 @@ import javax.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -38,11 +39,49 @@ public class Registration extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    
+    public boolean JUNIT(boolean flag)
+    {
+        String Fname="TEST";
+        Fname = Fname.toLowerCase();
+        String Lname="TEST";
+        Lname = Lname.toLowerCase();
+        String Email="test@test.com";
+        Email = Email.toLowerCase();
+        String user="Test";
+        user = user.toLowerCase();
+        String pass="test";
+        String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+        try {
+            Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            Statement stmt=conn.createStatement();
+            String query = "DELETE FROM IS2560.WTFuser WHERE USERNAME = '"+user+"'";
+            stmt.executeUpdate(query);
+            String query2 = "INSERT INTO IS2560.WTFuser (LASTNAME,FIRSTNAME,USERNAME,EMAIL,PASSWORD) VALUES ('"+Lname+"','"+Fname+"','"+user+"','"+Email+"','"+pass+"')";
+            stmt.executeUpdate(query2);
+            String query1 = "SELECT * FROM WTFuser where username = '"+user+"'";
+            ResultSet rs = stmt.executeQuery(query1);
+            boolean flag1 = rs.next();
+            stmt.close();
+            rs.close();
+            conn.close();  
+            if(flag1==true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
     /*This functions takes inputs from the user registration form and then inputs it into the databse
     after which the user is redirected to the login page, and is asked to login*/
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         String Fname=request.getParameter("fname").replaceAll(" ","");
         Fname = Fname.toLowerCase();
@@ -53,24 +92,33 @@ public class Registration extends HttpServlet {
         String user=request.getParameter("rusername").replaceAll(" ","");
         user = user.toLowerCase();
         String pass=request.getParameter("rpassword").replaceAll(" ","");
-        
+        Connection conn=null;
+        Statement stmt=null;
         try (PrintWriter out = response.getWriter()) {
             String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
         try{
-            Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-            Statement stmt=conn.createStatement();
+            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            stmt=conn.createStatement();
             String query2 = "INSERT INTO IS2560.WTFuser (LASTNAME,FIRSTNAME,USERNAME,EMAIL,PASSWORD) VALUES ('"+Lname+"','"+Fname+"','"+user+"','"+Email+"','"+pass+"')";
             stmt.executeUpdate(query2);
-            //logger.debug("Regitration Database Connected");
-            RequestDispatcher rd=request.getRequestDispatcher("task_login.jsp");
-            rd.forward(request, response);
-            conn.close();
+            //logger.debug("Regitration Database Connected"); 
+            request.setAttribute("registration","complete");
+                    //logger.debug("Failed Login");
+            RequestDispatcher rm=request.getRequestDispatcher("task_login.jsp");
+            rm.forward(request, response);
         }
         catch(SQLException ex)
         {
             out.print("Connection Failed!");
         }
+        finally
+        {
+            stmt.close();
+            conn.close();
         }
+        
+        }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -85,7 +133,11 @@ public class Registration extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -99,7 +151,11 @@ public class Registration extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

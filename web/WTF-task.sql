@@ -62,6 +62,7 @@ DELETE from WTFtasks;
 DELETE from WTFtaskallocation;
 DELETE from WTFFriends;
 
+DELETE from WTFuser where USERNAME ='ad';
 select * from WTFuser;
 select * from WTFtasks;
 select * from WTFtaskallocation;

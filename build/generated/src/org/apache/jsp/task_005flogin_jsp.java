@@ -113,6 +113,14 @@ public final class task_005flogin_jsp extends org.apache.jasper.runtime.HttpJspB
             out.println("<strong>The entered username or password is incorrect</strong>");
             out.println("</div>");
         }
+        if ((String)request.getAttribute("registration")=="complete")
+        {
+            out.println("<div class='alert alert-success alert-dismissible' role='alert'>");
+            out.println("<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>");
+            out.println("<strong>Registration Successful!!!Please login with your username password</strong>");
+            out.println("</div>");
+        }
+        
       out.write("\n");
       out.write("\n");
       out.write("        <!--Login from starts here -->\n");

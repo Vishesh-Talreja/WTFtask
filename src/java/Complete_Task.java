@@ -10,6 +10,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,6 +35,34 @@ public class Complete_Task extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    public boolean JUNIT(boolean flag)
+    {
+        String user="vtalreja";
+        user = user.toLowerCase();
+        String pass="firewaterthunder";
+        String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+        Connection conn;
+        try {
+            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            String query1 = "SELECT * FROM WTFuser where username = '"+user+"'";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            boolean flag1 = rs.next();
+            st.close();
+            conn.close();
+            if(flag1==true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
        
@@ -58,14 +88,17 @@ public class Complete_Task extends HttpServlet {
         name = name.toLowerCase();
         String user=request.getParameter("user").replaceAll(" ","");
         user = user.toLowerCase();
+        Connection conn=null;
+        Statement stmt=null;
+        ResultSet rs = null;
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
            try{
-            Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-            Statement stmt=conn.createStatement();
+            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            stmt=conn.createStatement();
             String query1 = "SELECT * FROM IS2560.WTFtasks WHERE TASKNAME='"+Tname+"'";
-            ResultSet rs = stmt.executeQuery(query1);                               //Extract taskId
+            rs = stmt.executeQuery(query1);                               //Extract taskId
             rs.next();
             int id = rs.getInt("TaskID");
             String query2 = "SELECT * FROM IS2560.WTFuser WHERE USERNAME='"+user+"'";
@@ -89,6 +122,16 @@ public class Complete_Task extends HttpServlet {
            catch(SQLException ex)
            {
              out.print(ex+"Connection Failed!");
+           }
+           finally
+           {
+                try {
+                    rs.close();
+                    stmt.close();
+                    conn.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Complete_Task.class.getName()).log(Level.SEVERE, null, ex);
+                }
            }
         }
         

@@ -13,6 +13,7 @@ import java.sql.DriverManager;
 import java.util.*;
 import javax.servlet.http.Cookie;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -42,6 +43,34 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         
     }
+    public boolean JUNIT(boolean flag)
+    {
+        String user="vtalreja";
+        user = user.toLowerCase();
+        String pass="firewaterthunder";
+        String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+        Connection conn;
+        try {
+            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            String query1 = "SELECT * FROM WTFuser where username = '"+user+"'";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            boolean flag1 = rs.next();
+            st.close();
+            conn.close();
+            if(flag1==true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -60,16 +89,18 @@ public class Login extends HttpServlet {
         String user=request.getParameter("lusername").replaceAll(" ","");
         user = user.toLowerCase();
         String pass=request.getParameter("lpassword").replaceAll(" ","");
-        
+        Connection conn=null;
+        Statement st =null;
+        ResultSet rs =null;
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()){
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
         try{
             
-            Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             String query1 = "SELECT * FROM WTFuser where username = '"+user+"'";
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(query1);
+            st = conn.createStatement();
+            rs = st.executeQuery(query1);
             boolean flag = rs.next();
             //logger.debug("Login Database Connected");
             /*Checks whether the query has returned some results, if not it will redirect to the login page
@@ -105,14 +136,22 @@ public class Login extends HttpServlet {
                 }
             }
             
-            st.close();
-            rs.close();
-            conn.close();
             
         }
         catch(SQLException ex)
         {
             out.print("Connection Failed!");
+        }
+        finally
+        {
+            try {
+                st.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
         }
         
