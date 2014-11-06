@@ -41,6 +41,7 @@ CONSTRAINT primary_key_friends PRIMARY KEY (mainusername,friendname)
 select * from WTFuser;
 select * from WTFtasks;
 select * from WTFtaskallocation;
+select FRIENDNAME from WTFFriends where Mainusername='akanade';
 
 INSERT INTO WTFtasks(Taskname,Taskpoints,Duedate,recur,owner) VALUES ('Clean', '50', '09/10/2014','none', 'vtalreja');
 INSERT INTO WTFtasks(Taskname,Taskpoints,Duedate,recur,owner) VALUES ('Cook', '50', '09/10/2014','none', 'vinaraja');

@@ -38,7 +38,33 @@ public class New_friend extends HttpServlet {
         
         }
     
-
+    public boolean JUNIT(String mainusername,String searchedusername)
+    {
+        String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+      Connection conn ;
+      try {
+            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+             Statement st=conn.createStatement(); 
+             String query2 = "SELECT FRIENDNAME FROM WTFFriends where MAINUSERNAME='"+mainusername+"'";
+             Statement st1 = conn.createStatement();
+             ResultSet rs2 = st.executeQuery(query2);
+             while(rs2.next())
+             {
+                 String friendname=rs2.getString("FRIENDNAME");
+                 if(friendname.equals(searchedusername))
+                 {
+                     return false;
+                 }
+             }
+             
+      }
+       catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

@@ -37,60 +37,16 @@ public class New_friendTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of processRequest method, of class New_friend.
-     */
-    @Test
-    public void testProcessRequest() throws Exception {
-        System.out.println("processRequest");
-        HttpServletRequest request = null;
-        HttpServletResponse response = null;
-        New_friend instance = new New_friend();
-        instance.processRequest(request, response);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of doGet method, of class New_friend.
      */
-    @Test
+  @Test
     public void testDoGet() throws Exception {
         System.out.println("doGet");
-        HttpServletRequest request = null;
-        HttpServletResponse response = null;
         New_friend instance = new New_friend();
-        instance.doGet(request, response);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of doPost method, of class New_friend.
-     */
-    @Test
-    public void testDoPost() throws Exception {
-        System.out.println("doPost");
-        HttpServletRequest request = null;
-        HttpServletResponse response = null;
-        New_friend instance = new New_friend();
-        instance.doPost(request, response);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getServletInfo method, of class New_friend.
-     */
-    @Test
-    public void testGetServletInfo() {
-        System.out.println("getServletInfo");
-        New_friend instance = new New_friend();
-        String expResult = "";
-        String result = instance.getServletInfo();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        boolean flag= instance.JUNIT("akanade","vtalreja");
+        assertEquals(true,flag);
     }
     
 }

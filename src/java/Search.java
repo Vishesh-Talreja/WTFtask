@@ -42,7 +42,68 @@ public class Search extends HttpServlet {
         }
   
 
-
+    public boolean JUNIT(String searched_user)
+    {
+      String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+      Connection conn ;
+      try {
+            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+             Statement stmt=conn.createStatement(); 
+            char searcheduser[] = searched_user.toCharArray();
+            boolean isWhiteSpace = false;
+            for (int i=0;i<searcheduser.length;i++) {
+                if(searcheduser[i]==' '){
+                   isWhiteSpace = true;
+                }
+            }
+            if(isWhiteSpace) {
+               // System.out.println("WHITE SPACE DETECTED");
+               // System.out.println("Full name");
+                String[] parts = searched_user.split(" ");
+                String first_name = parts[0];
+                String last_name = parts[1];
+               // System.out.println(first_name);
+                //System.out.println(last_name);
+                String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+first_name+"' AND LASTNAME = '"+last_name+"'";//query that obtains the set of searched user
+                Statement st = conn.createStatement();
+                ResultSet rs = st.executeQuery(query1);
+                boolean flag = rs.next();
+                if (flag == true){
+                    return true;
+                }
+                
+                rs.close();
+            }
+            else {
+                System.out.println("Either first or last");
+                String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+searched_user+"'";//query to get searched user list by firstname
+                Statement st = conn.createStatement();
+                ResultSet rs = st.executeQuery(query1);
+                boolean flag1 = rs.next();
+                if(flag1 == true) { 
+                    
+                    return true;
+                }
+                else {
+                    String query2="SELECT * FROM WTFuser where LASTNAME = '"+searched_user+"'";//query to get searched user list by Lastname
+                    Statement st1 = conn.createStatement();
+                    ResultSet rs1 = st.executeQuery(query2);
+                    boolean flag2 = rs1.next();
+                    if (flag2 == true) {
+                        return true;
+                    }
+                   
+                    st1.close();//connection close
+                }
+            
+           }
+            return false;
+      }
+      catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

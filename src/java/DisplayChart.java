@@ -43,7 +43,42 @@ public class DisplayChart extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
         }
     }
-
+    public boolean JUNIT(String username,String password)
+    {
+        String user=username;
+        user = user.toLowerCase();
+        String pass=password;
+        String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+        Connection conn;
+        try {
+            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            String query1 = "SELECT * FROM WTFuser where username = '"+user+"'";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            boolean flag1 = rs.next();
+            if(flag1==true)
+            {
+                String query2 = "SELECT * FROM WTFFriends where MAINUSERNAME='"+user+"'";
+                Statement st1 = conn.createStatement();
+                ResultSet rs2 = st.executeQuery(query2);
+                if(rs2.next())
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
