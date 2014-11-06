@@ -62,8 +62,7 @@ public class Search extends HttpServlet {
         String searched_user = request.getParameter("searchname");//Is used to get the name of the user being searched from search modal
         searched_user = searched_user.toLowerCase();//makes it lower case
         String main_username = request.getParameter("mainuser");
-        main_username = main_username.toLowerCase();
-        
+        main_username = main_username.toLowerCase();        
         String username = "";
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
@@ -92,8 +91,16 @@ public class Search extends HttpServlet {
                 boolean flag = rs.next();
                 if (flag == true){
                     username=rs.getString("username");
+                    if (username.equals(main_username))
+                    {
+                        System.out.println("Inside if 9");
+                        response.getWriter().write("false1&"+username);
+                    }
+                    else
+                    {
                     response.getWriter().write("true&"+username);
                     System.out.println(username);
+                    }
                 }
                 
                 rs.close();
@@ -107,9 +114,18 @@ public class Search extends HttpServlet {
                 if(flag1 == true) { 
                     
                     username=rs.getString("username");
-                    
+                    System.out.println(username);
+                     System.out.println(main_username);
+                    if (username.equals(main_username))
+                    {
+                        System.out.println("Inside if1");
+                        response.getWriter().write("false1&"+username);
+                    }
+                    else
+                    {
                     response.getWriter().write("true&"+username);
                     rs.close();
+                    }
                 }
                 else {
                     String query2="SELECT * FROM WTFuser where LASTNAME = '"+searched_user+"'";//query to get searched user list by Lastname
@@ -120,9 +136,16 @@ public class Search extends HttpServlet {
                         
                         
                         username=rs1.getString("username");
-                       
+                        if (username.equals(main_username))
+                        {
+                         System.out.println("Inside if");
+                        response.getWriter().write("false1&"+username);
+                        }
+                       else
+                        {
                         response.getWriter().write("true&"+username);
                         rs1.close();
+                        }
                     }
                    
                     st1.close();//connection close

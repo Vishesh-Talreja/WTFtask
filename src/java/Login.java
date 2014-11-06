@@ -96,11 +96,12 @@ public class Login extends HttpServlet {
         try (PrintWriter out = response.getWriter()){
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
         try{
-            
+
             conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             String query1 = "SELECT * FROM WTFuser where username = '"+user+"'";
             st = conn.createStatement();
             rs = st.executeQuery(query1);
+
             boolean flag = rs.next();
             //logger.debug("Login Database Connected");
             /*Checks whether the query has returned some results, if not it will redirect to the login page
@@ -117,15 +118,20 @@ public class Login extends HttpServlet {
             {
                 if(rs.getString("password").equals(pass))
                 {
-                    //Cookie usernameCookie = new Cookie("user",user);
-                    //response.addCookie(usernameCookie);
                     
+                    //Cookie usernameCookie = new Cookie("userName",userName);
+                    //response.addCookie(usernameCookie);
+                    //Cookie firstNameCookie = new Cookie("firstName",rs.getString("FIRSTNAME"));
+                    //response.addCookie(firstNameCookie);
+                    //Cookie lastNameCookie = new Cookie("lastName",rs.getString("LastNAME"));
+                    //response.addCookie(lastNameCookie);
                     //out.println("Welcome "+rs.getString("FirstName"));
                     request.setAttribute("Name",rs.getString("FirstName"));
                     request.setAttribute("username",rs.getString("username"));
                     //logger.debug("Login Successful");
                     RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");
                     rd.include(request, response);
+                    //response.sendRedirect("user_home.jsp");
                 }
                 else
                 {

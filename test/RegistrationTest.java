@@ -40,7 +40,7 @@ public class RegistrationTest {
     /**
      * Test of processRequest method, of class Registration.
      */
-    @Test
+    @org.junit.Test
     public void testProcessRequest() throws Exception {
         System.out.println("processRequest");
         Registration instance = new Registration();
@@ -48,5 +48,6 @@ public class RegistrationTest {
         flag = instance.JUNIT(flag);
         assertEquals(true,flag);
     }
+
     
 }

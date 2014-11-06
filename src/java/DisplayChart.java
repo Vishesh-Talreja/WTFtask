@@ -74,6 +74,17 @@ public class DisplayChart extends HttpServlet {
             String query1="SELECT * FROM WTFFriends where MAINUSERNAME='"+main_username+"'";//query that obtains the set of searched user
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
+            String query4="SELECT * FROM WTFuser where USERNAME='"+main_username+"'";//query that obtains the set of searched user
+            Statement st2 = conn.createStatement();
+            ResultSet rs3 = st2.executeQuery(query4);
+            System.out.println("outside  if");
+            if(rs3.next())
+            {
+                String l=rs3.getString("firstname");
+                pointsearnedlist.add(rs3.getString("pointearned"));
+                pointspossiblelist.add(rs3.getString("pointpossible"));
+                firstnamelist.add(rs3.getString("firstname"));
+            }
             // System.out.println(rs);
             while(rs.next())
             {

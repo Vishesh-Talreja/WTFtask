@@ -49,6 +49,4 @@ public class Complete_TaskTest {
         flag = instance.JUNIT(flag);
         assertEquals(true,flag);
     }
-
-    
 }

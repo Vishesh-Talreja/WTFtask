@@ -17,8 +17,9 @@
 <%@ page import="java.text.*" %>
 <%@ page import="javax.servlet.http.Cookie;" %>
 <%@ page import="java.util.Calendar.*" %>
-<%@ page import="javax.servlet.http.Cookie,org.joda.time.format.*,org.joda.time.LocalDate" %>
-
+<%@ page import="javax.servlet.http.Cookie" %>
+<%@ page import="org.joda.time.format.*" %>
+<%@ page import="org.joda.time.LocalDate" %>
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
@@ -160,8 +161,10 @@
         }
         }
         if(userName == null) response.sendRedirect("task_login.jsp");
-        return;*/
+        */
       %>
+      
+      
       
       <%
          Calendar cal = Calendar.getInstance(); 
@@ -175,9 +178,9 @@
       %>
       
       <%
-          String connectionURL="jdbc:derby://localhost:1527/WTFtask";
-          Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-          boolean flag = false;
+         String connectionURL="jdbc:derby://localhost:1527/WTFtask";
+        Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+         boolean flag = false;
          try {
             
             Statement getTask = conn.createStatement();
@@ -510,17 +513,65 @@
                 </div>
             </div>  
         </div>
+                     <%
+            System.out.println("PROGRESS UPDATE");
+            Connection conn4 = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            int totalTasks = 0;
+            int completedTasks = 0;
+            int percentage = 0;
+            try {
+                
+                Statement getProgress = conn4.createStatement();
+                System.out.println("STATEMENT CREATED");
+                String getProgressQuery = "SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = '"+user+"'";
+                ResultSet totalSet = getProgress.executeQuery(getProgressQuery);
+                boolean assigned = totalSet.next();
+                if (assigned == true) {
+                    totalTasks = Integer.parseInt(totalSet.getString(1));
+                    
+                    getProgressQuery = "SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = '"+user+"' AND STATUS = 'Complete'";
+                    ResultSet completeSet = getProgress.executeQuery(getProgressQuery);
+                    boolean completed = completeSet.next();
+                    if (completed == true) {
+                        completedTasks = Integer.parseInt(completeSet.getString(1));
+                        System.out.println(completedTasks);
+                        System.out.println(totalTasks);
+                        percentage = (int)((completedTasks*100)/totalTasks);
+                        System.out.println(percentage);
+                        
+                    }
+                    completeSet.close();
+                }
+                else { 
+                    System.out.println("no tasks assigned");
+                }
+                totalSet.close();
+                getProgress.close();
+                conn4.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+    %>
                     <div class="col-md-4" style="padding-top:40px">
-                        Your progress:
+                        Your progress: <%= percentage %>%
                         <div class="progress">
-                        <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                         60%<span class="sr-only">45% Complete</span>
+                        <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:<%= percentage %>%;color:black;">
+                         <span class="sr-only">45% Complete</span>
                         </div>
                         </div>
                     </div>
         </div>
         <!-- End owned tasks carousel-->
     </div>
+                         
+                         
+   
+                         
+                         
     <!-- main container-->
   </div>
   <div class="col-md-2"></div>
@@ -684,7 +735,7 @@
                             <input type="text" class="form-control" name="taskname" Placeholder="Task name" /> 
                             <br>
                         </div>
-                        <br>
+                        <br><br>
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="Points" name="taskpoints"/>
                         </div>
@@ -692,11 +743,11 @@
                         <div class="form-group">
                             <input type="hidden" class="form-control"  name="user" value = "<%=request.getAttribute("username")%>"/>
                         </div>
-                        <br>
+                        
                         <div class="form-group">
                             <input type="hidden" class="form-control" id="Name" name="Name" value = "<%=request.getAttribute("Name")%>"/>
                         </div>
-                        <br>
+                        
                         <div class="form-group">
                             <div class="col-lg-12 col-xs-12">
                                 <div class="input-group date" id="duedate">
@@ -826,9 +877,11 @@
                var k=0;
                 for (i=0;i<list.length;i++)
                {
+                   //console.log(list[i]-list2[i]);
                    datapointsgraph2[k]={
                        
                        label:list1[i],y:Number(list[i]-list2[i])
+                       
                    }
                    //console.log(datapoints[j]);
                    k++;
@@ -849,12 +902,14 @@
                                   toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
                                   name: "Points Completed",
                                   showInLegend: "true",
+                                  color:"#A9F5A9",
                                   dataPoints: datapointsgraph
                                 },  {        
                                   type: "stackedColumn",
                                   toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
                                   name: "Points Remaining",
                                   showInLegend: "true",
+                                  color:"#F5A9A9",
                                   dataPoints: datapointsgraph2
                                 }            
                                 ]
@@ -890,9 +945,16 @@
                     $("#searchUpdate").text("User Found");
                     $("#addfriend").removeAttr("disabled");     
               }
+              else if(response=="false1")
+              {
+                   $("#searchUpdate").text("You can't add yourself");
+                   $("#searched_username").attr('value',username);
+              }
               else
+              {
                   $("#searchUpdate").text("User not Found");
               $("#searched_username").attr('value',username);
+          }
            });
         });
 	
@@ -987,12 +1049,8 @@
             $('.carousel').carousel('pause');
             // Bootstrap validator code for add task form.
             $('#addtaskForm').bootstrapValidator({
-                    container:'tooltip',
-                    feedbackIcons: {		
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                    },
+                    
+                    
                     fields: {
 			taskname: {
                         	validators: {
@@ -1014,6 +1072,20 @@
                                     regexp: /^[0-9]+$/,
                                     message: 'Numbers only'
 				},
+                            }
+                        },
+                        recur: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Required'
+                                },
+                            }
+                        },
+                        duedate : {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Dats is required'
+                                },
                             }
                         },
                     }
