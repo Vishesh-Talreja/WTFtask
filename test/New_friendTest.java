@@ -45,7 +45,7 @@ public class New_friendTest {
     public void testDoGet() throws Exception {
         System.out.println("doGet");
         New_friend instance = new New_friend();
-        boolean flag= instance.JUNIT("akanade","vtalreja");
+        boolean flag= instance.JUNIT("akanade","phirlika");
         assertEquals(true,flag);
     }
     

@@ -49,19 +49,21 @@ public class DisplayChart extends HttpServlet {
         user = user.toLowerCase();
         String pass=password;
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
-        Connection conn;
+        Connection conn = null;
+         Statement st = null;
+         ResultSet rs = null;
         try {
             conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             String query1 = "SELECT * FROM WTFuser where username = '"+user+"'";
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(query1);
+            st = conn.createStatement();
+            rs = st.executeQuery(query1);
             boolean flag1 = rs.next();
             if(flag1==true)
             {
                 String query2 = "SELECT * FROM WTFFriends where MAINUSERNAME='"+user+"'";
-                Statement st1 = conn.createStatement();
-                ResultSet rs2 = st.executeQuery(query2);
-                if(rs2.next())
+                st = conn.createStatement();
+                rs = st.executeQuery(query2);
+                if(rs.next())
                 {
                     return true;
                 }
@@ -78,6 +80,17 @@ public class DisplayChart extends HttpServlet {
             ex.printStackTrace();
             return false;
         }
+        finally{
+          try{
+              st.close();
+              rs.close();
+             conn.close(); 
+          }
+          catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          
+      }
     }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -96,12 +109,12 @@ public class DisplayChart extends HttpServlet {
           String main_username = request.getParameter("mainuser");
         main_username = main_username.toLowerCase();
         System.out.println(main_username);
-        ArrayList<String> pointsearnedlist=new ArrayList<String>();
-        ArrayList<String> pointspossiblelist=new ArrayList<String>();
+        ArrayList<String> pointsearnedlist=new ArrayList<String>();//Arraylist that stores points earned for each user
+        ArrayList<String> pointspossiblelist=new ArrayList<String>();//Arraylist that stores points possible for each user
         ArrayList<String> list=new ArrayList<String>();
-        ArrayList<String> firstnamelist=new ArrayList<String>();
+        ArrayList<String> firstnamelist=new ArrayList<String>();//Arraylist  that stores friend tobe displayed
         String connection,dusername,password;
-        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask\\WTFtask\\config.txt"));
         try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -123,13 +136,15 @@ public class DisplayChart extends HttpServlet {
         }
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-           
+           Connection conn = null;
+            Statement st = null;
+            ResultSet rs = null;
            try {
-            Connection conn = DriverManager.getConnection(connection,dusername,password);
+            conn = DriverManager.getConnection(connection,dusername,password);
             Statement stmt=conn.createStatement(); 
             String query1="SELECT * FROM WTFFriends where MAINUSERNAME='"+main_username+"'";//query that obtains the set of searched user
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(query1);
+            st = conn.createStatement();
+            rs = st.executeQuery(query1);
             String query4="SELECT * FROM WTFuser where USERNAME='"+main_username+"'";//query that obtains the set of searched user
             Statement st2 = conn.createStatement();
             ResultSet rs3 = st2.executeQuery(query4);
@@ -160,10 +175,8 @@ public class DisplayChart extends HttpServlet {
                 if(rs1.next())
                 {
                String pointsearned=rs1.getString("pointearned");
-                   //System.out.println(bc);
                 pointsearnedlist.add(pointsearned);
                  String pointspossible=rs1.getString("pointpossible");
-                 //System.out.println(pointspossible);
                 pointspossiblelist.add(pointspossible);
                 String firstname=rs1.getString("firstname");
                 firstnamelist.add(firstname);
@@ -171,23 +184,31 @@ public class DisplayChart extends HttpServlet {
                 st1.close();
                  
             }
-            //System.out.println(pointsearnedlist);
-            System.out.println(firstnamelist);
-           //request.setAttribute("username",list);
-            HashMap<String,ArrayList<String>> mapset=new HashMap<String,ArrayList<String>>();
-            mapset.put("username", firstnamelist);
-            mapset.put("pointsearned", pointsearnedlist);
-            mapset.put("pointspossible", pointspossiblelist);
+            HashMap<String,ArrayList<String>> mapset=new HashMap<String,ArrayList<String>>();//Creates a HashMap
+            mapset.put("username", firstnamelist);//Add usernamelist to HashMap
+            mapset.put("pointsearned", pointsearnedlist);//Add Pointsearned lsit to HashMap
+            mapset.put("pointspossible", pointspossiblelist);//Add POINTPOSSIBLE list to HashMap
             String json=new Gson().toJson(mapset);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(json);
+            response.getWriter().write(json);//Returns hashmap to the frontend
             
            }
            catch(SQLException ex)
         {
             out.print("Connection Failed!");
         }
+            finally{
+          try{
+              st.close();//connections are closed
+              rs.close();
+             conn.close(); 
+          }
+          catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          
+      }
     }
     }
 

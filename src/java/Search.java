@@ -41,14 +41,16 @@ public class Search extends HttpServlet {
            
         }
   
-
+ /* JUNIT Testing*/
     public boolean JUNIT(String searched_user)
     {
       String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
-      Connection conn ;
+      Connection conn = null ;
+      Statement st1=null;
+      ResultSet rs1=null;
       try {
             conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-             Statement stmt=conn.createStatement(); 
+            Statement stmt=conn.createStatement(); 
             char searcheduser[] = searched_user.toCharArray();
             boolean isWhiteSpace = false;
             for (int i=0;i<searcheduser.length;i++) {
@@ -57,43 +59,38 @@ public class Search extends HttpServlet {
                 }
             }
             if(isWhiteSpace) {
-               // System.out.println("WHITE SPACE DETECTED");
-               // System.out.println("Full name");
                 String[] parts = searched_user.split(" ");
                 String first_name = parts[0];
                 String last_name = parts[1];
-               // System.out.println(first_name);
-                //System.out.println(last_name);
                 String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+first_name+"' AND LASTNAME = '"+last_name+"'";//query that obtains the set of searched user
-                Statement st = conn.createStatement();
-                ResultSet rs = st.executeQuery(query1);
-                boolean flag = rs.next();
+                st1 = conn.createStatement();
+                rs1 = st1.executeQuery(query1);
+                boolean flag = rs1.next();
                 if (flag == true){
+                     System.out.println("inside waste");
                     return true;
                 }
-                
-                rs.close();
             }
             else {
                 System.out.println("Either first or last");
                 String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+searched_user+"'";//query to get searched user list by firstname
-                Statement st = conn.createStatement();
-                ResultSet rs = st.executeQuery(query1);
-                boolean flag1 = rs.next();
+                 st1 = conn.createStatement();
+                 rs1 = st1.executeQuery(query1);
+                boolean flag1 = rs1.next();
                 if(flag1 == true) { 
-                    
+                   
                     return true;
                 }
                 else {
                     String query2="SELECT * FROM WTFuser where LASTNAME = '"+searched_user+"'";//query to get searched user list by Lastname
-                    Statement st1 = conn.createStatement();
-                    ResultSet rs1 = st.executeQuery(query2);
+                    st1 = conn.createStatement();
+                    rs1 = st1.executeQuery(query2);
                     boolean flag2 = rs1.next();
-                    if (flag2 == true) {
+                    if (flag2 == true) { 
                         return true;
                     }
                    
-                    st1.close();//connection close
+                  // st1.close();//connection close
                 }
             
            }
@@ -103,6 +100,17 @@ public class Search extends HttpServlet {
             ex.printStackTrace();
             return false;
         }
+      finally{
+          try{
+              st1.close();
+              rs1.close();
+             conn.close(); 
+          }
+          catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          
+      }
     }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -126,7 +134,7 @@ public class Search extends HttpServlet {
         main_username = main_username.toLowerCase();        
         String username = "";
         String connection,dusername,password;
-        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask\\WTFtask\\config.txt"));
         try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -148,8 +156,11 @@ public class Search extends HttpServlet {
         }
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
+            Connection conn = null;
+            Statement st = null;
+            ResultSet rs = null;
             try {
-               Connection conn = DriverManager.getConnection(connection,dusername,password);
+            conn = DriverManager.getConnection(connection,dusername,password);
             Statement stmt=conn.createStatement(); 
             char searcheduser[] = searched_user.toCharArray();
             boolean isWhiteSpace = false;
@@ -167,8 +178,8 @@ public class Search extends HttpServlet {
                // System.out.println(first_name);
                 //System.out.println(last_name);
                 String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+first_name+"' AND LASTNAME = '"+last_name+"'";//query that obtains the set of searched user
-                Statement st = conn.createStatement();
-                ResultSet rs = st.executeQuery(query1);
+                st = conn.createStatement();
+                rs = st.executeQuery(query1);
                 boolean flag = rs.next();
                 if (flag == true){
                     username=rs.getString("username");
@@ -184,13 +195,12 @@ public class Search extends HttpServlet {
                     }
                 }
                 
-                rs.close();
             }
             else {
                 System.out.println("Either first or last");
                 String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+searched_user+"'";//query to get searched user list by firstname
-                Statement st = conn.createStatement();
-                ResultSet rs = st.executeQuery(query1);
+                st = conn.createStatement();
+                rs = st.executeQuery(query1);
                 boolean flag1 = rs.next();
                 if(flag1 == true) { 
                     
@@ -205,18 +215,17 @@ public class Search extends HttpServlet {
                     else
                     {
                     response.getWriter().write("true&"+username);
-                    rs.close();
                     }
                 }
                 else {
                     String query2="SELECT * FROM WTFuser where LASTNAME = '"+searched_user+"'";//query to get searched user list by Lastname
-                    Statement st1 = conn.createStatement();
-                    ResultSet rs1 = st.executeQuery(query2);
-                    boolean flag2 = rs1.next();
+                   st = conn.createStatement();
+                     rs = st.executeQuery(query2);
+                    boolean flag2 = rs.next();
                     if (flag2 == true) {
                         
                         
-                        username=rs1.getString("username");
+                        username=rs.getString("username");
                         if (username.equals(main_username))
                         {
                          System.out.println("Inside if");
@@ -225,11 +234,8 @@ public class Search extends HttpServlet {
                        else
                         {
                         response.getWriter().write("true&"+username);
-                        rs1.close();
                         }
                     }
-                   
-                    st1.close();//connection close
                 }
                 
             }
@@ -240,6 +246,17 @@ public class Search extends HttpServlet {
         {
             out.print("Connection Failed!");
         }
+            finally{
+          try{
+              st.close();
+              rs.close();
+             conn.close(); 
+          }
+          catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          
+      }
            
         }
     }
