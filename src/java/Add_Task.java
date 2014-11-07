@@ -46,6 +46,8 @@ public class Add_Task extends HttpServlet {
         
         
     }
+    
+    //This is the JUnit code for this servlet.
     public boolean JUNIT(boolean flag)
     {
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
@@ -105,6 +107,7 @@ public class Add_Task extends HttpServlet {
         for(int i=0; i<assignees.length;i++) {
             assignees[i] = assignees[i].toLowerCase();
         }
+        //This piece of code extracts the database paqrameters from the file config.txt
         String connection,username,password;
         BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
         try {
@@ -141,7 +144,7 @@ public class Add_Task extends HttpServlet {
             int id = rs.getInt("TaskID");
             int Tpoint = Integer.parseInt(Tpoints);
             
-            for(int i=0;i<assignees.length;i++) {                                   //Assign each member to this task
+            for(int i=0;i<assignees.length;i++) {                                   //Assign each member to this task with designated points
                 String query5 = "SELECT * FROM WTFuser WHERE FIRSTNAME='"+assignees[i]+"'";
                 rs = stmt.executeQuery(query5);
                 rs.next();

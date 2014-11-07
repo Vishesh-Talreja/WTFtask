@@ -167,6 +167,7 @@
       
       
       <%
+         //This piece of code is used to extract the current system date
          Calendar cal = Calendar.getInstance(); 
          int year = cal.get(Calendar.YEAR);
          int month = cal.get(Calendar.MONTH)+1;
@@ -178,8 +179,11 @@
       %>
       
       <%
+         
+         //This piece of code is used to reset the due date for a recurring task whose due date has already passed. THis code extracts 
+         //the due dates of each task in the database one by one, compares it to the system date and if it is past the system date, adds the designated amount of days to the due date.
          String connectionURL="jdbc:derby://localhost:1527/WTFtask";
-        Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+         Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
          boolean flag = false;
          try {
             
@@ -190,7 +194,6 @@
             ResultSet updateTaskSet;
             while(getTaskSet.next()) {
                 
-                
                 if(getTaskSet.getString("RECUR").equals("weekly") ||getTaskSet.getString("RECUR").equals("monthly") ) {
                     
                     LocalDate task_date = formatter.parseLocalDate( getTaskSet.getString("DUEDATE"));
@@ -199,16 +202,16 @@
                         String curr_task_date = task_date.toString();
                         String new_task_date = "";
                         if (getTaskSet.getString("RECUR").equals("weekly")) {
-                            System.out.println("GOING TO ADD BY 7 "+getTaskSet.getString("TASKNAME"));
+                            //System.out.println("GOING TO ADD BY 7 "+getTaskSet.getString("TASKNAME"));
                             task_date = task_date.plusDays(7);
                             new_task_date = task_date.toString(); 
-                            System.out.println("ADDED 7 days to "+getTaskSet.getString("TASKNAME")+ "OLD TASK DATE WAS "+ curr_task_date +" NEW DUE DATE IS " + new_task_date); 
+                            //System.out.println("ADDED 7 days to "+getTaskSet.getString("TASKNAME")+ "OLD TASK DATE WAS "+ curr_task_date +" NEW DUE DATE IS " + new_task_date); 
                         }
                         else if (getTaskSet.getString("RECUR").equals("monthly")) {
-                            System.out.println("GOING TO ADD BY 30 "+getTaskSet.getString("TASKNAME"));
+                            //System.out.println("GOING TO ADD BY 30 "+getTaskSet.getString("TASKNAME"));
                             task_date = task_date.plusDays(30);
                             new_task_date = task_date.toString();
-                            System.out.println("ADDED 30 days to "+getTaskSet.getString("TASKNAME")+ "OLD TASK DATE WAS "+ curr_task_date +" NEW DUE DATE IS " + new_task_date); 
+                            //System.out.println("ADDED 30 days to "+getTaskSet.getString("TASKNAME")+ "OLD TASK DATE WAS "+ curr_task_date +" NEW DUE DATE IS " + new_task_date); 
                         }
                         String updateTaskDate = "UPDATE IS2560.WTFtasks SET DUEDATE='"+ new_task_date +"' WHERE DUEDATE= '"+ curr_task_date +"'";
                         updateTask.executeUpdate(updateTaskDate);
@@ -219,8 +222,8 @@
                 
             }
             if (flag == false)
-                System.out.println("No tasks to update");
-            System.out.println("END WHILE");
+                //System.out.println("No tasks to update");
+            //System.out.println("END WHILE");
             getTaskSet.close();
             getTask.close();
          }
@@ -514,8 +517,10 @@
                 </div>
             </div>  
         </div>
-                     <%
-            System.out.println("PROGRESS UPDATE");
+            <%
+                        
+            //This piece of code is used to update the individual progress bar of the logged in user. I); It wll extract the task completion statistics of the user such as
+            //total tasks assigned and tasks completed, calcuate the percentage of tasks completed and accordingly update the progress bar.
             Connection conn4 = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             int totalTasks = 0;
             int completedTasks = 0;
@@ -535,16 +540,16 @@
                     boolean completed = completeSet.next();
                     if (completed == true) {
                         completedTasks = Integer.parseInt(completeSet.getString(1));
-                        System.out.println(completedTasks);
-                        System.out.println(totalTasks);
+                        //System.out.println(completedTasks);
+                        //System.out.println(totalTasks);
                         percentage = (int)((completedTasks*100)/totalTasks);
-                        System.out.println(percentage);
+                        //System.out.println(percentage);
                         
                     }
                     completeSet.close();
                 }
                 else { 
-                    System.out.println("no tasks assigned");
+                    //System.out.println("no tasks assigned");
                 }
                 totalSet.close();
                 getProgress.close();
@@ -569,11 +574,7 @@
         <!-- End owned tasks carousel-->
     </div>
                          
-                         
-   
-                         
-                         
-    <!-- main container-->
+ <!-- main container-->
   </div>
   <div class="col-md-2"></div>
     
@@ -821,8 +822,11 @@
     <script>
 
 	i = 0;
+        //Here we simply obtain the current system date
 	var date = new Date();
         date.setDate(date.getDate());
+        
+        //Here the datepicker is initialized with past dates disabled and hide on date select
 	 $(function () {
                 $("#duedate").datepicker({startDate: date});
                 
@@ -830,6 +834,8 @@
                     $(this).datepicker('hide');
                 });
             });
+            
+          //This function displays a chart showing the progress of all your friends in terms of points.  
           function chartdisplay(){
              var mainuser = $("#mainuser").val();
              console.log(mainuser);
@@ -959,6 +965,7 @@
            });
         });
 	
+        //This function is called when tbe user logs out, calling  a cookie cleaner servlet.
         function logout() {
             $.get('Logout');
         }
@@ -1004,6 +1011,7 @@
         
         //Show/hide and forms and reset values on close.
 	$("#inviteForm").hide();
+        
         
         $("#showaddtaskmodal").click(function() {	
                 document.forms["addtaskForm"].reset();
