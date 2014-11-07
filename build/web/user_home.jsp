@@ -192,8 +192,10 @@
             String getTasksQuery = "SELECT * FROM WTFtasks";
             ResultSet getTaskSet = getTask.executeQuery(getTasksQuery);
             ResultSet updateTaskSet;
+            int taskid;
             while(getTaskSet.next()) {
-                
+                taskid = getTaskSet.getInt("TASKID");
+                //System.out.println("THE ID IS "+taskid);
                 if(getTaskSet.getString("RECUR").equals("weekly") ||getTaskSet.getString("RECUR").equals("monthly") ) {
                     
                     LocalDate task_date = formatter.parseLocalDate( getTaskSet.getString("DUEDATE"));
@@ -213,8 +215,11 @@
                             new_task_date = task_date.toString();
                             //System.out.println("ADDED 30 days to "+getTaskSet.getString("TASKNAME")+ "OLD TASK DATE WAS "+ curr_task_date +" NEW DUE DATE IS " + new_task_date); 
                         }
+                        System.out.println("THE ID IS "+taskid);
                         String updateTaskDate = "UPDATE IS2560.WTFtasks SET DUEDATE='"+ new_task_date +"' WHERE DUEDATE= '"+ curr_task_date +"'";
                         updateTask.executeUpdate(updateTaskDate);
+                        String updateTaskStatus = "UPDATE IS2560.WTFtaskallocation SET STATUS='Pending' WHERE TASKID="+taskid;
+                        updateTask.executeQuery(updateTaskStatus);
                     }
                     else
                         flag = false;
@@ -457,9 +462,9 @@
 
                             while(rs8.next()){
                                       Statement s15 = conn2.createStatement();
-                                      sql10= "SELECT STATUS FROM WTFtaskallocation WHERE USERNAME = '"+user+"' and TASKID = "+rs8.getString("TASKID")+"";
+                                      sql10= "SELECT STATUS FROM WTFtaskallocation WHERE TASKID = "+rs8.getString("TASKID")+"";
                                       ResultSet rs10 = s15.executeQuery(sql10);
-                                      while(rs10.next())
+                                      if(rs10.next())
                                       {
                                       if(count2==0)
                                       {    

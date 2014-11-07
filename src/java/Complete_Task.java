@@ -7,10 +7,16 @@ import java.io.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -93,8 +99,10 @@ public class Complete_Task extends HttpServlet {
         Connection conn=null;
         Statement stmt=null;
         ResultSet rs = null;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date task_date = new Date();
         String connection,username,password;
-        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask\\WTFtask\\config.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
         try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -125,6 +133,8 @@ public class Complete_Task extends HttpServlet {
             rs = stmt.executeQuery(query1);                               //Extract taskId
             rs.next();
             int id = rs.getInt("TaskID");
+            String recurValue =rs.getString("RECUR");
+            String taskdate = rs.getString("DUEDATE");
             //Slecting data from the user table
             String query2 = "SELECT * FROM IS2560.WTFuser WHERE USERNAME='"+user+"'";
             rs = stmt.executeQuery(query2);
@@ -136,8 +146,29 @@ public class Complete_Task extends HttpServlet {
             //Adding taskpoints to the user table 
             String query3 = "UPDATE IS2560.WTFuser SET POINTEARNED = '"+NewTpoints+"' WHERE USERNAME ='"+user+"'";
             stmt.executeUpdate(query3);
-            String query = "UPDATE IS2560.WTFtaskallocation SET STATUS = 'Complete' WHERE USERNAME ='"+user+"' and TASKID="+id;
-            stmt.executeUpdate(query);
+            String query = null;
+            if(recurValue.equals("none")) {
+                query = "UPDATE IS2560.WTFtaskallocation SET STATUS = 'Complete' WHERE USERNAME ='"+user+"' and TASKID="+id;
+                stmt.executeUpdate(query);
+            }
+            else {
+                task_date = dateFormat.parse(taskdate);
+                Calendar c = Calendar.getInstance();
+                c.setTime(task_date); 
+                if(recurValue.equals("weekly")) {
+                    //System.out.println("Task duedate postponed by 7 days");
+                    c.add(Calendar.DATE, 7); // Adding 5 days
+                    taskdate = dateFormat.format(c.getTime());
+                }
+                else if(recurValue.equals("monthly")) {
+                    //System.out.println("Task duedate postponed by 30 days");
+                    c.add(Calendar.DATE, 30); // Adding 5 days
+                    taskdate = dateFormat.format(c.getTime());
+                }
+                
+                String updateQuery = "UPDATE IS2560.WTFtasks SET DUEDATE='"+taskdate+"' WHERE TASKID="+id;
+                stmt.executeUpdate(updateQuery);
+            }
             request.setAttribute("Name", name);
             request.setAttribute("username",user);
             RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");
@@ -146,12 +177,15 @@ public class Complete_Task extends HttpServlet {
            catch(SQLException ex)
            {
              out.print(ex+"Connection Failed!");
-           }
+           } catch (ParseException ex) {
+                Logger.getLogger(Complete_Task.class.getName()).log(Level.SEVERE, null, ex);
+            }
            finally
            {
                 try {
                     //Releasing all the resources
                     rs.close();
+                    
                     stmt.close();
                     conn.close();
                 } catch (SQLException ex) {

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-//import org.apache.log4j.Logger;
+import org.apache.log4j.Logger;
 import java.io.*;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(urlPatterns = {"/Login"})
 public class Login extends HttpServlet {
-//private static final Logger logger = Logger.getLogger(Login.class);
+    private static final Logger logger = Logger.getLogger(Login.class);
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -94,7 +94,7 @@ public class Login extends HttpServlet {
         ResultSet rs =null;
         response.setContentType("text/html;charset=UTF-8");
         String connection,username,password;
-        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask\\WTFtask\\config.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
         try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -124,13 +124,13 @@ public class Login extends HttpServlet {
             rs = st.executeQuery(query1);
 
             boolean flag = rs.next();
-            //logger.debug("Login Database Connected");
+            logger.debug("Login Database Connected");
             /*Checks whether the query has returned some results, if not it will redirect to the login page
             with an error message, else it will redirect the user to the his home page*/
             if(flag==false)
             {
                     request.setAttribute("logon","fail");
-                    //logger.debug("Failed Login");
+                    logger.debug("Failed Login");
                     RequestDispatcher rm=request.getRequestDispatcher("task_login.jsp");
                     rm.forward(request, response);
                     
@@ -149,7 +149,7 @@ public class Login extends HttpServlet {
                     //out.println("Welcome "+rs.getString("FirstName"));
                     request.setAttribute("Name",rs.getString("FirstName"));
                     request.setAttribute("username",rs.getString("username"));
-                    //logger.debug("Login Successful");
+                    logger.debug("Login Successful");
                     RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");
                     rd.include(request, response);
                     //response.sendRedirect("user_home.jsp");
@@ -157,7 +157,7 @@ public class Login extends HttpServlet {
                 else
                 {
                     request.setAttribute("logon","fail");
-                    //logger.debug("Login Failed due to invalid password");
+                    logger.debug("Login Failed due to invalid password");
                     RequestDispatcher rm=request.getRequestDispatcher("task_login.jsp");
                     rm.forward(request, response);
                 }

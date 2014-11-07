@@ -76,7 +76,7 @@ SET POINTEARNED='0';
 
 DELETE from WTFuser;
 DELETE from WTFtasks;
-DELETE from WTFtaskallocation;
+DELETE from WTFtaskallocation where TASKID=9;
 DELETE from WTFFriends;
 
 DELETE from WTFuser where USERNAME ='ad';
