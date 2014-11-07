@@ -12,6 +12,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,13 +45,15 @@ public class New_friend extends HttpServlet {
     public boolean JUNIT(String mainusername,String searchedusername)
     {
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
-      Connection conn ;
+      Connection conn = null ;
+      Statement st1 = null;
+       ResultSet rs2 = null;
       try {
             conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
              Statement st=conn.createStatement(); 
              String query2 = "SELECT FRIENDNAME FROM WTFFriends where MAINUSERNAME='"+mainusername+"'";
-             Statement st1 = conn.createStatement();
-             ResultSet rs2 = st.executeQuery(query2);
+             st1 = conn.createStatement();
+            rs2 = st.executeQuery(query2);
              while(rs2.next())
              {
                  String friendname=rs2.getString("FRIENDNAME");
@@ -64,9 +68,20 @@ public class New_friend extends HttpServlet {
             ex.printStackTrace();
             return false;
         }
+      finally{
+          try{
+              st1.close();
+              rs2.close();
+             conn.close(); 
+          }
+          catch (SQLException ex) {
+               Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          
+      }
         return true;
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -87,7 +102,7 @@ public class New_friend extends HttpServlet {
         String main_username = request.getParameter("mainuser");//obtains the username who is logged in
         String main_user_firstname = request.getParameter("mainuser_firstname");
         String connection,username,password;
-        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask\\WTFtask\\config.txt"));
         try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -107,19 +122,20 @@ public class New_friend extends HttpServlet {
         } finally {
             br.close();
         }
-       //System.out.println(user);
        try (PrintWriter out = response.getWriter()){
-
+            Connection conn=null;
+            Statement st1 = null;
+            ResultSet rs = null;
         try{
             
-            Connection conn = DriverManager.getConnection(connection,username,password);
+            conn = DriverManager.getConnection(connection,username,password);
             String query="INSERT INTO IS2560.WTFFriends (mainusername,friendname) VALUES ( '"+main_username+"' , '"+searched_username+"' )";//Inserts into WTFFriends database
             Statement st = conn.createStatement();
             st.executeUpdate(query);
 
-            Statement st1 = conn.createStatement();
+            st1 = conn.createStatement();
             String query2 = "SELECT * FROM IS2560.WTFuser WHERE username='"+searched_username+"'";
-            ResultSet rs = st1.executeQuery(query2);
+            rs = st1.executeQuery(query2);
             boolean is = rs.next();
             String searched_user_firstname = rs.getString("Firstname");
             System.out.println(searched_user_firstname);
@@ -132,9 +148,7 @@ public class New_friend extends HttpServlet {
             RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");//Loads the main page after friend has been added 
 
             rd.forward(request, response);
-            rs.close();
-            st.close();
-            conn.close();//connection closed
+           //connection closed
             
         }
         catch(SQLException ex)
@@ -142,9 +156,21 @@ public class New_friend extends HttpServlet {
             response.getWriter().write("false");
             out.print("Connection Failed!"); 
         }
+        finally{
+          try{
+            rs.close();
+            st1.close();
+            conn.close();
+          }
+          catch (SQLException ex) {
+               Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          
+      }
        }
         
     }
+
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -169,5 +195,7 @@ public class New_friend extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }
+
+
+

@@ -44,7 +44,7 @@ public class SearchTest {
     public void testDoGet() throws Exception {
         System.out.println("doGet");
         Search instance = new Search();
-        boolean flag= instance.JUNIT("aashish");
+        boolean flag= instance.JUNIT("aashish kanade");
         assertEquals(true,flag);
     }
 }
