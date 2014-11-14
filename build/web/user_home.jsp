@@ -795,7 +795,7 @@
                                 <input type="text" class="form-control" Placeholder="Add friends..." id="addedfriend" name="addedfriend">
                             </div>
                             <div class="col-md-3 col-xs-3">
-                                <button id="add" type="button" class="btn btn-success" onclick="showFriend()"> Add</button>	
+                                <button id="add" type="button" class="btn btn-success" onclick="showFriend()" disabled="false"> Add</button>	
                             </div>
                         </div>
                         <br><br>
@@ -977,6 +977,7 @@
         
         //Here the entered name is validated from the database via an ajax call to check whether the said person is a friend or not.
         function showFriend() {
+                
                  var addedfriend = $("#addedfriend").val();
                  var curr_user = $("#Name").val();
                  if (addedfriend != curr_user) {
@@ -997,6 +998,7 @@
                                $("#somediv").text(responseText);
                                $("#addedfriend").val('');  
                            }
+                           
                        });
                    }
                    else {

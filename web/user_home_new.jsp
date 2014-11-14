@@ -1,5 +1,5 @@
 <%-- 
-    Document   : faulty_login
+    Document   : user_home_new
     Created on : Sep 29, 2014, 8:55:34 PM
     Author     : aashish kanade, vinay rajagopalan, vishesh talreja
 --%>
@@ -7,11 +7,9 @@
 
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <%@ page import="java.util.*" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.io.*" %>
-
 <%@ page import="java.sql.*" %>
 <%@ page import="javax.servlet.*" %>
 <%@ page import="java.text.*" %>
@@ -32,6 +30,7 @@
     <title>Crib</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/metro-bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="http://bsdp-assets.blackcherry.us/1.3.0/datepicker.min.css">
     <!-- BootstrapValidator CSS -->
     <link rel="stylesheet" href="dist/css/bootstrapValidator.min.css"/>
@@ -45,108 +44,16 @@
 			background-color:#336699;
 			border-color:#336699;
 		}
+                
+                html { height:100%;width:100%}
 		
-                	
-		body {
-		  background: -webkit-gradient(#2ECCFA,white); /* Chrome,Safari4+ */
-		  background: -webkit-linear-gradient(#2ECCFA,white); /* Chrome10+,Safari5.1+ */
-		 background-repeat: no-repeat;
-		}
-                
-		#myCarousel {height:30vh;}
-                .item {height:25vh;}
-                html {height:100%}
-
-                ::-webkit-scrollbar { 
-                            display: none; 
+                body { height:100%;width:100%}
+		::-webkit-scrollbar { 
+                    display: none; 
                 }
                 
-                .carousel-inner .active.left { left: -50%; }
-		.carousel-inner .next        { left:  50%; }
-		.carousel-inner .prev        { left:  -50%; }
-		.carousel-control.left,.carousel-control.right {background-image:none;}
 
-		.col-lg-2 {width: 50%;}
-                
-                .event {
-                  width: 300px;
-                  height: 80px;
-                  background: #fff;
-                  border: 1px solid #CCC;
-                  border-radius: 2px;
-                  margin: 50px;
-                }
-                .event:before {
-                  content: '';
-                  display: block;
-                  width: 295px;
-                  height: 70px;
-                  background: #fff;
-                  border: 1px solid #CCC;
-                  border-radius: 2px; 
-                  transform: rotate(2deg);
-                  position: relative;
-                  top: 12px;
-                  left: 2px;
-                  z-index: -1;
-                }
-                .event:after {
-                  content: '';
-                  display: block;
-                  width: 295px;
-                  height: 75px;
-                  background: #fff;
-                  border: 1px solid #CCC;
-                  border-radius: 2px; 
-                  transform: rotate(-2deg);
-                  position: relative;
-                  top: -136px;
-                  z-index: -2;  
-                }
-                .event > span {
-                  display: block;
-                  width: 30px;
-                  background: #232323;  
-                  position: relative;
-                  top: -55px;
-                  left: -15px;
-
-                  /* Text */
-                  color: #fff;
-                  font-size: 10px;
-                  padding: 2px 7px;
-                  text-align: right;
-                }
-                .event > .info {
-                  display: inline-block;
-                  position: relative;
-                  top: -75px;
-                  left: 40px;
-
-                  /* Text */
-                  color: #232323;
-                  font-weight: 600;
-                  line-height: 25px;
-                }
-                .event > .info:first-line {
-                  text-transform: uppercase;
-                  font-size: 10px;
-                  margin: 10px 0 0 0;
-                  font-weight: 700;
-                }
-                .event > .price {
-                  display: inline-block;
-                  width: 60px;
-                  position: relative;
-                  top: -85px;
-                  left: 115px; 
-
-                  /* Text */
-                  color: #E35354;
-                  text-align: center;
-                  font-weight: 700;
-                }
-
+      
 	</style>	
   </head>
   <body>
@@ -241,43 +148,11 @@
          
       %>
       
-  <div class="col-md-2"></div>
-  <div class="col-md-8 col-xs-12" style='padding: 0'>
-    <!-- main container for page content-->
-    <div style ="height:100vh;background-color: white;padding: 2em">
-        <!-- top navbar-->
-        <nav class="navbar navbar-default" role="navigation" style="border:hidden ;background-color:#2E9AFE;width: 100%;margin: -1">
-          <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar" style="background-color:white;"></span>
-                <span class="icon-bar" style="background-color:white;"></span>
-                <span class="icon-bar" style="background-color:white;"></span>
-              </button>
-
-            <div class="navbar-brand" style="padding-top:0px;"><img  src="img/logo_nav.gif" style="height:140%;width50%;"/></div>
-
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right" >
-                    <li id="chart"> <a id="chartdisplaymodal" href="#chartdisplay" class="btn-group-sm" data-toggle="modal"  style="color:white" onclick="chartdisplay()">Chart</a></li>
-                    <li id="group"><a id="showdisplayfriendmodal" href="#displayfriendmodal" class="btn-group-sm" data-toggle="modal"  style="color:white">Friends</a></li>
-                    <li id="group"><a id="showaddtaskmodal" href="#addtaskmodal" class="btn-group-sm" data-toggle="modal"  style="color:white">Add a Task</a></li>
-                    <li id="friend"><a id="showaddfriendmodal" href="#addfriendmodal" class="btn-group-sm" data-toggle="modal" style="color:white">Add a Friend</a></li>
-
-
-                    <li ><a href="task_login.jsp" onclick="logout()" class="btn-group-sm" style="color:white">Log Out</a></li>
-
-                </ul> 
-            </div><!-- /.navbar-collapse -->
-          </div><!-- /.container-fluid -->
-        </nav><!-- end navbar-->
-        
-        <!-- Welcome message-->
-        <h1 style="font-face:papyrus">Welcome <%=request.getAttribute("Name")%> </h1><br>
+  <!-- Main content-->
+    <div class="col-md-2 col-xs-0">
+			
+    </div>
+    <div class="col-md-8 col-xs-12">
 
         <%
              /*This block of java code would check the values returned from various servlets 
@@ -305,138 +180,11 @@
                 }
         %>
         
-        <!-- View Tasks carousel-->
-        <div class="row">
-        <div class="col-md-8">
-            <div class="col-md-4 col-md-offset-4 text-center"><h4><a  href="#myCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>&nbsp;Your Tasks&nbsp;<a  href="#myCarousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a></h4></div>
-            <div class="col-md-12 col-xs-12">
-                <div class="carousel slide" id="myCarousel">
-                    <div class="carousel-inner">
-                        <%
-                        /*This block of java code displays the tasks the user has to complete, here it 
-                          first connects to the database and then displays them in the form of thumbnails*/
-                        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        Date date = new Date();
-                        String user = (String)request.getAttribute("username");
-                        String Name = (String)request.getAttribute("Name");
-                        String sql,sql3;
+
                         
-                        sql3 ="SELECT TASKID,STATUS FROM WTFtaskallocation where USERNAME = '"+user+"'";
-                        int task_year,task_month,task_day;
-                        try {
-                            
-                            Statement s = conn.createStatement();
-                            Statement s1 = conn.createStatement();
-                            Statement s2 = conn.createStatement();
-                            ResultSet rs2 = s2.executeQuery(sql3);
-                            int count = 0;
-                            
-                            while(rs2.next()){
-                                sql = "SELECT * FROM WTFtasks where TASKID ="+rs2.getInt("TASKID");
-                                ResultSet rs = s.executeQuery(sql);
-                                while (rs.next()) {
-
-                                      //String date[] = rs.getString("DUEDATE").split("-");
-                                      //task_year = Integer.parseInt(date[0]);
-                                      //task_month = Integer.parseInt(date[1]);
-                                      //task_day = Integer.parseInt(date[2]);
-                                      //if (year == task_year && month == task_month && day == task_day) {
-                                      String sql2 ="SELECT FIRSTNAME,LASTNAME FROM WTFuser WHERE USERNAME='"+rs.getString("OWNER")+"'";                       
-                                      ResultSet rs1 = s1.executeQuery(sql2);
-                                      rs1.next();
-                                      if(count==0)
-                                      {    
-                                      out.println("<div class='item active'>");
-                                      }
-                                      else
-                                      {
-                                         out.println("<div class='item'>"); 
-                                      }
-                                      String duedate=rs.getString("DUEDATE");
-                                      Date date1 = dateFormat.parse(duedate);
-                                      out.println("<div class='col-lg-2 col-xs-12' >");
-                                      if(rs2.getString("STATUS").equalsIgnoreCase("Complete"))
-                                      {
-                                          out.println("<div class='thumbnail' style = 'background-color:#A9F5A9;color:white;' align='center'>");
-                                      }
-                                      else
-                                      {    
-                                      if(date1.before(date)){
-                                            out.println("<div class='thumbnail' style = 'background-color:#F5A9A9;color:white;' align='center'>");
-                                      }
-                                      else
-                                      {    
-                                      out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
-                                      }
-                                      }
-                                      out.println("<div class='caption'>");
-                                      out.println("<h3>"+rs.getString("TASKNAME")+"</h3>");
-                                      out.println("<p>POINTS: "+rs.getString("TASKPOINTS")+"<br>OWNER: "+rs1.getString("FIRSTNAME")+" "+rs1.getString("LASTNAME")+"<br>DUE-DATE: "+rs.getString("DUEDATE")+"</p>");
-                                      //Part of code to display completed tasks
-                                      if(rs2.getString("STATUS").equalsIgnoreCase("Complete"))
-                                      {
-                                          out.println("<p><form method = 'get' action = 'Complete_Task'><button type ='submit' disabled='disabled' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></p>");
-                                      }
-                                      else
-                                      {
-                                          out.println("<p><form method = 'get' action = 'Complete_Task'><input type='hidden' name='Tname' value = '"+rs.getString("TASKNAME")+"'/><input type='hidden' name='Tpoints' value = '"+rs.getString("TASKPOINTS")+"'/><input type='hidden' name='Name' value = '"+Name+"'/><input type='hidden' name='user' value = '"+user+"'/><button type ='submit' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></p>");
-                                      }
-                                      out.println("</div></div></div></div>");
-                                      count++;
-                                      rs1.close();
-                                  }
-                                  rs.close();
-                              }
-
-                              s.close();
-                              s1.close();
-                              s2.close();
-                              conn.close();
-                              
-                          }
-                          catch (SQLException e) {
-                              e.printStackTrace();
-                          }
-                          catch (Exception e) {
-                              e.printStackTrace();
-                          }
-                          %>
                     
-                          
                     
-                    </div>
-                </div>
-            </div>  
-        </div>
-           <div class="col-md-4">
-               <canvas id="myCanvas"></canvas>
-                <script>
-                  /*This part of code is to represent the canvas on the home page*/
-                  var canvas = document.getElementById('myCanvas');
-                  var context = canvas.getContext('2d');
-
-                  context.beginPath();
-                  context.rect(0, 40, 50, 25);
-                  context.fillStyle = '#A9F5A9';
-                  context.fill();
-                  context.fillStyle = 'black';
-                  context.font = '16pt Calibri';
-                  context.fillText('Completed Tasks', 60, 60);
-                  
-                  context.beginPath();
-                  context.rect(0, 80, 50, 25);
-                  context.fillStyle = '#F5A9A9';
-                  context.fill();
-                  context.fillStyle = 'black';
-                  context.font = '16pt Calibri';
-                  context.fillText('Past Due Date', 60, 100);
-                </script>
-               
-           </div>
-        </div>
-        <!-- End View tasks carousel-->
-        
-        <!-- View owned tasks carousel-->
+        <!-- View owned tasks carousel
         <div class="row">
         <div class="col-md-8">
             <div class="col-md-6 col-md-offset-3 text-center"><h4><a  href="#myCarousel1" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>&nbsp;Tasks You Own&nbsp;<a  href="#myCarousel1" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a></h4></div>
@@ -445,7 +193,7 @@
                     <div class="carousel-inner">
                         <%  
                         /*This block of java code displays the tasks the user owns, here it 
-                          first connects to the database and then displays them in the form of thumbnails*/
+                          first connects to the database and then displays them in the form of thumbnails
 
                         //String user2 = (String)request.getAttribute("username");
                         String sql7,sql10;
@@ -516,74 +264,400 @@
                           catch (SQLException e) {
                               e.printStackTrace();
                           }
-
+                        */
                           %>
                     </div>
                 </div>
             </div>  
         </div>
-            <%
-                        
-            //This piece of code is used to update the individual progress bar of the logged in user. I); It wll extract the task completion statistics of the user such as
-            //total tasks assigned and tasks completed, calcuate the percentage of tasks completed and accordingly update the progress bar.
-            Connection conn4 = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-            int totalTasks = 0;
-            int completedTasks = 0;
-            int percentage = 0;
-            try {
-                
-                Statement getProgress = conn4.createStatement();
-                System.out.println("STATEMENT CREATED");
-                String getProgressQuery = "SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = '"+user+"'";
-                ResultSet totalSet = getProgress.executeQuery(getProgressQuery);
-                boolean assigned = totalSet.next();
-                if (assigned == true) {
-                    totalTasks = Integer.parseInt(totalSet.getString(1));
+            
                     
-                    getProgressQuery = "SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = '"+user+"' AND STATUS = 'Complete'";
-                    ResultSet completeSet = getProgress.executeQuery(getProgressQuery);
-                    boolean completed = completeSet.next();
-                    if (completed == true) {
-                        completedTasks = Integer.parseInt(completeSet.getString(1));
-                        //System.out.println(completedTasks);
-                        //System.out.println(totalTasks);
-                        percentage = (int)((completedTasks*100)/totalTasks);
-                        //System.out.println(percentage);
-                        
-                    }
-                    completeSet.close();
-                }
-                else { 
-                    //System.out.println("no tasks assigned");
-                }
-                totalSet.close();
-                getProgress.close();
-                conn4.close();
-            }
-            catch (SQLException e) {
-                e.printStackTrace();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-    %>
-                    <div class="col-md-4" style="padding-top:40px">
-                        Your progress: <%= percentage %>%
-                        <div class="progress">
-                        <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:<%= percentage %>%;color:black;">
-                         <span class="sr-only">45% Complete</span>
+                    
+        </div>-->
+
+                         
+                         
+        
+        <!-- Top bar -->                 
+        <div class="row" style="height:8rem;background-color:#7f7f7f">
+            <img src="img/logo_nav.gif" align="center" style="height:100%;padding-left:1rem;"></img>
+            <div style="float:right;padding-top:3rem;padding-right:3rem;color:white">Signed in as <b><%=request.getAttribute("Name")%></b></div>
+        </div>
+	
+        <!-- Spacing row -->
+        <div class="row" style="height:1rem;"></div>
+		
+        <!-- Toggle menu -->
+        <div role="tabpanel">
+
+          <!-- Nav tabs -->
+          <ul id="myTab" class="nav nav-tabs nav-justified" role="tablist">
+                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+                <li role="presentation"><a href="#tasks" aria-controls="profile" role="tab" data-toggle="tab">Tasks</a></li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+
+                <!-- Home page -->
+                <div role="tabpanel" class="tab-pane active" id="home">
+                    <div class="row" style="height:3rem;"></div>
+                    <div class="row" style="height:1%;overflow:hidden;">
+                        <div class="col-md-3 col-xs-6">
+                            <div class="thumbnail tile" style="width:100%;padding:2rem;background-color:white;border:none">
+                                <a id="showaddtaskmodal" href="#addtaskmodal" data-toggle="modal">
+                                    <h4 align="center" style="color:black;"> Add a task </h4>
+                                    <img src="img/add_task.png" />
+                                </a>
+                            </div>
+
                         </div>
+                        <div class="col-md-3 col-xs-6">
+                            <div class="thumbnail tile" style="width:100%;padding:2rem;background-color:white;border:none">
+                                <a id="showaddfriendmodal" href="#addfriendmodal" data-toggle="modal">
+                                    <h4 align="center" style="color:black;"> Add a friend </h4>
+                                    <img src="img/add_friend.png" />
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-6">
+                            <div class="thumbnail tile" style="width:100%;padding:2rem;background-color:white;border:none">
+                                <a id="chartdisplaymodal" href="#chartdisplay" data-toggle="modal" onclick="chartdisplay()">
+                                    <h4 align="center" style="color:black;"> View charts </h4>
+                                    <img src="img/view_chart.png" />
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-6">
+                            <div class="thumbnail tile" style="width:100%;padding:2rem;background-color:white;border:none">
+                                <a href="task_login.jsp">
+                                    <h4 align="center" style="color:black;"> Logout </h4>
+                                    <img src="img/logout.png" /> 
+                                </a>
+                            </div>
                         </div>
                     </div>
-        </div>
-        <!-- End owned tasks carousel-->
-    </div>
+                    <div class="row">
+                        <div class="col-md-6" >
+                            <div class="panel panel-default"  >
+                                <div class="panel-heading" align="center" ><b>Task to do</b></div>
+                                <div class="panel-body" style="height:20rem; overflow:auto">
+                                    <table class="table table-hover">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Points</th>
+                                            <th>Due date</th>
+                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                        </tr>
+                                        <%
+                                            /*This block of java code displays the tasks the user has to complete, here it 
+                                              first connects to the database and then displays them in the form of thumbnails*/
+                                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                            Date date = new Date();
+                                            String user = (String)request.getAttribute("username");
+                                            String Name = (String)request.getAttribute("Name");
+                                            System.out.println(user+" "+Name);
+                                            String sql,sql3;
+
+                                            sql3 ="SELECT TASKID,STATUS FROM WTFtaskallocation where USERNAME = '"+user+"'";
+                                            int task_year,task_month,task_day;
+                                            try {
+
+                                                Statement s = conn.createStatement();
+                                                Statement s1 = conn.createStatement();
+                                                Statement s2 = conn.createStatement();
+                                                ResultSet rs2 = s2.executeQuery(sql3);
+                                                while(rs2.next()){
+                                                    
+                                                    sql = "SELECT * FROM WTFtasks where TASKID ="+rs2.getInt("TASKID");
+                                                    ResultSet rs = s.executeQuery(sql);
+                                                    while (rs.next()) {
+                                                          //String date[] = rs.getString("DUEDATE").split("-");
+                                                          //task_year = Integer.parseInt(date[0]);
+                                                          //task_month = Integer.parseInt(date[1]);
+                                                          //task_day = Integer.parseInt(date[2]);
+                                                          //if (year == task_year && month == task_month && day == task_day) {
+                                                          
+                                                          String duedate=rs.getString("DUEDATE");
+                                                          Date date1 = dateFormat.parse(duedate);
+                                                          out.println("<tr>");
+                                                          out.println("<td>"+rs.getString("TASKNAME")+"</td>");
+                                                          out.println("<td>"+rs.getString("TASKPOINTS")+"</td>");
+                                                          out.println("<td>"+rs.getString("DUEDATE")+"</td>");
+                                                           if(rs2.getString("STATUS").equalsIgnoreCase("Complete"))
+                                                            {
+                                                                out.println("<td><form method = 'get' action = 'Complete_Task'><button type ='submit' disabled='disabled' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></td>");
+                                                            }
+                                                            else
+                                                            {
+                                                                out.println("<td><form method = 'get' action = 'Complete_Task'><button type ='submit' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></td>");
+                                                            }
+                                                          //out.println("<td><a href='#'><span class='glyphicon glyphicon-edit'></span></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#'><span class='glyphicon glyphicon-trash'></span></a></td>");
+                                                          out.println("</tr>");
+
+                                                      }
+                                                      rs.close();
+                                                  }
+
+                                                  s.close();
+                                                  s1.close();
+                                                  s2.close();
+                                                  conn.close();
+
+                                              }
+                                              catch (SQLException e) {
+                                                  e.printStackTrace();
+                                              }
+                                              catch (Exception e) {
+                                                  e.printStackTrace();
+                                              }
+                                        %>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <%
+                                //This piece of code is used to update the individual progress bar of the logged in user. I); It wll extract the task completion statistics of the user such as
+                                //total tasks assigned and tasks completed, calcuate the percentage of tasks completed and accordingly update the progress bar.
+                                Connection conn4 = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+                                int totalTasks = 0;
+                                int completedTasks = 0;
+                                int percentage = 0;
+                                try {
+                                    Statement getProgress = conn4.createStatement();
+                                    String getProgressQuery = "SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = '"+user+"'";
+                                    ResultSet totalSet = getProgress.executeQuery(getProgressQuery);
+                                    boolean assigned = totalSet.next();
+                                    if (assigned == true) {
+                                        totalTasks = Integer.parseInt(totalSet.getString(1));
+
+                                        getProgressQuery = "SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = '"+user+"' AND STATUS = 'Complete'";
+                                        ResultSet completeSet = getProgress.executeQuery(getProgressQuery);
+                                        boolean completed = completeSet.next();
+                                        if (completed == true) {
+                                            completedTasks = Integer.parseInt(completeSet.getString(1));
+                                            //System.out.println(completedTasks);
+                                            //System.out.println(totalTasks);
+                                            percentage = (int)((completedTasks*100)/totalTasks);
+                                            //System.out.println(percentage);
+
+                                        }
+                                        completeSet.close();
+                                    }
+                                    else { 
+                                        //System.out.println("no tasks assigned");
+                                    }
+                                    totalSet.close();
+                                    getProgress.close();
+                                    conn4.close();
+                                }
+                                catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            %>
+                            <div class="panel panel-default">
+                                <div class="panel-heading" align="center"><b>Monthly progress</b></div>
+                                <div class="panel-body" style="height:20rem; overflow:auto;padding:5rem;">
+                                    <div class="col-md-3"><b>Your progress</b></div>
+                                    <div class="col-md-9">
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width:<%= percentage %>%;color:black;">
+                                                <span class="sr-only">45% Complete</span><%= percentage %>%
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p>Tasks completed : 2</p>
+                                    <p>Tasks remaining : 2</p>
+                                </div>
+                            </div>	
+                        </div>	
+                    </div>
+
+                    <!-- Spacing row-->
+                    <div class="row" style="height:1rem"></div> <!-- End spacing row-->
+
+                    <!-- 2nd row -->
+                    <div class="row">
+                        <!-- Friends panel-->
+                        <div class="col-md-6">
+                            <div class="panel panel-default" >
+                                <div class="panel-heading" align="center"><b>Your Friends</b></div>
+                                <div class="panel-body" style="height:20rem; overflow:auto">
+                                    <table class="table table-hover">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Points earned</th>
+                                            <th>Points remaining</th>
+                                        </tr>
+                                        <%  
+                                            /*This piece of java code connects to the database and then displays the friends of the
+                                            user that is logged on on a separate modal*/
+
+                                            //String user1 = (String)request.getAttribute("username");
+                                            String selectFriends,selectUser,sql6;
+                                            String connectionURL10="jdbc:derby://localhost:1527/WTFtask";
+                                            selectFriends ="SELECT * FROM WTFFriends where MAINUSERNAME = '"+user+"'";
+                                            try {
+                                                Connection conn1 = DriverManager.getConnection(connectionURL10, "IS2560","IS2560");
+                                                Statement selectFriendStatement = conn1.createStatement();
+                                                Statement selectUserStatement = conn1.createStatement();
+                                                ResultSet friendSet = selectFriendStatement.executeQuery(selectFriends);
+                                                
+                                                while(friendSet.next())
+                                                {
+                                                    selectUser="SELECT * from WTFuser where USERNAME='"+friendSet.getString("FRIENDNAME")+"'";
+                                                    ResultSet userSet = selectUserStatement.executeQuery(selectUser);
+                                                    while(userSet.next()) {
+                                                        out.println("<tr>");
+                                                        out.println("<td>"+userSet.getString("FIRSTNAME")+"</td>");
+                                                        out.println("<td>"+userSet.getString("POINTEARNED")+"</td>");
+                                                        out.println("<td>"+(Integer.parseInt(userSet.getString("POINTPOSSIBLE"))- Integer.parseInt(userSet.getString("POINTEARNED")))+"</td>");
+                                                        out.println("</tr>");
+                                                    }
+                                                    userSet.close();
+
+                                                }
+                                                selectUserStatement.close();
+                                                friendSet.close();
+                                                selectFriendStatement.close();
+                                                conn1.close();
+
+                                            }
+                                            catch(SQLException e)
+                                            {
+                                                e.printStackTrace();
+                                            }
+                                        %>
+                                        
+                                    </table>
+                                </div>
+                            </div>
+                        </div> <!-- End Friends panel-->
+
+                        <!-- Extra panel-->
+                        <div class="col-md-6" style="height:20rem;">
+                                <div class="panel panel-default">
+                                        <div class="panel-heading" align="center"><b>Extra</b></div>
+                                        <div class="panel-body" style="height:20rem; overflow:auto; padding:5rem;">	
+                                                <!-- Content -->
+                                                Content to be added
+                                        </div>
+                                </div>
+                        </div> <!-- End Extra Panel-->
+                    </div> <!-- End 2nd row-->
+                </div> <!-- End Home page -->
+
+                <!--Tasks page -->
+                <div role="tabpanel" class="tab-pane" id="tasks">
+                    <div class="row" style="height:3rem;"></div>
+                    <div class="row">
+                        <div class="col-md-6" >
+                            <div class="panel panel-default"  >
+                                <div class="panel-heading" align="center" ><b>Master task list</b></div>
+                                <div class="panel-body" style="height:60rem; overflow:auto">
+                                    <span class='glyphicon glyphicon-ok' style='color:green'></span> : Complete&nbsp;&nbsp;
+                                    <span class='glyphicon glyphicon-exclamation-sign' style='color:red'></span> : Pending
+                                    <br><br>
+                                    <table class="table table-hover table-responsive">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Points</th>
+                                            <th>Due date</th>
+                                            <th>Status</th>
+                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                        </tr>
+                                        <%  
+                                            /*This piece of java code connects to the database and then displays the friends of the
+                                            user that is logged on on a separate modal*/
+
+                                            //String user1 = (String)request.getAttribute("username");
+                                            String selectTasks, getStatus;
+                                            String connectionURL11="jdbc:derby://localhost:1527/WTFtask";
+                                            selectTasks ="SELECT * FROM WTFtasks";
+                                            try {
+                                                Connection conn10 = DriverManager.getConnection(connectionURL11, "IS2560","IS2560");
+                                                Statement selectTasksStatement = conn10.createStatement();
+                                                Statement getStatusStatement = conn10.createStatement();
+                                                ResultSet taskSet = selectTasksStatement.executeQuery(selectTasks);
+                                                while(taskSet.next())
+                                                {
+                                                    getStatus = "SELECT * FROM WTFTASKALLOCATION WHERE TASKID="+taskSet.getInt("TASKID");
+                                                    ResultSet statusSet = getStatusStatement.executeQuery(getStatus);
+                                                    statusSet.next();
+                                                    out.println("<tr>");
+                                                    out.println("<td>"+taskSet.getString("TASKNAME")+"</td>");
+                                                    out.println("<td>"+taskSet.getString("TASKPOINTS")+"</td>");
+                                                    out.println("<td>"+taskSet.getString("DUEDATE")+"</td>");
+                                                    if (statusSet.getString("STATUS").equalsIgnoreCase("Complete")) {
+                                                        out.println("<td><span class='glyphicon glyphicon-ok' style='color:green'></span></td>");
+                                                    }
+                                                    else {
+                                                        out.println("<td><span class='glyphicon glyphicon-exclamation-sign' style='color:red'></span></td>");
+                                                    }
+                                                    out.println("<td><button type='button' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
+                                                    out.println("</tr>");
+                                                    statusSet.close();
+                                                } 
+                                                taskSet.close();
+                                                getStatusStatement.close();
+                                                selectTasksStatement.close();
+                                                conn10.close();
+                                            }
+                                            catch(SQLException e)
+                                            {
+                                                e.printStackTrace();
+                                            }
+                                        %>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row" style="margin:1rem;">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" align="center"><b>Extra</b></div>
+                                    <div class="panel-body" style="height:20rem; overflow:auto;padding:5rem;">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin:1rem;">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" align="center"><b>Extra</b></div>
+                                    <div class="panel-body" style="height:20rem; overflow:auto;padding:5rem;">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>	
+                    </div>
+                </div> <!-- End Tasks page -->
+
+          </div> <!-- End Tab content -->
+
+        </div> <!-- End Toggle menu -->
                          
- <!-- main container-->
+                         
+                         
+                         
+                         
+                         
+                         
+    <!-- main container-->
   </div>
-  <div class="col-md-2"></div>
+                                
+  <div class="col-md-2 col-xs-0"></div>
+  
+  
+  
+  
+  
     
-    <!-- Modal for showing friends-->
+    <!-- Modal for showing friends
     <div id="displayfriendmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" style="border-radius:20px;">
             <div class="modal-content">
@@ -592,7 +666,7 @@
                         <h3 class="modal-title" align="center">Your Friends</h3></br>
                         <%  
                             /*This piece of java code connects to the database and then displays the friends of the
-                            user that is logged on on a separate modal*/
+                            user that is logged on on a separate modal
 
                             //String user1 = (String)request.getAttribute("username");
                             String sql4,sql5,sql6;
@@ -646,10 +720,7 @@
                             catch(SQLException e)
                             {
                                 e.printStackTrace();
-                            }
-
-
-
+                            }*/
                         %>
                 </div>
             </div>
@@ -714,8 +785,10 @@
             </div>
         </div>
     </div>
-    <!-- End add friend modal-->                    
-    <div id="chartdisplay" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <!-- End add friend modal-->  
+    
+    
+    <div id="chartdisplay" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="border-radius:20px;">
             <div class="modal-content">
                 <div class="modal-header">
@@ -723,11 +796,13 @@
                     <form>
                     <input type="hidden" class="form-control input-md" name = "mainuser" id="mainuser" value="<%=request.getAttribute("username")%>">
                      </form>
-                    <div id="chartContainer" style="height: 500px; width: 100%;">  </div> 
+                    <div id="chartContainer" style="height: 500px; width: 100%;"> </div> 
                  </div>
             </div>
         </div>
     </div>
+                     
+                     
     <!-- modal for adding new tasks-->
     <div id="addtaskmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
         <div class="modal-dialog">
@@ -795,7 +870,7 @@
                                 <input type="text" class="form-control" Placeholder="Add friends..." id="addedfriend" name="addedfriend">
                             </div>
                             <div class="col-md-3 col-xs-3">
-                                <button id="add" type="button" class="btn btn-success" onclick="showFriend()" disabled="false"> Add</button>	
+                                <button id="add" type="button" class="btn btn-success" onclick="showFriend()"> Add</button>	
                             </div>
                         </div>
                         <br><br>
@@ -813,7 +888,7 @@
     </div>
     <!-- end add task modal-->                                                         
     
-    
+  
     
     
 
@@ -826,10 +901,24 @@
 
     <script>
 
+        $('#myTab a').click(function (e) {
+		  e.preventDefault()
+		  $(this).tab('show')
+		})
+        
 	i = 0;
         //Here we simply obtain the current system date
 	var date = new Date();
         date.setDate(date.getDate());
+        
+        function editTask(task) {
+            alert("done");
+        }
+        
+        function deleteTask(task) {
+            
+            alert("delete here");
+        }
         
         //Here the datepicker is initialized with past dates disabled and hide on date select
 	 $(function () {
@@ -901,7 +990,7 @@
                //var z=datapointsgraph[0].y;
                //var q=datapointsgraph[1].y;
               var chart = new CanvasJS.Chart("chartContainer", {
-                  
+                                       
                                 title:{
                                 text:"Graphical Representaion"   
                                 },
@@ -970,14 +1059,8 @@
            });
         });
 	
-        //This function is called when tbe user logs out, calling  a cookie cleaner servlet.
-        function logout() {
-            $.get('Logout');
-        }
-        
         //Here the entered name is validated from the database via an ajax call to check whether the said person is a friend or not.
         function showFriend() {
-                
                  var addedfriend = $("#addedfriend").val();
                  var curr_user = $("#Name").val();
                  if (addedfriend != curr_user) {
@@ -989,6 +1072,7 @@
                               string = "<div id='here"+i+"' onClick='removeFriend(this)' ><input type='text' style='border:none' name='list'  value='"+name+"' />"+"&nbsp;<span class='glyphicon glyphicon-remove' style='color:#7F7F7F;'></span><br></div>";
                               $("#content").append(string);
                               $("#addedfriend").val('');
+                              document.getElementById("add").disabled = true;
                            }
                            else if (responseText == "false"){
                               $("#somediv").text("Not your friend! Add him first!");
@@ -998,7 +1082,6 @@
                                $("#somediv").text(responseText);
                                $("#addedfriend").val('');  
                            }
-                           
                        });
                    }
                    else {
@@ -1008,17 +1091,18 @@
                         string = "<div id='here"+i+"' onClick='removeFriend(this)' ><input type='text' style='border:none' name='list'  value='"+name+"' />"+"&nbsp;<span class='glyphicon glyphicon-remove' style='color:#7F7F7F;'></span><br></div>";
                         $("#content").append(string);
                         $("#addedfriend").val('');
+                        document.getElementById("add").disabled = true;
                    }
 	}
         
         //This code removes the added friend in the add task modal
 	function removeFriend(item) {
 		$(item).remove();
+                document.getElementById("add").disabled = false;
 	}	
         
         //Show/hide and forms and reset values on close.
 	$("#inviteForm").hide();
-        
         
         $("#showaddtaskmodal").click(function() {	
                 document.forms["addtaskForm"].reset();
@@ -1040,26 +1124,6 @@
                 document.forms["searchForm"].reset();
                 document.forms["inviteForm"].reset();
 	});
-        
-        //Carousel slide code to display 2 tasks on one slide and move ahead by 1 task.
-        $('#myCarousel').carousel({
-		  interval: 4000,
-                  wrap: false
-		})
-        $('#myCarousel1').carousel({
-		  interval: 4000,
-                  wrap: false
-		})
-                
-		$('.carousel .item').each(function(){
-			  var next = $(this).next();
-			  if (!next.length) {
-				next = $(this).siblings(':first');
-			  }
-			  next.children(':first-child').clone().appendTo($(this));
-			  
-			});
-        
         
         $(document).ready(function() {
             $('.carousel').carousel('pause');

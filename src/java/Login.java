@@ -13,7 +13,7 @@ import java.sql.DriverManager;
 import java.util.*;
 import javax.servlet.http.Cookie;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -150,7 +150,7 @@ public class Login extends HttpServlet {
                     request.setAttribute("Name",rs.getString("FirstName"));
                     request.setAttribute("username",rs.getString("username"));
                     logger.debug("Login Successful");
-                    RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");
+                    RequestDispatcher rd=request.getRequestDispatcher("user_home_new.jsp");
                     rd.include(request, response);
                     //response.sendRedirect("user_home.jsp");
                 }
@@ -176,7 +176,8 @@ public class Login extends HttpServlet {
                 rs.close();
                 conn.close();
             } catch (SQLException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                logger.debug("Login Successful");
+                //Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
             
         }

@@ -250,7 +250,7 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
             int taskid;
             while(getTaskSet.next()) {
                 taskid = getTaskSet.getInt("TASKID");
-                
+                //System.out.println("THE ID IS "+taskid);
                 if(getTaskSet.getString("RECUR").equals("weekly") ||getTaskSet.getString("RECUR").equals("monthly") ) {
                     
                     LocalDate task_date = formatter.parseLocalDate( getTaskSet.getString("DUEDATE"));
@@ -525,9 +525,9 @@ public final class user_005fhome_jsp extends org.apache.jasper.runtime.HttpJspBa
 
                             while(rs8.next()){
                                       Statement s15 = conn2.createStatement();
-                                      sql10= "SELECT STATUS FROM WTFtaskallocation WHERE USERNAME = '"+user+"' and TASKID = "+rs8.getString("TASKID")+"";
+                                      sql10= "SELECT STATUS FROM WTFtaskallocation WHERE TASKID = "+rs8.getString("TASKID")+"";
                                       ResultSet rs10 = s15.executeQuery(sql10);
-                                      while(rs10.next())
+                                      if(rs10.next())
                                       {
                                       if(count2==0)
                                       {    
