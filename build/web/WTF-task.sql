@@ -38,6 +38,8 @@ FOREIGN KEY(mainusername) REFERENCES WTFuser(username),
 CONSTRAINT primary_key_friends PRIMARY KEY (mainusername,friendname)
 );
 
+
+
 select * from WTFuser;
 select * from WTFtasks;
 select * from WTFtaskallocation;
@@ -105,7 +107,7 @@ INSERT INTO WTFFriends VALUES('vinaraja','vtalreja');
 
 INSERT INTO WTFtaskallocation VALUES (1,'vtalreja','Pending');
 INSERT INTO WTFtaskallocation VALUES (2,'akanade','Pending');
-INSERT INTO WTFtaskallocation VALUES (3,'vinaraja','Pending');
+INSERT INTO WTFtaskallocation VALUES (18,'vinaraja','Pending');
 INSERT INTO WTFtaskallocation VALUES (4,'vtalreja','Pending');
 INSERT INTO WTFtaskallocation VALUES (5,'vinaraja','Pending');
 INSERT INTO WTFtaskallocation VALUES (5,'vtalreja','Pending');

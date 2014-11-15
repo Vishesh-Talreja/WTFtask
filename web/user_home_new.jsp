@@ -578,6 +578,7 @@
                                             String selectTasks, getStatus;
                                             String connectionURL11="jdbc:derby://localhost:1527/WTFtask";
                                             selectTasks ="SELECT * FROM WTFtasks";
+                                            int id = 0;
                                             try {
                                                 Connection conn10 = DriverManager.getConnection(connectionURL11, "IS2560","IS2560");
                                                 Statement selectTasksStatement = conn10.createStatement();
@@ -585,10 +586,11 @@
                                                 ResultSet taskSet = selectTasksStatement.executeQuery(selectTasks);
                                                 while(taskSet.next())
                                                 {
+                                                    
                                                     getStatus = "SELECT * FROM WTFTASKALLOCATION WHERE TASKID="+taskSet.getInt("TASKID");
                                                     ResultSet statusSet = getStatusStatement.executeQuery(getStatus);
                                                     statusSet.next();
-                                                    out.println("<tr>");
+                                                    out.println("<tr value='table row'>");
                                                     out.println("<td>"+taskSet.getString("TASKNAME")+"</td>");
                                                     out.println("<td>"+taskSet.getString("TASKPOINTS")+"</td>");
                                                     out.println("<td>"+taskSet.getString("DUEDATE")+"</td>");
@@ -598,8 +600,10 @@
                                                     else {
                                                         out.println("<td><span class='glyphicon glyphicon-exclamation-sign' style='color:red'></span></td>");
                                                     }
-                                                    out.println("<td><button type='button' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
+                                                    out.println("<td value='table data button'><button type='button' id='e"+id+"' value='scam' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
+                                                    
                                                     out.println("</tr>");
+                                                    id++;
                                                     statusSet.close();
                                                 } 
                                                 taskSet.close();
@@ -912,12 +916,21 @@
         date.setDate(date.getDate());
         
         function editTask(task) {
-            alert("done");
+            
         }
         
         function deleteTask(task) {
-            
-            alert("delete here");
+            var id, name, points, duedate;
+            id = $(task).attr('id');
+            name = $(task).parent().parent().children(":eq(0)").text();
+            points = $(task).parent().parent().children(":eq(1)").text();
+            duedate = $(task).parent().parent().children(":eq(2)").text();
+            //alert(name + " " + points + " " +duedate);
+            $.get('deleteTask','&taskName='+name+"&taskPoints="+points+'&taskDueDate='+duedate,function(ResponseText) {
+                if (ResponseText == "true") {
+                    $(task).parent().parent().remove();
+                }
+            });
         }
         
         //Here the datepicker is initialized with past dates disabled and hide on date select
