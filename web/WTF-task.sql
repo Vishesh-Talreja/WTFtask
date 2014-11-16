@@ -24,10 +24,10 @@ CONSTRAINT primary_key_task PRIMARY KEY (TaskID)
 CREATE TABLE WTFtaskallocation
 (
 TaskID INTEGER,
-username varchar(255),
+username varchar(255) DEFAULT NULL,
 status varchar(255),
-FOREIGN KEY(TaskID) REFERENCES WTFtasks(TaskID),
-FOREIGN KEY(username) REFERENCES WTFuser(username)
+FOREIGN KEY(TaskID) REFERENCES WTFtasks(TaskID)
+
 );
 
 CREATE TABLE WTFFriends
@@ -60,16 +60,10 @@ DROP TABLE WTFtaskallocation;
 DROP TABLE WTFFriends;
 
 UPDATE WTFtaskallocation
-SET STATUS='Pending'
-WHERE USERNAME="vtalreja" and TASKID=21;
+SET username='null';
 
 UPDATE WTFuser
-SET POINTEARNED='0'
-WHERE USERNAME='';
-
-UPDATE WTFuser
-SET POINTPOSSIBLE='680'
-WHERE username = 'vtalreja';
+SET POINTPOSSIBLE='0';
 
 
 UPDATE WTFuser
@@ -81,7 +75,6 @@ DELETE from WTFtasks;
 DELETE from WTFtaskallocation where TASKID=9;
 DELETE from WTFFriends;
 
-DELETE from WTFuser where USERNAME ='ad';
 select * from WTFuser;
 select * from WTFtasks;
 select * from WTFtaskallocation;
@@ -94,6 +87,7 @@ Delete from WTFuser
 Delete from WTFtasks
 Delete from WTFFriends
 
+
 INSERT INTO WTFuser VALUES ('talreja', 'vishesh', 'vtalreja', 'vtalreja@indiana.edu', 'firewaterthunder','0','0');
 INSERT INTO WTFuser VALUES ('rajagopalan', 'vinay', 'vinaraja', 'vinaraja@indiana.edu', 'firewaterthunder','0','0');
 INSERT INTO WTFuser VALUES ('kanade', 'aashish', 'akanade', 'akanade@indiana.edu', 'firewaterthunder','0','0');
@@ -105,17 +99,14 @@ INSERT INTO WTFFriends VALUES('vtalreja','vinaraja');
 INSERT INTO WTFFriends VALUES('vinaraja','akanade');
 INSERT INTO WTFFriends VALUES('vinaraja','vtalreja');
 
-INSERT INTO WTFtaskallocation VALUES (1,'vtalreja','Pending');
-INSERT INTO WTFtaskallocation VALUES (2,'akanade','Pending');
-INSERT INTO WTFtaskallocation VALUES (18,'vinaraja','Pending');
-INSERT INTO WTFtaskallocation VALUES (4,'vtalreja','Pending');
-INSERT INTO WTFtaskallocation VALUES (5,'vinaraja','Pending');
-INSERT INTO WTFtaskallocation VALUES (5,'vtalreja','Pending');
-INSERT INTO WTFtaskallocation VALUES (6,'akanade','Pending');
-INSERT INTO WTFtaskallocation VALUES (7,'vinaraja','Pending');
-INSERT INTO WTFtaskallocation VALUES (7,'vtalreja','Pending');
-INSERT INTO WTFtaskallocation VALUES (8,'akanade','Pending');
-INSERT INTO WTFtaskallocation VALUES (8,'vinaraja','Pending');
+INSERT INTO WTFtaskallocation VALUES (1,'null','Pending');
+INSERT INTO WTFtaskallocation VALUES (2,'null','Pending');
+INSERT INTO WTFtaskallocation VALUES (3,'null','Pending');
+INSERT INTO WTFtaskallocation VALUES (4,'null','Pending');
+INSERT INTO WTFtaskallocation VALUES (5,'null','Pending');
+INSERT INTO WTFtaskallocation VALUES (6,'null','Pending');
+INSERT INTO WTFtaskallocation VALUES (7,'null','Pending');
+INSERT INTO WTFtaskallocation VALUES (8,'null','Pending');
 
 
 SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = 'akanade'

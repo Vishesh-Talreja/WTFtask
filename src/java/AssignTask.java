@@ -30,8 +30,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Aashish
  */
-@WebServlet(urlPatterns = {"/Validate_Assignee"})
-public class Validate_Assignee extends HttpServlet {
+@WebServlet(urlPatterns = {"/AssignTask"})
+public class AssignTask extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -94,10 +94,10 @@ public class Validate_Assignee extends HttpServlet {
         response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
         response.setCharacterEncoding("UTF-8"); // You want world domination, huh?
         //Recieve input from form
-        String adder = request.getParameter("curr_user").replaceAll(" ","");
-        adder = adder.toLowerCase();
-        String addedfriend = request.getParameter("addedfriend").replaceAll(" ","");
-        addedfriend = addedfriend.toLowerCase();
+        String taskName = request.getParameter("taskName");
+        String taskPoints = request.getParameter("taskPoints").replaceAll(" ","");
+        String taskDueDate = request.getParameter("taskDueDate").replaceAll(" ","");
+        String userName = request.getParameter("username").replaceAll(" ","");
         String connection,username,password;
         BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
         try {
@@ -124,34 +124,32 @@ public class Validate_Assignee extends HttpServlet {
         try{
 
             Connection conn = DriverManager.getConnection(connection,username,password);
-            String query1 = "SELECT * FROM WTFuser where Firstname = '"+adder+"'";
+            String getTaskId = "SELECT * FROM WTFtasks where TASKNAME = '"+taskName+"' AND TASKPOINTS='"+taskPoints+"' AND DUEDATE='"+taskDueDate+"'";
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(query1);
-            boolean dummy = rs.next();
-            String adder_username = rs.getString("username");
-            String query2 = "SELECT * FROM WTFFriends where mainusername = '"+adder_username+"'";
-            ResultSet rs1 = st.executeQuery(query2);
-            boolean is = rs1.next();
-            if (!is) {      //The user does not have any friends in his list.
-                response.getWriter().write("Add friends first!");
-            }
-            else { 
-                String query3 = "SELECT * FROM WTFFriends where mainusername = '"+adder_username+"' AND friendname IN (Select username FROM WTFuser WHERE Firstname = '"+addedfriend+"')";
-                ResultSet rs2 = st.executeQuery(query3);
-                boolean is1 = rs2.next();
-                System.out.println(is1);
-                if (is1)
-                    response.getWriter().write("true");     //The friend is authenticated.
-                else
-                    response.getWriter().write("false");    //The entered name is not his friend.
-                rs2.close();
-            }
-            
+            ResultSet taskSet = st.executeQuery(getTaskId);
+            taskSet.next();
+            int id = taskSet.getInt("TaskID");
+            System.out.println(id);
+            System.out.println(userName +" "+taskPoints+" "+taskName);
+            String assignTask = "UPDATE IS2560.WTFTASKALLOCATION SET USERNAME='"+userName+"' WHERE TASKID="+id;
+            st.executeUpdate(assignTask);
+            String getPointsPossible = "SELECT * FROM WTFuser where username ='"+userName+"'";
+            ResultSet pointsSet = st.executeQuery(getPointsPossible);
+            pointsSet.next();
+            int points = Integer.parseInt(pointsSet.getString("POINTPOSSIBLE"));
+            points = points + Integer.parseInt(taskPoints);
+            System.out.println(points);
+            String newtaskPoints = Integer.toString(points);
+            String updatePointsPossible = "UPDATE IS2560.WTFuser SET POINTPOSSIBLE ='"+newtaskPoints+"' WHERE USERNAME='"+userName+"'";
+            int rows = st.executeUpdate(updatePointsPossible);
+            System.out.println(rows);
+            if (rows == 1)
+                response.getWriter().write("true");     //The task is assigned.
+            else
+                response.getWriter().write("false");    //The task is not assigned.
             
             st.close();
-            rs.close();
-            rs1.close();
-            
+            taskSet.close();
             conn.close();
             
         }

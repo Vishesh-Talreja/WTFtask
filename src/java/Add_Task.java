@@ -90,7 +90,6 @@ public class Add_Task extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("scam");
         processRequest(request, response);
         response.setContentType("text/html;charset=UTF-8");
         //Recieve inputs from form
@@ -102,11 +101,16 @@ public class Add_Task extends HttpServlet {
         String Tpoints=request.getParameter("taskpoints").replaceAll(" ","");
         String Tduedate=request.getParameter("duedate").replaceAll(" ","");
         String recur = request.getParameter("recur").replace(" "," ");
-        System.out.println("The task is selected to recur "+recur+"!!!!!!!");
-        String[] assignees = request.getParameterValues("list");
-        for(int i=0; i<assignees.length;i++) {
-            assignees[i] = assignees[i].toLowerCase();
+        //System.out.println("The task is selected to recur "+recur+"!!!!!!!");
+        String assignee;
+        if (request.getParameter("list") == null) {
+            assignee = null;
         }
+        else {
+            assignee = request.getParameter("list");
+            assignee = assignee.toLowerCase();
+        }
+        
         //This piece of code extracts the database paqrameters from the file config.txt
         String connection,username,password;
         BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
@@ -133,30 +137,18 @@ public class Add_Task extends HttpServlet {
         try{
             Connection conn = DriverManager.getConnection(connection, username,password);
             Statement stmt=conn.createStatement();
-
             String query3 = "INSERT INTO IS2560.WTFtasks (TASKNAME,TASKPOINTS,DUEDATE,OWNER,RECUR) VALUES ('"+Tname+"','"+Tpoints+"','"+Tduedate+"','"+user+"','"+recur+"')";
-
             stmt.executeUpdate(query3);                                             //Insert task details into database
             String query4 = "SELECT * FROM IS2560.WTFtasks WHERE TASKNAME='"+Tname+"'";
             ResultSet rs = stmt.executeQuery(query4);                               //Extract taskId
             rs.next();
             logger.debug("Add Task Database Connected");
             int id = rs.getInt("TaskID");
-            int Tpoint = Integer.parseInt(Tpoints);
             
-            for(int i=0;i<assignees.length;i++) {                                   //Assign each member to this task with designated points
-                String query5 = "SELECT * FROM WTFuser WHERE FIRSTNAME='"+assignees[i]+"'";
-                rs = stmt.executeQuery(query5);
-                rs.next();
-                int pointsNow=Integer.parseInt(rs.getString("POINTPOSSIBLE"));
-                String userNow=rs.getString("USERNAME");
-                String query6 = "INSERT INTO WTFTASKALLOCATION VALUES ("+id+",'"+userNow+"','Pending')";
-                stmt.executeUpdate(query6);
-                pointsNow=pointsNow+Tpoint;
-                String newPointsNow = Integer.toString(pointsNow);
-                String query7 = "Update WTFuser set PointPossible= '"+newPointsNow+"' where username='"+userNow+"'";
-                stmt.executeUpdate(query7);
-            } 
+            //Assign each member to this task with designated points            
+            String query6;
+            query6 = "INSERT INTO WTFTASKALLOCATION VALUES ("+id+",'"+null+"','Pending')";
+            stmt.executeUpdate(query6);
             stmt.close();
             //Return required parameterts back to homepage
             request.setAttribute("Name", name);
@@ -164,7 +156,7 @@ public class Add_Task extends HttpServlet {
             request.setAttribute("username",user);
             request.setAttribute("added", "yes");
             conn.close();
-            RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");
+            RequestDispatcher rd=request.getRequestDispatcher("user_home_new.jsp");
             rd.forward(request, response);
             //response.sendRedirect("user_home.jsp");
             

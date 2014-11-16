@@ -281,7 +281,7 @@
         <!-- Top bar -->                 
         <div class="row" style="height:8rem;background-color:#7f7f7f">
             <img src="img/logo_nav.gif" align="center" style="height:100%;padding-left:1rem;"></img>
-            <div style="float:right;padding-top:3rem;padding-right:3rem;color:white">Signed in as <b><%=request.getAttribute("Name")%></b></div>
+            <div style="float:right;padding-top:3rem;padding-right:3rem;color:white">Signed in as <b id="identity"><%=request.getAttribute("Name")%></b></div>
         </div>
 	
         <!-- Spacing row -->
@@ -470,8 +470,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <p>Tasks completed : 2</p>
-                                    <p>Tasks remaining : 2</p>
+                                    <p>Tasks completed : <%= completedTasks %></p>
+                                    <p>Tasks remaining : <%= (totalTasks - completedTasks) %></p>
                                 </div>
                             </div>	
                         </div>	
@@ -568,6 +568,7 @@
                                             <th>Points</th>
                                             <th>Due date</th>
                                             <th>Status</th>
+                                            <th>Assignee</th>
                                             <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                         </tr>
                                         <%  
@@ -598,8 +599,16 @@
                                                         out.println("<td><span class='glyphicon glyphicon-ok' style='color:green'></span></td>");
                                                     }
                                                     else {
-                                                        out.println("<td><span class='glyphicon glyphicon-exclamation-sign' style='color:red'></span></td>");
+                                                        out.println("<td><span class='glyphicon glyphicon-exclamation-sign' style='color:red'></span></td>");  
                                                     }
+                                                    
+                                                    if (statusSet.getString("username").equalsIgnoreCase("null")) {
+                                                        out.println("<td>"+statusSet.getString("username")+"&nbsp;&nbsp;<button onclick='assign(this)' class='btn btn-success'>Assign to me</button></td>");
+                                                    }
+                                                    else {
+                                                        out.println("<td>"+statusSet.getString("username")+"</td>");
+                                                    }
+                                                    
                                                     out.println("<td value='table data button'><button type='button' id='e"+id+"' value='scam' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
                                                     
                                                     out.println("</tr>");
@@ -625,7 +634,6 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading" align="center"><b>Extra</b></div>
                                     <div class="panel-body" style="height:20rem; overflow:auto;padding:5rem;">
-
                                     </div>
                                 </div>
                             </div>
@@ -633,7 +641,6 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading" align="center"><b>Extra</b></div>
                                     <div class="panel-body" style="height:20rem; overflow:auto;padding:5rem;">
-
                                     </div>
                                 </div>
                             </div>
@@ -748,7 +755,7 @@
                                 <button id="SearchButton" type="button" onclick="Search()"><span class="glyphicon glyphicon-search"></span> </button> 
                             </div></br></br>
                             <input type="hidden" class="form-control input-md" name = "mainuser" id="mainuser" value="<%=request.getAttribute("username")%>">
-                            <input type="hidden" class="form-control input-md" name = "mainuser_firstname" id="mainuser" value="<%=request.getAttribute("Name")%>">
+                            <input type="hidden" class="form-control input-md" name = "mainuser_firstname" id="mainuser_firstname" value="<%=request.getAttribute("Name")%>">
                             <input type="hidden" class="form-control input-md" name = "searched_username" id="searched_username" >
                             <button class="btn btn-success"  type="disable" id="addfriend" disabled >Add</button>
                         </div><br>
@@ -869,15 +876,6 @@
                             </div>
                         </div>
                         <br><br>
-                        <div class="form-group">
-                            <div class="col-md-9 col-xs-9">
-                                <input type="text" class="form-control" Placeholder="Add friends..." id="addedfriend" name="addedfriend">
-                            </div>
-                            <div class="col-md-3 col-xs-3">
-                                <button id="add" type="button" class="btn btn-success" onclick="showFriend()"> Add</button>	
-                            </div>
-                        </div>
-                        <br><br>
                         <div id="somediv"  style="color:red;"></div>
                         <div id="content"></div>
                         <br>
@@ -905,10 +903,12 @@
 
     <script>
 
-        $('#myTab a').click(function (e) {
-		  e.preventDefault()
-		  $(this).tab('show')
-		})
+        
+            $('#myTab a').click(function (e) {
+		  e.preventDefault();
+		  $(this).tab('show');
+            })
+      
         
 	i = 0;
         //Here we simply obtain the current system date
@@ -931,6 +931,28 @@
                     $(task).parent().parent().remove();
                 }
             });
+        }
+        
+        function assign(assignButton) {
+            
+            var username, name, points, duedate;
+            name = $(assignButton).parent().parent().children(":eq(0)").text();
+            points = $(assignButton).parent().parent().children(":eq(1)").text();
+            duedate = $(assignButton).parent().parent().children(":eq(2)").text();
+            username = '<%=user%>';
+            //alert(name + " " + points + " " +duedate + " " + username);
+            $.get('AssignTask','&taskName='+name+"&taskPoints="+points+'&taskDueDate='+duedate+'&username='+username,function(ResponseText) {
+                
+                if (ResponseText == "true") {
+                    $(assignButton).parent().text(username);
+                    location.reload();
+                }
+                else {
+                    alert("diff");
+                }
+            });
+            
+            
         }
         
         //Here the datepicker is initialized with past dates disabled and hide on date select
@@ -1072,42 +1094,7 @@
            });
         });
 	
-        //Here the entered name is validated from the database via an ajax call to check whether the said person is a friend or not.
-        function showFriend() {
-                 var addedfriend = $("#addedfriend").val();
-                 var curr_user = $("#Name").val();
-                 if (addedfriend != curr_user) {
-                    $.get('Validate_Assignee','&curr_user='+curr_user+'&addedfriend='+addedfriend, function(responseText) { // Execute Ajax GET request on URL of "someservlet" and execute the following function with Ajax response text...
-                          if (responseText === "true") {
-                              $("#somediv").text("");
-                              i = i + 1;
-                              var name = document.getElementById("addedfriend").value;
-                              string = "<div id='here"+i+"' onClick='removeFriend(this)' ><input type='text' style='border:none' name='list'  value='"+name+"' />"+"&nbsp;<span class='glyphicon glyphicon-remove' style='color:#7F7F7F;'></span><br></div>";
-                              $("#content").append(string);
-                              $("#addedfriend").val('');
-                              document.getElementById("add").disabled = true;
-                           }
-                           else if (responseText == "false"){
-                              $("#somediv").text("Not your friend! Add him first!");
-                              $("#addedfriend").val('');
-                           }
-                           else {
-                               $("#somediv").text(responseText);
-                               $("#addedfriend").val('');  
-                           }
-                       });
-                   }
-                   else {
-                        $("#somediv").text("");
-                        i = i + 1;
-                        var name = document.getElementById("addedfriend").value;
-                        string = "<div id='here"+i+"' onClick='removeFriend(this)' ><input type='text' style='border:none' name='list'  value='"+name+"' />"+"&nbsp;<span class='glyphicon glyphicon-remove' style='color:#7F7F7F;'></span><br></div>";
-                        $("#content").append(string);
-                        $("#addedfriend").val('');
-                        document.getElementById("add").disabled = true;
-                   }
-	}
-        
+                
         //This code removes the added friend in the add task modal
 	function removeFriend(item) {
 		$(item).remove();

@@ -43,7 +43,7 @@ public class Validate_AssigneeTest {
     @org.junit.Test
     public void testProcessRequest() throws Exception {
         System.out.println("processRequest");
-        Validate_Assignee instance = new Validate_Assignee();
+        AssignTask instance = new AssignTask();
         boolean flag = false;
         flag = instance.JUNIT(flag);
         assertEquals(true,flag);
