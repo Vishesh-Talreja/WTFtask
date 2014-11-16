@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(urlPatterns = {"/Registration"})
 public class Registration extends HttpServlet {
-    private static final Logger logger = Logger.getLogger(Registration.class);
+    //private static final Logger logger = Logger.getLogger(Registration.class);
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -125,9 +125,9 @@ public class Registration extends HttpServlet {
             stmt=conn.createStatement();
             String query2 = "INSERT INTO IS2560.WTFuser (LASTNAME,FIRSTNAME,USERNAME,EMAIL,PASSWORD) VALUES ('"+Lname+"','"+Fname+"','"+user+"','"+Email+"','"+pass+"')";
             stmt.executeUpdate(query2);
-            logger.debug("Regitration Database Connected"); 
+            //logger.debug("Regitration Database Connected"); 
             request.setAttribute("registration","complete");
-                    logger.debug("Failed Login");
+                    //logger.debug("Failed Login");
             RequestDispatcher rm=request.getRequestDispatcher("task_login.jsp");
             rm.forward(request, response);
         }
@@ -160,7 +160,7 @@ public class Registration extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            logger.debug("Login Successful");
+            //logger.debug("Login Successful");
             //Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -179,7 +179,7 @@ public class Registration extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            logger.debug("Login Successful");
+            //logger.debug("Login Successful");
             //Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
