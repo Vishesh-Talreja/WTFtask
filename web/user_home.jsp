@@ -914,14 +914,14 @@
                                   toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
                                   name: "Points Completed",
                                   showInLegend: "true",
-                                  color:"#A9F5A9",
+                                  color:"#04B404",
                                   dataPoints: datapointsgraph
                                 },  {        
                                   type: "stackedColumn",
                                   toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
                                   name: "Points Remaining",
                                   showInLegend: "true",
-                                  color:"#F5A9A9",
+                                  color:"#DF013A",
                                   dataPoints: datapointsgraph2
                                 }            
                                 ]

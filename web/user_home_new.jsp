@@ -380,20 +380,15 @@
                                                           
                                                           String duedate=rs.getString("DUEDATE");
                                                           Date date1 = dateFormat.parse(duedate);
+                                                          if(rs2.getString("STATUS").equalsIgnoreCase("Pending"))
+                                                          {    
                                                           out.println("<tr>");
                                                           out.println("<td>"+rs.getString("TASKNAME")+"</td>");
-                                                          out.println("<td>"+rs.getString("TASKPOINTS")+"</td>");
+                                                          out.println("<td>"+rs.getString("ALLOTEDTASKPOINTS")+"</td>");
                                                           out.println("<td>"+rs.getString("DUEDATE")+"</td>");
-                                                           if(rs2.getString("STATUS").equalsIgnoreCase("Complete"))
-                                                            {
-                                                                out.println("<td><form method = 'get' action = 'Complete_Task'><button type ='submit' disabled='disabled' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></td>");
-                                                            }
-                                                            else
-                                                            {
-                                                                out.println("<td><form method = 'get' action = 'Complete_Task'><button type ='submit' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></td>");
-                                                            }
-                                                          //out.println("<td><a href='#'><span class='glyphicon glyphicon-edit'></span></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#'><span class='glyphicon glyphicon-trash'></span></a></td>");
+                                                          out.println("<td><form method = 'get' action = 'Complete_Task'><input type='hidden' name='Tname' value = '"+rs.getString("TASKNAME")+"'/><input type='hidden' name='Tpoints' value = '"+rs.getString("ALLOTEDTASKPOINTS")+"'/><input type='hidden' name='Name' value = '"+Name+"'/><input type='hidden' name='user' value = '"+user+"'/><button type ='submit' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></td>");
                                                           out.println("</tr>");
+                                                          }
 
                                                       }
                                                       rs.close();
@@ -555,7 +550,7 @@
                 <div role="tabpanel" class="tab-pane" id="tasks">
                     <div class="row" style="height:3rem;"></div>
                     <div class="row">
-                        <div class="col-md-6" >
+                        <div class="col-md-10" >
                             <div class="panel panel-default"  >
                                 <div class="panel-heading" align="center" ><b>Master task list</b></div>
                                 <div class="panel-body" style="height:60rem; overflow:auto">
@@ -629,7 +624,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-2">
                             <div class="row" style="margin:1rem;">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" align="center"><b>Extra</b></div>
@@ -1038,14 +1033,14 @@
                                   toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
                                   name: "Points Completed",
                                   showInLegend: "true",
-                                  color:"#A9F5A9",
+                                  color:"#04B404",
                                   dataPoints: datapointsgraph
                                 },  {        
                                   type: "stackedColumn",
                                   toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
                                   name: "Points Remaining",
                                   showInLegend: "true",
-                                  color:"#F5A9A9",
+                                  color:"#DF013A",
                                   dataPoints: datapointsgraph2
                                 }            
                                 ]

@@ -102,7 +102,8 @@ public class Complete_Task extends HttpServlet {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date task_date = new Date();
         String connection,username,password;
-        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
+        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
         try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -135,17 +136,26 @@ public class Complete_Task extends HttpServlet {
             int id = rs.getInt("TaskID");
             String recurValue =rs.getString("RECUR");
             String taskdate = rs.getString("DUEDATE");
+            Statement stmt1=conn.createStatement();
+            String query5="SELECT * FROM WTFTASKALLOCATION WHERE TASKID="+id;
+            ResultSet rs1=stmt1.executeQuery(query5);
+            rs1.next();
             //Slecting data from the user table
             String query2 = "SELECT * FROM IS2560.WTFuser WHERE USERNAME='"+user+"'";
             rs = stmt.executeQuery(query2);
             rs.next();
-            int TpointsBefore=Integer.parseInt(rs.getString("POINTEARNED"));
-            int TpointsNow = Integer.parseInt(Tpoints);
+            float TpointsBefore=Float.parseFloat(rs.getString("POINTEARNED"));
+            float TpointsNow = Float.parseFloat(Tpoints);
             TpointsNow =TpointsNow+TpointsBefore;
-            String NewTpoints = Integer.toString(TpointsNow);
-            //Adding taskpoints to the user table 
-            String query3 = "UPDATE IS2560.WTFuser SET POINTEARNED = '"+NewTpoints+"' WHERE USERNAME ='"+user+"'";
-            stmt.executeUpdate(query3);
+            String NewTpoints = Float.toString(TpointsNow);
+            if("Pending".equals(rs1.getString("STATUS")))
+            {    
+                //Adding taskpoints to the user table 
+                String query3 = "UPDATE IS2560.WTFuser SET POINTEARNED = '"+NewTpoints+"' WHERE USERNAME ='"+user+"'";
+                stmt.executeUpdate(query3);
+            }
+            rs1.close();
+            stmt1.close();
             String query = null;
             if(recurValue.equals("none")) {
                 query = "UPDATE IS2560.WTFtaskallocation SET STATUS = 'Complete' WHERE USERNAME ='"+user+"' and TASKID="+id;
@@ -171,7 +181,7 @@ public class Complete_Task extends HttpServlet {
             }
             request.setAttribute("Name", name);
             request.setAttribute("username",user);
-            RequestDispatcher rd=request.getRequestDispatcher("user_home.jsp");
+            RequestDispatcher rd=request.getRequestDispatcher("user_home_new.jsp");
             rd.forward(request, response);
            }
            catch(SQLException ex)

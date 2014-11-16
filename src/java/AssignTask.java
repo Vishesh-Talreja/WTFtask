@@ -99,7 +99,8 @@ public class AssignTask extends HttpServlet {
         String taskDueDate = request.getParameter("taskDueDate").replaceAll(" ","");
         String userName = request.getParameter("username").replaceAll(" ","");
         String connection,username,password;
-        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
+        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
         try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -136,21 +137,69 @@ public class AssignTask extends HttpServlet {
             String getPointsPossible = "SELECT * FROM WTFuser where username ='"+userName+"'";
             ResultSet pointsSet = st.executeQuery(getPointsPossible);
             pointsSet.next();
-            int points = Integer.parseInt(pointsSet.getString("POINTPOSSIBLE"));
-            points = points + Integer.parseInt(taskPoints);
+            float points = Float.parseFloat(pointsSet.getString("POINTPOSSIBLE"));
+            points = points + Float.parseFloat(taskPoints);
             System.out.println(points);
-            String newtaskPoints = Integer.toString(points);
+            String newtaskPoints = Float.toString(points);
             String updatePointsPossible = "UPDATE IS2560.WTFuser SET POINTPOSSIBLE ='"+newtaskPoints+"' WHERE USERNAME='"+userName+"'";
             int rows = st.executeUpdate(updatePointsPossible);
+            String updateAllotedPoints ="UPDATE WTFtasks SET ALLOTEDTASKPOINTS ='"+taskPoints+"' WHERE TASKID="+id;
+            st.executeUpdate(updateAllotedPoints);
             System.out.println(rows);
+            float totalPoints = 0;
+            float reducedPoints = (20*Float.parseFloat(taskPoints))/100;
+            float decreasePoints = Float.parseFloat(taskPoints)-reducedPoints;
+            System.out.println(reducedPoints);
+            String newtaskPoint = "UPDATE WTFtasks SET TASKPOINTS='"+decreasePoints+"' WHERE TASKID="+id;
+            st.executeUpdate(newtaskPoint);
+            String addTpoints = "SELECT * FROM WTFtasks where TASKID <>"+id;
+            ResultSet rs = st.executeQuery(addTpoints);
+            while(rs.next())
+            {
+                int Tid = rs.getInt("TASKID");
+                Statement st2 = conn.createStatement();
+                ResultSet rs1 = st2.executeQuery("SELECT STATUS,USERNAME FROM WTFTASKALLOCATION WHERE TASKID ="+Tid);
+                rs1.next();
+                if("Pending".equals(rs1.getString("STATUS"))&&"null".equals(rs1.getString("USERNAME")))
+                {    
+                    totalPoints = totalPoints+Float.parseFloat(rs.getString("TASKPOINTS"));
+                }
+                rs1.close();
+                st2.close();
+            }
+            System.out.println(totalPoints);
+            String alterTpoints="SELECT * FROM WTFtasks where TASKID <>"+id;
+            rs = st.executeQuery(alterTpoints);
+            while(rs.next())
+            {
+                int Tid = rs.getInt("TASKID");
+                float Tpoints = Float.parseFloat(rs.getString("TASKPOINTS"));
+                float increasedPoints = reducedPoints * (Tpoints/totalPoints);
+                Tpoints = Tpoints+increasedPoints;
+                String newTpoints = Float.toString(Tpoints);
+                Statement st2 = conn.createStatement();
+                ResultSet rs1 = st2.executeQuery("SELECT STATUS,USERNAME FROM WTFTASKALLOCATION WHERE TASKID ="+Tid);
+                rs1.next();
+                if("Pending".equals(rs1.getString("STATUS"))&&"null".equals(rs1.getString("USERNAME")))
+                { 
+                    String newPoints = "UPDATE WTFtasks SET TASKPOINTS='"+newTpoints+"' WHERE TASKID="+Tid;
+                    Statement st1 = conn.createStatement();
+                    st1.executeUpdate(newPoints);
+                    st1.close();
+                }
+                rs1.close();
+                st2.close();
+            }
+            
+            st.close();
+            taskSet.close();
+            conn.close();
             if (rows == 1)
                 response.getWriter().write("true");     //The task is assigned.
             else
                 response.getWriter().write("false");    //The task is not assigned.
             
-            st.close();
-            taskSet.close();
-            conn.close();
+            
             
         }
         catch(SQLException ex)

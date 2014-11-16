@@ -1,1 +1,0 @@
-IS2560 IS2560 jdbc:derby://localhost:1527/WTFtask
