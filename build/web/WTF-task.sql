@@ -53,6 +53,7 @@ INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) 
 INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Cook dinner', '350','0', '11/11/2014','none', 'vinaraja');
 INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Clean Hall', '30','0', '12/2/2014','none', 'akanade');
 INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Cook BreakFast', '70','0', '11/10/2014','none', 'akanade');
+INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Overdue task check', '90','0', '11/22/2014','none', 'akanade');
 
 DROP TABLE WTFuser;
 DROP TABLE WTFtasks;
@@ -109,6 +110,7 @@ INSERT INTO WTFtaskallocation VALUES (4,'null','Pending');
 INSERT INTO WTFtaskallocation VALUES (5,'null','Pending');
 INSERT INTO WTFtaskallocation VALUES (6,'null','Pending');
 INSERT INTO WTFtaskallocation VALUES (7,'null','Pending');
+INSERT INTO WTFtaskallocation VALUES (8,'null','Pending');
 
 
 

@@ -397,7 +397,7 @@
                                                   s.close();
                                                   s1.close();
                                                   s2.close();
-                                                  conn.close();
+                                                  //conn.close();
 
                                               }
                                               catch (SQLException e) {
@@ -412,63 +412,65 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <%
-                                //This piece of code is used to update the individual progress bar of the logged in user. I); It wll extract the task completion statistics of the user such as
-                                //total tasks assigned and tasks completed, calcuate the percentage of tasks completed and accordingly update the progress bar.
-                                Connection conn4 = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-                                int totalTasks = 0;
-                                int completedTasks = 0;
-                                int percentage = 0;
-                                try {
-                                    Statement getProgress = conn4.createStatement();
-                                    String getProgressQuery = "SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = '"+user+"'";
-                                    ResultSet totalSet = getProgress.executeQuery(getProgressQuery);
-                                    boolean assigned = totalSet.next();
-                                    if (assigned == true) {
-                                        totalTasks = Integer.parseInt(totalSet.getString(1));
-
-                                        getProgressQuery = "SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = '"+user+"' AND STATUS = 'Complete'";
-                                        ResultSet completeSet = getProgress.executeQuery(getProgressQuery);
-                                        boolean completed = completeSet.next();
-                                        if (completed == true) {
-                                            completedTasks = Integer.parseInt(completeSet.getString(1));
-                                            //System.out.println(completedTasks);
-                                            //System.out.println(totalTasks);
-                                            percentage = (int)((completedTasks*100)/totalTasks);
-                                            //System.out.println(percentage);
-
-                                        }
-                                        completeSet.close();
-                                    }
-                                    else { 
-                                        //System.out.println("no tasks assigned");
-                                    }
-                                    totalSet.close();
-                                    getProgress.close();
-                                    conn4.close();
-                                }
-                                catch (SQLException e) {
-                                    e.printStackTrace();
-                                }
-                                catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            %>
                             <div class="panel panel-default">
-                                <div class="panel-heading" align="center"><b>Monthly progress</b></div>
-                                <div class="panel-body" style="height:20rem; overflow:auto;padding:5rem;">
-                                    <div class="col-md-3"><b>Your progress</b></div>
-                                    <div class="col-md-9">
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width:<%= percentage %>%;color:black;">
-                                                <span class="sr-only">45% Complete</span><%= percentage %>%
-                                            </div>
+                                        <div class="panel-heading" align="center"><b>Overdue Tasks</b></div>
+                                        <div class="panel-body" style="height:20rem; overflow:auto">
+                                    <table class="table table-hover">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Points</th>
+                                            <th>Due date</th>
+                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                        </tr>
+                                        <%
+                                            /*This block of java code displays the tasks the user has to complete, here it 
+                                              first connects to the database and then displays them in the form of thumbnails*/
+                                            
+                                            System.out.println(user+" "+Name);
+                                            sql3 ="SELECT TASKID,STATUS FROM WTFtaskallocation where USERNAME = '"+user+"'";
+                                            try {
+
+                                                Statement s = conn.createStatement();
+                                                Statement s1 = conn.createStatement();
+                                                Statement s2 = conn.createStatement();
+                                                ResultSet rs2 = s2.executeQuery(sql3);
+                                                while(rs2.next()){
+                                                    
+                                                    sql = "SELECT * FROM WTFtasks where TASKID ="+rs2.getInt("TASKID");
+                                                    ResultSet rs = s.executeQuery(sql);
+                                                    while (rs.next()) {
+                                                          String duedate=rs.getString("DUEDATE");
+                                                          Date date1 = dateFormat.parse(duedate);
+                                                          if(rs2.getString("STATUS").equalsIgnoreCase("Pending")&&date1.before(date))
+                                                          {    
+                                                          out.println("<tr>");
+                                                          out.println("<td>"+rs.getString("TASKNAME")+"</td>");
+                                                          out.println("<td>"+rs.getString("ALLOTEDTASKPOINTS")+"</td>");
+                                                          out.println("<td>"+rs.getString("DUEDATE")+"</td>");
+                                                          out.println("<td><form method = 'get' action = 'Complete_Task'><input type='hidden' name='Tname' value = '"+rs.getString("TASKNAME")+"'/><input type='hidden' name='Tpoints' value = '"+rs.getString("ALLOTEDTASKPOINTS")+"'/><input type='hidden' name='Name' value = '"+Name+"'/><input type='hidden' name='user' value = '"+user+"'/><button type ='submit' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></td>");
+                                                          out.println("</tr>");
+                                                          }
+
+                                                      }
+                                                      rs.close();
+                                                  }
+
+                                                  s.close();
+                                                  s1.close();
+                                                  s2.close();
+                                                  conn.close();
+
+                                              }
+                                              catch (SQLException e) {
+                                                  e.printStackTrace();
+                                              }
+                                              catch (Exception e) {
+                                                  e.printStackTrace();
+                                              }
+                                        %>
+                                    </table>
                                         </div>
-                                    </div>
-                                    <p>Tasks completed : <%= completedTasks %></p>
-                                    <p>Tasks remaining : <%= (totalTasks - completedTasks) %></p>
-                                </div>
-                            </div>	
+                                </div>	
                         </div>	
                     </div>
 
@@ -535,13 +537,64 @@
 
                         <!-- Extra panel-->
                         <div class="col-md-6" style="height:20rem;">
-                                <div class="panel panel-default">
-                                        <div class="panel-heading" align="center"><b>Extra</b></div>
-                                        <div class="panel-body" style="height:20rem; overflow:auto; padding:5rem;">	
-                                                <!-- Content -->
-                                                Content to be added
+                                <%
+                                //This piece of code is used to update the individual progress bar of the logged in user. I); It wll extract the task completion statistics of the user such as
+                                //total tasks assigned and tasks completed, calcuate the percentage of tasks completed and accordingly update the progress bar.
+                                Connection conn4 = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+                                int totalTasks = 0;
+                                int completedTasks = 0;
+                                int percentage = 0;
+                                try {
+                                    Statement getProgress = conn4.createStatement();
+                                    String getProgressQuery = "SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = '"+user+"'";
+                                    ResultSet totalSet = getProgress.executeQuery(getProgressQuery);
+                                    boolean assigned = totalSet.next();
+                                    if (assigned == true) {
+                                        totalTasks = Integer.parseInt(totalSet.getString(1));
+
+                                        getProgressQuery = "SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = '"+user+"' AND STATUS = 'Complete'";
+                                        ResultSet completeSet = getProgress.executeQuery(getProgressQuery);
+                                        boolean completed = completeSet.next();
+                                        if (completed == true) {
+                                            completedTasks = Integer.parseInt(completeSet.getString(1));
+                                            //System.out.println(completedTasks);
+                                            //System.out.println(totalTasks);
+                                            percentage = (int)((completedTasks*100)/totalTasks);
+                                            //System.out.println(percentage);
+
+                                        }
+                                        completeSet.close();
+                                    }
+                                    else { 
+                                        //System.out.println("no tasks assigned");
+                                    }
+                                    totalSet.close();
+                                    getProgress.close();
+                                    conn4.close();
+                                }
+                                catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            %>
+                            <div class="panel panel-default">
+                                <div class="panel-heading" align="center"><b>Monthly progress</b></div>
+                                <div class="panel-body" style="height:20rem; overflow:auto;padding:5rem;">
+                                    <div class="col-md-3"><b>Your progress</b></div>
+                                    <div class="col-md-9">
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width:<%= percentage %>%;color:black;">
+                                                <span class="sr-only">45% Complete</span><%= percentage %>%
+                                            </div>
                                         </div>
+                                    </div>
+                                    <p>Tasks completed : <%= completedTasks %></p>
+                                    <p>Tasks remaining : <%= (totalTasks - completedTasks) %></p>
                                 </div>
+                            </div>
+                                
                         </div> <!-- End Extra Panel-->
                     </div> <!-- End 2nd row-->
                 </div> <!-- End Home page -->
@@ -550,12 +603,13 @@
                 <div role="tabpanel" class="tab-pane" id="tasks">
                     <div class="row" style="height:3rem;"></div>
                     <div class="row">
-                        <div class="col-md-10" >
+                        <div class="col-md-12" >
                             <div class="panel panel-default"  >
                                 <div class="panel-heading" align="center" ><b>Master task list</b></div>
-                                <div class="panel-body" style="height:60rem; overflow:auto">
+                                <div class="panel-body" style="height:50rem; overflow:auto">
                                     <span class='glyphicon glyphicon-ok' style='color:green'></span> : Complete&nbsp;&nbsp;
-                                    <span class='glyphicon glyphicon-exclamation-sign' style='color:red'></span> : Pending
+                                    <span class='glyphicon glyphicon-exclamation-sign' style='color:red'></span> : Pending&nbsp;&nbsp;
+                                    <span class='glyphicon glyphicon-star'></span> : Overdue
                                     <br><br>
                                     <table class="table table-hover table-responsive">
                                         <tr>
@@ -586,6 +640,8 @@
                                                     getStatus = "SELECT * FROM WTFTASKALLOCATION WHERE TASKID="+taskSet.getInt("TASKID");
                                                     ResultSet statusSet = getStatusStatement.executeQuery(getStatus);
                                                     statusSet.next();
+                                                    String duedate=taskSet.getString("DUEDATE");
+                                                    Date date1 = dateFormat.parse(duedate);
                                                     out.println("<tr value='table row'>");
                                                     out.println("<td>"+taskSet.getString("TASKNAME")+"</td>");
                                                     out.println("<td>"+taskSet.getString("TASKPOINTS")+"</td>");
@@ -603,8 +659,14 @@
                                                     else {
                                                         out.println("<td>"+statusSet.getString("username")+"</td>");
                                                     }
-                                                    
-                                                    out.println("<td value='table data button'><button type='button' id='e"+id+"' value='scam' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
+                                                    if(date1.before(date))
+                                                    {
+                                                        out.println("<td value='table data button'><button type='button' id='e"+id+"' value='scam' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-star'></span></td>");
+                                                    }
+                                                    else
+                                                    {
+                                                        out.println("<td value='table data button'><button type='button' id='e"+id+"' value='scam' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
+                                                    }
                                                     
                                                     out.println("</tr>");
                                                     id++;
@@ -624,22 +686,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="row" style="margin:1rem;">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" align="center"><b>Extra</b></div>
-                                    <div class="panel-body" style="height:20rem; overflow:auto;padding:5rem;">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row" style="margin:1rem;">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" align="center"><b>Extra</b></div>
-                                    <div class="panel-body" style="height:20rem; overflow:auto;padding:5rem;">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>	
+                        	
                     </div>
                 </div> <!-- End Tasks page -->
 
