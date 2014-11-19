@@ -46,6 +46,8 @@ select * from WTFtasks;
 select * from WTFtaskallocation;
 select FRIENDNAME from WTFFriends where Mainusername='akanade';
 
+UPDATE WTFtaskallocation SET status = 'Pending',username='vatlreja'where TaskId=7;
+
 INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Cook Lunch', '50','0','09/10/2014','none', 'vinaraja');
 INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Lunch', '250','0', '11/12/2014','none', 'vtalreja');
 INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Bathroom Cleaning', '150','0', '12/11/2014','none', 'akanade');
@@ -75,13 +77,18 @@ SET POINTEARNED='0';
 
 DELETE from WTFuser;
 DELETE from WTFtasks;
-DELETE from WTFtaskallocation where TASKID=9;
+DELETE from WTFtaskallocation;
 DELETE from WTFFriends;
 
 select * from WTFuser;
 select * from WTFtasks;
 select * from WTFtaskallocation;
 select * FROM WTFFriends;
+
+DROP TABLE WTFuser;
+DROP TABLE WTFtasks;
+DROP TABLE WTFtaskallocation;
+DROP TABLE WTFFriends;
 
 SELECT STATUS FROM WTFtaskallocation WHERE USERNAME = 'vtalreja' and TASKID = 22
 

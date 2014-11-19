@@ -564,6 +564,7 @@
                                             <th>Due date</th>
                                             <th>Status</th>
                                             <th>Assignee</th>
+                                            <th>Reuse</th>
                                             <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                         </tr>
                                         <%  
@@ -592,6 +593,7 @@
                                                     out.println("<td>"+taskSet.getString("DUEDATE")+"</td>");
                                                     if (statusSet.getString("STATUS").equalsIgnoreCase("Complete")) {
                                                         out.println("<td><span class='glyphicon glyphicon-ok' style='color:green'></span></td>");
+                                                        
                                                     }
                                                     else {
                                                         out.println("<td><span class='glyphicon glyphicon-exclamation-sign' style='color:red'></span></td>");  
@@ -603,8 +605,19 @@
                                                     else {
                                                         out.println("<td>"+statusSet.getString("username")+"</td>");
                                                     }
+                                                    if (statusSet.getString("STATUS").equalsIgnoreCase("Complete")){
+                                                        
+                                                        out.println("<td><a data-toggle='modal' data-id='"+taskSet.getString("TASKID")+"' title='Add this item' class='open-AddBookDialog btn btn-success' href='#reusetask'>Reuse Task</a></td>");
+                                                        
+
+                                                     }
+                                                    else
+                                                    {
+                                                        out.println("<td><button class='btn btn-primary' disabled>Reuse Task</button></td>");
+                                                    }
+                                         
                                                     
-                                                    out.println("<td value='table data button'><button type='button' id='e"+id+"' value='scam' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
+                                                    out.println("<td value='table data button'><button type='button' id='d"+id+"' value='scamy'  onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
                                                     
                                                     out.println("</tr>");
                                                     id++;
@@ -807,6 +820,27 @@
             </div>
         </div>
     </div>
+    
+    <div id="reusetask" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="border-radius:20px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><br><br>
+                    <div class="modal-body">
+                        <input type="hidden" name="bookId" id="bookId" value=""/>
+                        <input type="hidden" class="form-control input-md" name = "mainuser" id="mainuser1" value="<%=request.getAttribute("username")%>">
+                    </div>
+                     <div class="hero-unit">
+                         <label>DueDate</label><input  type="text" class="form-control"  placeholder="click to show datepicker"  id="example1" align="middle" width="20%" height="20%" ></br>
+                     </div>
+                     <div class="form-group">
+                         <button type="submit" class="btn btn-primary" id="reuseupdated" onclick="reusetask1()">Reuse</button>
+                     </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+                  
                      
                      
     <!-- modal for adding new tasks-->
@@ -897,8 +931,8 @@
     <script type="text/javascript" src="dist/js/bootstrapValidator.min.js"></script>
 
     <script>
-
-        
+           
+                
             $('#myTab a').click(function (e) {
 		  e.preventDefault();
 		  $(this).tab('show');
@@ -910,9 +944,32 @@
 	var date = new Date();
         date.setDate(date.getDate());
         
-        function editTask(task) {
-            
-        }
+        $(document).on("click", ".open-AddBookDialog", function () {
+            var myBookId = $(this).data('id');
+            console.log(myBookId);
+            $(".modal-body #bookId").val( myBookId );
+            $('#example1').datepicker({
+                    format: "dd/mm/yyyy"
+                });  
+            });
+    /**function editTask(task) {
+            var id=$(task).attr('id');
+            //alert(id);
+             $('#example1').datepicker({
+                    format: "dd/mm/yyyy"
+                });  
+        }**/
+        function reusetask1(){
+            var id=$(".modal-body #bookId").val();
+            console.log(id);
+            var mainuser=$(".modal-body #mainuser1").val();
+            var duedate=$(".hero-unit #example1").val();
+           $.get('ReuseTask',"&taskid="+id+"&mainuser="+mainuser+"&duedate="+duedate,function(ResponseText){ 
+               console.log("yes exited");
+        })
+        location.reload();
+    };
+    
         
         function deleteTask(task) {
             var id, name, points, duedate;

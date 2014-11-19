@@ -99,8 +99,8 @@ public class AssignTask extends HttpServlet {
         String taskDueDate = request.getParameter("taskDueDate").replaceAll(" ","");
         String userName = request.getParameter("username").replaceAll(" ","");
         String connection,username,password;
-        BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
-        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        //BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask\\WTFtask\\config.txt"));
         try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
