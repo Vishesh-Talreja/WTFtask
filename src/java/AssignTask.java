@@ -18,6 +18,9 @@ import javax.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -25,7 +28,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import java.util.Date;
 /**
  *
  * @author Aashish
@@ -100,7 +103,7 @@ public class AssignTask extends HttpServlet {
         String userName = request.getParameter("username").replaceAll(" ","");
         String connection,username,password;
         BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
-        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask\\WTFtask\\config.txt"));
         try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -123,13 +126,34 @@ public class AssignTask extends HttpServlet {
         try (PrintWriter out = response.getWriter()){
         
         try{
-
+            boolean isTaskDoneEarly=false;
             Connection conn = DriverManager.getConnection(connection,username,password);
             String getTaskId = "SELECT * FROM WTFtasks where TASKNAME = '"+taskName+"' AND TASKPOINTS='"+taskPoints+"' AND DUEDATE='"+taskDueDate+"'";
             Statement st = conn.createStatement();
             ResultSet taskSet = st.executeQuery(getTaskId);
             taskSet.next();
             int id = taskSet.getInt("TaskID");
+            String CreateDate = taskSet.getString("CREATEDDATE");
+            String DueDate = taskSet.getString("DUEDATE");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date d1 = dateFormat.parse(CreateDate);
+                Date d2 = dateFormat.parse(DueDate);
+                long diff1 = d2.getTime() - d1.getTime();
+                Date d3 = new Date();
+                dateFormat.format(d3);
+                long diff2 = d3.getTime() - d1.getTime();
+                System.out.println(diff1);
+                System.out.println(diff2);
+                System.out.println(diff1/2);
+                if((diff2>diff1/2))
+                {
+                    isTaskDoneEarly=true;
+                }
+ 
+            } catch (ParseException ex) {
+                Logger.getLogger(AssignTask.class.getName()).log(Level.SEVERE, null, ex);
+            }
             System.out.println(id);
             System.out.println(userName +" "+taskPoints+" "+taskName);
             String assignTask = "UPDATE IS2560.WTFTASKALLOCATION SET USERNAME='"+userName+"' WHERE TASKID="+id;
@@ -150,8 +174,11 @@ public class AssignTask extends HttpServlet {
             float reducedPoints = (20*Float.parseFloat(taskPoints))/100;
             float decreasePoints = Float.parseFloat(taskPoints)-reducedPoints;
             System.out.println(reducedPoints);
-            String newtaskPoint = "UPDATE WTFtasks SET TASKPOINTS='"+decreasePoints+"' WHERE TASKID="+id;
-            st.executeUpdate(newtaskPoint);
+            if(isTaskDoneEarly==true)
+            {    
+                String newtaskPoint = "UPDATE WTFtasks SET TASKPOINTS='"+decreasePoints+"' WHERE TASKID="+id;
+                st.executeUpdate(newtaskPoint);
+            }
             String addTpoints = "SELECT * FROM WTFtasks where TASKID <>"+id;
             ResultSet rs = st.executeQuery(addTpoints);
             while(rs.next())
@@ -180,7 +207,7 @@ public class AssignTask extends HttpServlet {
                 Statement st2 = conn.createStatement();
                 ResultSet rs1 = st2.executeQuery("SELECT STATUS,USERNAME FROM WTFTASKALLOCATION WHERE TASKID ="+Tid);
                 rs1.next();
-                if("Pending".equals(rs1.getString("STATUS"))&&"null".equals(rs1.getString("USERNAME")))
+                if("Pending".equals(rs1.getString("STATUS"))&&"null".equals(rs1.getString("USERNAME"))&&isTaskDoneEarly==true)
                 { 
                     String newPoints = "UPDATE WTFtasks SET TASKPOINTS='"+newTpoints+"' WHERE TASKID="+Tid;
                     Statement st1 = conn.createStatement();

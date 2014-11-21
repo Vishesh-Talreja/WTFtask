@@ -17,6 +17,7 @@ Taskname varchar(255),
 Taskpoints varchar(255),
 AllotedTaskpoints varchar (255),
 Duedate date,
+CreatedDate date,
 recur VARCHAR(20) DEFAULT 'none',
 owner VARCHAR(100),
 CONSTRAINT primary_key_task PRIMARY KEY (TaskID)
@@ -46,14 +47,16 @@ select * from WTFtasks;
 select * from WTFtaskallocation;
 select FRIENDNAME from WTFFriends where Mainusername='akanade';
 
-INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Cook Lunch', '50','0','09/10/2014','none', 'vinaraja');
-INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Lunch', '250','0', '11/12/2014','none', 'vtalreja');
-INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Bathroom Cleaning', '150','0', '12/11/2014','none', 'akanade');
-INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Garbage Disposal', '450','0', '11/12/2014','none', 'akanade');
-INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Cook dinner', '350','0', '11/11/2014','none', 'vinaraja');
-INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Clean Hall', '30','0', '12/2/2014','none', 'akanade');
-INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Cook BreakFast', '70','0', '11/10/2014','none', 'akanade');
-INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,recur,owner) VALUES ('Overdue task check', '90','0', '11/22/2014','none', 'akanade');
+UPDATE WTFtaskallocation SET status = 'Pending',username='vatlreja'where TaskId=7;
+
+INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Cook Lunch', '50','0','09/10/2014','10/21/2014','none', 'vinaraja');
+INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Lunch', '250','0', '11/12/2014','10/23/2014','none', 'vtalreja');
+INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Bathroom Cleaning', '150','0', '12/11/2014','10/25/2014','none', 'akanade');
+INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Garbage Disposal', '450','0', '11/12/2014','10/27/2014','none', 'akanade');
+INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Cook dinner', '350','0', '11/11/2014','10/28/2014','none', 'vinaraja');
+INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Clean Hall', '30','0', '12/2/2014','10/22/2014','none', 'akanade');
+INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Cook BreakFast', '70','0', '11/10/2014','10/29/2014','none', 'akanade');
+INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Overdue task check', '90','0', '11/22/2014','11/18/2014','none', 'akanade');
 
 DROP TABLE WTFuser;
 DROP TABLE WTFtasks;
@@ -76,13 +79,18 @@ SET POINTEARNED='0';
 
 DELETE from WTFuser;
 DELETE from WTFtasks;
-DELETE from WTFtaskallocation where TASKID=9;
+DELETE from WTFtaskallocation;
 DELETE from WTFFriends;
 
 select * from WTFuser;
 select * from WTFtasks;
 select * from WTFtaskallocation;
 select * FROM WTFFriends;
+
+DROP TABLE WTFuser;
+DROP TABLE WTFtasks;
+DROP TABLE WTFtaskallocation;
+DROP TABLE WTFFriends;
 
 SELECT STATUS FROM WTFtaskallocation WHERE USERNAME = 'vtalreja' and TASKID = 22
 

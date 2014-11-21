@@ -101,6 +101,7 @@ public class deleteTask extends HttpServlet {
         String taskDueDate = request.getParameter("taskDueDate");
         String connection,username,password;
         System.out.println(taskName+" "+taskPoints+" "+taskDueDate);
+        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask\\WTFtask\\config.txt"));
         BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
         //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
         try {

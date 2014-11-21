@@ -102,6 +102,7 @@ public class New_friend extends HttpServlet {
         String main_username = request.getParameter("mainuser");//obtains the username who is logged in
         String main_user_firstname = request.getParameter("mainuser_firstname");
         String connection,username,password;
+        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask\\WTFtask\\config.txt"));
         BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
         //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
         try {

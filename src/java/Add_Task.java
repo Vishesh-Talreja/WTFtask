@@ -17,6 +17,9 @@ import javax.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -54,6 +57,7 @@ public class Add_Task extends HttpServlet {
         try {
             Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             Statement stmt=conn.createStatement();
+            
             String query2 = "INSERT INTO IS2560.WTFtasks (TASKNAME,TASKPOINTS,DUEDATE,RECUR,OWNER) VALUES('test','0','2014-11-05','none','test')";
             stmt.executeUpdate(query2);
             String query1 = "SELECT * FROM WTFtasks where taskname = 'test'";
@@ -114,7 +118,7 @@ public class Add_Task extends HttpServlet {
         //This piece of code extracts the database paqrameters from the file config.txt
         String connection,username,password;
         BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
-        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask\\WTFtask\\config.txt"));
         try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -138,7 +142,11 @@ public class Add_Task extends HttpServlet {
         try{
             Connection conn = DriverManager.getConnection(connection, username,password);
             Statement stmt=conn.createStatement();
-            String query3 = "INSERT INTO IS2560.WTFtasks (TASKNAME,TASKPOINTS,DUEDATE,OWNER,RECUR) VALUES ('"+Tname+"','"+Tpoints+"','"+Tduedate+"','"+user+"','"+recur+"')";
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            String CreateDate;
+            CreateDate = dateFormat.format(date);
+            String query3 = "INSERT INTO IS2560.WTFtasks (TASKNAME,TASKPOINTS,DUEDATE,CREATEDDATE,OWNER,RECUR) VALUES ('"+Tname+"','"+Tpoints+"','"+CreateDate+"','"+Tduedate+"','"+user+"','"+recur+"')";
             stmt.executeUpdate(query3);                                             //Insert task details into database
             String query4 = "SELECT * FROM IS2560.WTFtasks WHERE TASKNAME='"+Tname+"'";
             ResultSet rs = stmt.executeQuery(query4);                               //Extract taskId
