@@ -109,8 +109,8 @@ public class Complete_Task extends HttpServlet {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date task_date = new Date();
         String connection,username,password;
-        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask1\\WTFtask\\config.txt"));
-        //BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
+        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask1\\WTFtask\\config.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
         //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
         try {
             StringBuilder sb = new StringBuilder();
@@ -154,6 +154,8 @@ public class Complete_Task extends HttpServlet {
             rs.next();
             float TpointsBefore=Float.parseFloat(rs.getString("POINTEARNED"));
             float TpointsNow = Float.parseFloat(Tpoints);
+            float weeklypointsnow = Float.parseFloat(rs.getString("WEEKLYPOINTSDONE"));
+            weeklypointsnow = weeklypointsnow+TpointsNow;
             TpointsNow =TpointsNow+TpointsBefore;
             String NewTpoints = Float.toString(TpointsNow);
             if("Pending".equals(rs1.getString("STATUS")))
@@ -161,6 +163,8 @@ public class Complete_Task extends HttpServlet {
                 //Adding taskpoints to the user table 
                 String query3 = "UPDATE IS2560.WTFuser SET POINTEARNED = '"+NewTpoints+"' WHERE USERNAME ='"+user+"'";
                 stmt.executeUpdate(query3);
+                String query4 = "UPDATE IS2560.WTFuser SET WEEKLYPOINTSDONE = '"+weeklypointsnow+"' WHERE USERNAME ='"+user+"'";
+                stmt.executeUpdate(query4);
             }
             rs1.close();
             stmt1.close();

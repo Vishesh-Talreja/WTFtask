@@ -9,6 +9,7 @@ pointearned varchar(255),
 pointpossible varchar(255),
 weeklypoints varchar(255),
 weekupdated varchar(255),
+weeklypointsdone varchar(255),
 CONSTRAINT primary_key_user PRIMARY KEY (username)
 );
 
@@ -95,9 +96,9 @@ Delete from WTFtasks
 Delete from WTFFriends
 
 
-INSERT INTO WTFuser VALUES ('talreja', 'vishesh', 'vtalreja', 'vtalreja@indiana.edu', 'firewaterthunder','0','0','0','0');
-INSERT INTO WTFuser VALUES ('rajagopalan', 'vinay', 'vinaraja', 'vinaraja@indiana.edu', 'firewaterthunder','0','0','0','0');
-INSERT INTO WTFuser VALUES ('kanade', 'aashish', 'akanade', 'akanade@indiana.edu', 'firewaterthunder','0','0','0','0');
+INSERT INTO WTFuser VALUES ('talreja', 'vishesh', 'vtalreja', 'vtalreja@indiana.edu', 'firewaterthunder','0','0','0','0','0');
+INSERT INTO WTFuser VALUES ('rajagopalan', 'vinay', 'vinaraja', 'vinaraja@indiana.edu', 'firewaterthunder','0','0','0','0','0');
+INSERT INTO WTFuser VALUES ('kanade', 'aashish', 'akanade', 'akanade@indiana.edu', 'firewaterthunder','0','0','0','0','0');
 
 INSERT INTO WTFFriends VALUES('akanade','vtalreja');
 INSERT INTO WTFFriends VALUES('akanade','vinaraja');

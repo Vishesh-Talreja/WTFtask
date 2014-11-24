@@ -482,8 +482,10 @@
                         <!-- Friends panel-->
                         <div class="col-md-6">
                             <div class="panel panel-default" >
-                                <div class="panel-heading" align="center"><b>Recurring Points goal</b></div>
+                                <div class="panel-heading" align="center"><b>Friend list and Weekly points</b></div>
                                 <div class="panel-body" style="height:20rem; overflow:auto">
+                                    <table class="table table-hover">
+                                        <tr>
                                      <%
                                         //This piece of code is used to extract the current system date
                                         Calendar cal1 = Calendar.getInstance();
@@ -522,11 +524,11 @@
                                                  }
                                                  if(weekupdatedInt<week)
                                                  {
-                                                   out.println("<form><input type='hidden' name='weekupdated' id='week' value = '"+week+"'/><input name='weeklypoint' id='weeklypoints' placeholder='weekly points'/><button type ='button' id='weeklyupdate' href='#' class='btn btn-primary'onclick='UpdatePoints()' align='right'>Upadate</button></form>");  
+                                                   out.println("<form><input type='hidden' name='weekupdated' id='week' value = '"+week+"'/><input name='weeklypoint' id='weeklypoints' placeholder='weekly points'/><button type ='button' id='weeklyupdate' href='#' class='btn btn-primary'onclick='UpdatePoints()' align='right'>Update</button></form></td>");  
                                                  }
                                                  else
                                                  {
-                                                     out.println("<form><input name='weeklypoint' placeholder='weekly points' disabled/><button type ='submit' id='weeklyupdate' href='#' class='btn btn-primary' align='center' disabled>Upadate</button></form>"); 
+                                                     out.println("<form><input name='weeklypoint' placeholder='weekly points' disabled/><button type ='submit' id='weeklyupdate' href='#' class='btn btn-primary' align='center' disabled>Update</button></form></tr>"); 
                                                  }
                                                 
                                             }
@@ -536,11 +538,41 @@
                                               catch (Exception e) {
                                                   e.printStackTrace();
                                               }
-                                       // String presentdate=curr_date1.toString();
-                                        //String staticdate="2014-11-16";
+                                       
+                                            /*This piece of java code connects to the database and then displays the friends of the
+                                            user that is logged on on a separate modal*/
+
+                                            out.println("<tr><th>Name</th><th>Points alloted</th><th>Points completed</th></tr>");
+                                            String selectFriends,selectUser,sql6;
+                                            String connectionURL10="jdbc:derby://localhost:1527/WTFtask";
+                                            selectFriends ="SELECT * FROM WTFFriends where MAINUSERNAME = '"+user+"'";
+                                            try {
+                                                Connection conn1 = DriverManager.getConnection(connectionURL10, "IS2560","IS2560");
+                                                Statement selectFriendStatement = conn1.createStatement();
+                                                Statement selectUserStatement = conn1.createStatement();
+                                                
+                                                    selectUser="SELECT * from WTFuser";
+                                                    ResultSet userSet = selectUserStatement.executeQuery(selectUser);
+                                                    while(userSet.next()) {
+                                                        out.println("<tr>");
+                                                        out.println("<td>"+userSet.getString("FIRSTNAME")+"</td>");
+                                                        out.println("<td>"+userSet.getString("WEEKLYPOINTS")+"</td>");
+                                                        out.println("<td>"+userSet.getString("WEEKLYPOINTSDONE")+"</td>");
+                                                        out.println("</tr>");
+                                                    }
+                                                    userSet.close();
+                                                selectUserStatement.close();
+                                                selectFriendStatement.close();
+                                                conn1.close();
+
+                                            }
+                                            catch(SQLException e)
+                                            {
+                                                e.printStackTrace();
+                                            }
                                         
                                      %>
-                       
+                                    </table>
                                   
                                 </div>
                             </div>
@@ -611,63 +643,7 @@
                     
                     <!-- Spacing row-->
                     <div class="row" style="height:1rem"></div> <!-- End spacing row-->
-                     <div class="row">
-                        <!-- Friends panel-->
-                        <div class="col-md-6">
-                            <div class="panel panel-default" >
-                                <div class="panel-heading" align="center"><b>Your Friends</b></div>
-                                <div class="panel-body" style="height:20rem; overflow:auto">
-                                    <table class="table table-hover">
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Points earned</th>
-                                            <th>Points remaining</th>
-                                        </tr>
-                                        <%  
-                                            /*This piece of java code connects to the database and then displays the friends of the
-                                            user that is logged on on a separate modal*/
-
-                                            //String user1 = (String)request.getAttribute("username");
-                                            String selectFriends,selectUser,sql6;
-                                            String connectionURL10="jdbc:derby://localhost:1527/WTFtask";
-                                            selectFriends ="SELECT * FROM WTFFriends where MAINUSERNAME = '"+user+"'";
-                                            try {
-                                                Connection conn1 = DriverManager.getConnection(connectionURL10, "IS2560","IS2560");
-                                                Statement selectFriendStatement = conn1.createStatement();
-                                                Statement selectUserStatement = conn1.createStatement();
-                                                ResultSet friendSet = selectFriendStatement.executeQuery(selectFriends);
-                                                
-                                                while(friendSet.next())
-                                                {
-                                                    selectUser="SELECT * from WTFuser where USERNAME='"+friendSet.getString("FRIENDNAME")+"'";
-                                                    ResultSet userSet = selectUserStatement.executeQuery(selectUser);
-                                                    while(userSet.next()) {
-                                                        out.println("<tr>");
-                                                        out.println("<td>"+userSet.getString("FIRSTNAME")+"</td>");
-                                                        out.println("<td>"+userSet.getString("POINTEARNED")+"</td>");
-                                                        out.println("<td>"+(Integer.parseInt(userSet.getString("POINTPOSSIBLE"))- Integer.parseInt(userSet.getString("POINTEARNED")))+"</td>");
-                                                        out.println("</tr>");
-                                                    }
-                                                    userSet.close();
-
-                                                }
-                                                selectUserStatement.close();
-                                                friendSet.close();
-                                                selectFriendStatement.close();
-                                                conn1.close();
-
-                                            }
-                                            catch(SQLException e)
-                                            {
-                                                e.printStackTrace();
-                                            }
-                                        %>
-                                        
-                                    </table>
-                                </div>
-                            </div>
-                        </div> <!-- End Friends panel-->
-                        </div> <!-- End 2nd row-->
+                     
                 </div> <!-- End Home page -->
 
                 <!--Tasks page -->

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
@@ -57,14 +58,15 @@ public class WeeklyPointsUpdate extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
         response.setCharacterEncoding("UTF-8");
-          String main_username = request.getParameter("mainuser");
+           String main_username = request.getParameter("mainuser");
            String week = request.getParameter("week");
+           String isNewWeek = request.getParameter("isNewWeek");
            String weeklyPoints = request.getParameter("points");
            //System.out.println(duedate);
            main_username = main_username.toLowerCase();
            String connection,dusername,password;
-           //BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
-           BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask1\\WTFtask\\config.txt"));
+           BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
+           //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask1\\WTFtask\\config.txt"));
            try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -91,9 +93,24 @@ public class WeeklyPointsUpdate extends HttpServlet {
             Statement st2 = null;
           
            try {
-            conn = DriverManager.getConnection(connection,dusername,password);
-           String query1="UPDATE WTFuser SET WEEKLYPOINTS = '"+weeklyPoints+"',WEEKUPDATED='"+week+"' where USERNAME='"+main_username+"'";
+           conn = DriverManager.getConnection(connection,dusername,password);
+           String query ="Select * from WTFuser where USERNAME='"+main_username+"'";
            st = conn.createStatement();
+           ResultSet newPoints = st.executeQuery(query);
+           newPoints.next();
+           float inputPoints = Float.parseFloat(weeklyPoints);
+           float pointsDone = Float.parseFloat(newPoints.getString("WEEKLYPOINTSDONE"));
+           float points = Float.parseFloat(newPoints.getString("WEEKLYPOINTS"));
+           if (pointsDone>points)
+           {
+               inputPoints = inputPoints - (pointsDone-points);
+           }
+           else
+           {
+               inputPoints = inputPoints + (points -pointsDone);
+           }
+           weeklyPoints = Float.toString(inputPoints);
+           String query1="UPDATE WTFuser SET WEEKLYPOINTS = '"+weeklyPoints+"',WEEKUPDATED='"+week+"',WEEKLYPOINTSDONE='0' where USERNAME='"+main_username+"'";
            st.executeUpdate(query1);
 
            }
