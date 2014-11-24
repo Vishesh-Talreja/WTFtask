@@ -9,13 +9,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -29,8 +24,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author vinay
  */
-@WebServlet(urlPatterns = {"/ReuseTask"})
-public class ReuseTask extends HttpServlet {
+@WebServlet(urlPatterns = {"/WeeklyPointsUpdate"})
+public class WeeklyPointsUpdate extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,8 +38,10 @@ public class ReuseTask extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
        
-    }
+        }
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -58,27 +55,13 @@ public class ReuseTask extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
+        response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
         response.setCharacterEncoding("UTF-8");
           String main_username = request.getParameter("mainuser");
-           String taskid = request.getParameter("taskid");
-           String duedate = request.getParameter("duedate");
+           String week = request.getParameter("week");
+           String weeklyPoints = request.getParameter("points");
            //System.out.println(duedate);
-           String[] due= duedate.split("/");
-           StringBuilder sb1=new StringBuilder();
-           sb1.append(due[1]);
-           sb1.append("/");
-           sb1.append(due[0]);
-           sb1.append("/");
-           sb1.append(due[2]);
-           String date=sb1.toString();
-           
            main_username = main_username.toLowerCase();
-           int id=Integer.parseInt(taskid);
-           
-           System.out.println("xyz");
-           System.out.println(id);
-            System.out.println(date);
            String connection,dusername,password;
            //BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
            BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask1\\WTFtask\\config.txt"));
@@ -109,13 +92,10 @@ public class ReuseTask extends HttpServlet {
           
            try {
             conn = DriverManager.getConnection(connection,dusername,password);
-           String query1="UPDATE WTFtaskallocation SET status = 'Pending',username='null' where TaskId="+id;
+           String query1="UPDATE WTFuser SET WEEKLYPOINTS = '"+weeklyPoints+"',WEEKUPDATED='"+week+"' where USERNAME='"+main_username+"'";
            st = conn.createStatement();
            st.executeUpdate(query1);
-           String query2="UPDATE WTFtasks SET Duedate= '"+date+"'where TaskId="+id ;
-           st2=conn.createStatement();
-           st2.executeUpdate(query2);
-            
+
            }
              catch(SQLException ex)
         {
@@ -126,8 +106,8 @@ public class ReuseTask extends HttpServlet {
               st.close();//connections are closed
               //rs.close();
              conn.close(); 
-             RequestDispatcher rm=request.getRequestDispatcher("user_home_new.jsp");
-             rm.forward(request, response);
+            // RequestDispatcher rm=request.getRequestDispatcher("user_home_new.jsp");
+            // rm.forward(request, response);
           }
           catch (SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
@@ -136,6 +116,7 @@ public class ReuseTask extends HttpServlet {
       }
     }
     }
+
 
     /**
      * Handles the HTTP <code>POST</code> method.

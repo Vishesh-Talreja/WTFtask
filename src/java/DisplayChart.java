@@ -114,8 +114,8 @@ public class DisplayChart extends HttpServlet {
         ArrayList<String> list=new ArrayList<String>();
         ArrayList<String> firstnamelist=new ArrayList<String>();//Arraylist  that stores friend tobe displayed
         String connection,dusername,password;
-        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask\\WTFtask\\config.txt"));
-        BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask1\\WTFtask\\config.txt"));
+       // BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
         //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
         try {
             StringBuilder sb = new StringBuilder();
