@@ -487,8 +487,8 @@
                                      <%
                                         //This piece of code is used to extract the current system date
                                         Calendar cal1 = Calendar.getInstance();
-                                        //int week=cal1.get(Calendar.DAY_OF_WEEK_IN_MONTH);
-                                        int week = 5;
+                                        int week=cal1.get(Calendar.DAY_OF_WEEK_IN_MONTH);
+                                        //int week = 1;
                                         int year1 = cal1.get(Calendar.YEAR);
                                         int month1 = cal1.get(Calendar.MONTH)+1;
                                         int day1 = cal1.get(Calendar.DAY_OF_MONTH);
@@ -516,8 +516,9 @@
                                                
                                                  if ((week==1&&weekupdatedInt!=0)||(week==1&&weekupdatedInt!=1))
                                                  {
-                                                    String s5="UPDATE WTFusers SET WEEKUPDATED = '0' where USERNAME = '"+user+"'"; 
-                                                    s4.executeUpdate(s5);
+                                                    String s5="UPDATE WTFuser SET WEEKUPDATED = '0' where USERNAME = '"+user+"'"; 
+                                                    s3.executeUpdate(s5);
+                                                    weekupdatedInt=0;
                                                  }
                                                  if(weekupdatedInt<week)
                                                  {
