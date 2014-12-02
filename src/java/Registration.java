@@ -16,6 +16,8 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import javax.servlet.RequestDispatcher;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.sql.*;
 //import java.util.logging.Logger;
@@ -96,28 +98,22 @@ public class Registration extends HttpServlet {
         String pass=request.getParameter("rpassword").replaceAll(" ","");
         Connection conn=null;
         Statement stmt=null;
-        String connection,username,password;
-        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask1\\WTFtask\\config.txt"));
-        BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
-        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        String connection=null,username=null,password=null;
+        InputStream in = Login.class.getResourceAsStream("/config.txt");
+        BufferedReader reader=new BufferedReader(new InputStreamReader(in));
         try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
-                
-            }
-            String everything = sb.toString();
-            String arg[] = everything.split(" ");
-            connection = arg[2];
-            username = arg[0];
-            password = arg[1];
             
-        } finally {
-            br.close();
+            String line=null;
+            System.out.println("sam");
+                while((line=reader.readLine())!=null){
+                    String[] arg = line.split(" ");
+                    username = arg[0];
+                    password = arg[1];
+                    connection = arg[2];
+                }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         try (PrintWriter out = response.getWriter()) {
             

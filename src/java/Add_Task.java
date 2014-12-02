@@ -104,39 +104,25 @@ public class Add_Task extends HttpServlet {
         String Tname=request.getParameter("taskname");
         String Tpoints=request.getParameter("taskpoints").replaceAll(" ","");
         String Tduedate=request.getParameter("duedate").replaceAll(" ","");
+        System.out.println("AREEEE DUE DATE TO "+Tduedate+" HAIII");
         String recur = request.getParameter("recur").replace(" "," ");
         //System.out.println("The task is selected to recur "+recur+"!!!!!!!");
-        String assignee;
-        if (request.getParameter("list") == null) {
-            assignee = null;
-        }
-        else {
-            assignee = request.getParameter("list");
-            assignee = assignee.toLowerCase();
-        }
-        
         //This piece of code extracts the database paqrameters from the file config.txt
-        String connection,username,password;
-        BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
-        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask1\\WTFtask\\config.txt"));
+        String connection=null,username=null,password=null;
+        InputStream in = Login.class.getResourceAsStream("/config.txt");
+        BufferedReader reader=new BufferedReader(new InputStreamReader(in));
         try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
-                
-            }
-            String everything = sb.toString();
-            String arg[] = everything.split(" ");
-            connection = arg[2];
-            username = arg[0];
-            password = arg[1];
             
-        } finally {
-            br.close();
+            String line=null;
+                while((line=reader.readLine())!=null){
+                    String[] arg = line.split(" ");
+                    username = arg[0];
+                    password = arg[1];
+                    connection = arg[2];
+                }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         try (PrintWriter out = response.getWriter()) {
         try{
@@ -146,7 +132,7 @@ public class Add_Task extends HttpServlet {
             Date date = new Date();
             String CreateDate;
             CreateDate = dateFormat.format(date);
-            String query3 = "INSERT INTO IS2560.WTFtasks (TASKNAME,TASKPOINTS,DUEDATE,CREATEDDATE,OWNER,RECUR) VALUES ('"+Tname+"','"+Tpoints+"','"+CreateDate+"','"+Tduedate+"','"+user+"','"+recur+"')";
+            String query3 = "INSERT INTO IS2560.WTFtasks (TASKNAME,TASKPOINTS,DUEDATE,CREATEDDATE,ALLOTEDTASKPOINTS,OWNER,RECUR) VALUES ('"+Tname+"','"+Tpoints+"','"+Tduedate+"','"+CreateDate+"','0' ,'"+user+"','"+recur+"')";
             stmt.executeUpdate(query3);                                             //Insert task details into database
             String query4 = "SELECT * FROM IS2560.WTFtasks WHERE TASKNAME='"+Tname+"'";
             ResultSet rs = stmt.executeQuery(query4);                               //Extract taskId
@@ -159,15 +145,9 @@ public class Add_Task extends HttpServlet {
             query6 = "INSERT INTO WTFTASKALLOCATION VALUES ("+id+",'"+null+"','Pending')";
             stmt.executeUpdate(query6);
             stmt.close();
-            //Return required parameterts back to homepage
-            request.setAttribute("Name", name);
-            request.setAttribute("TName",Tname);
-            request.setAttribute("username",user);
-            request.setAttribute("added", "yes");
+            //Return to homepage
+            response.getWriter().write("true");
             conn.close();
-            RequestDispatcher rd=request.getRequestDispatcher("user_home_new.jsp");
-            rd.forward(request, response);
-            //response.sendRedirect("user_home.jsp");
             
         }
         catch(SQLException ex)

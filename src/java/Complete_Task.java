@@ -108,28 +108,22 @@ public class Complete_Task extends HttpServlet {
         ResultSet rs = null;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date task_date = new Date();
-        String connection,username,password;
-        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask1\\WTFtask\\config.txt"));
-        BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
-        //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Aashish\\Documents\\NetBeansProjects\\WTFtask\\config.txt"));
+        String connection=null,username=null,password=null;
+        InputStream in = Login.class.getResourceAsStream("/config.txt");
+        BufferedReader reader=new BufferedReader(new InputStreamReader(in));
         try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
-                
-            }
-            String everything = sb.toString();
-            String arg[] = everything.split(" ");
-            connection = arg[2];
-            username = arg[0];
-            password = arg[1];
             
-        } finally {
-            br.close();
+            String line=null;
+            System.out.println("sam");
+                while((line=reader.readLine())!=null){
+                    String[] arg = line.split(" ");
+                    username = arg[0];
+                    password = arg[1];
+                    connection = arg[2];
+                }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
@@ -179,17 +173,18 @@ public class Complete_Task extends HttpServlet {
                 c.setTime(task_date); 
                 if(recurValue.equals("weekly")) {
                     //System.out.println("Task duedate postponed by 7 days");
-                    c.add(Calendar.DATE, 7); // Adding 5 days
+                    c.add(Calendar.DATE, 7); // Adding 7 days
                     taskdate = dateFormat.format(c.getTime());
                 }
                 else if(recurValue.equals("monthly")) {
                     //System.out.println("Task duedate postponed by 30 days");
-                    c.add(Calendar.DATE, 30); // Adding 5 days
+                    c.add(Calendar.DATE, 30); // Adding 30 days
                     taskdate = dateFormat.format(c.getTime());
                 }
                 
                 String updateQuery = "UPDATE IS2560.WTFtasks SET DUEDATE='"+taskdate+"' WHERE TASKID="+id;
                 stmt.executeUpdate(updateQuery);
+                stmt.executeUpdate("UPDATE IS2560.WTFTASKALLOCATION SET USERNAME='null' WHERE TASKID="+id);
             }
             request.setAttribute("Name", name);
             request.setAttribute("username",user);

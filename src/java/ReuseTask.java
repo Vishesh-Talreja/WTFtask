@@ -6,6 +6,8 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -79,27 +81,22 @@ public class ReuseTask extends HttpServlet {
            System.out.println("xyz");
            System.out.println(id);
             System.out.println(date);
-           String connection,dusername,password;
-           BufferedReader br = new BufferedReader(new FileReader("/Users/visheshtalreja/Desktop/WTFtask/src/java/config.txt"));
-           //BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\vinay\\Documents\\NetBeansProjects\\WTFtask1\\WTFtask\\config.txt"));
-           try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
-                
-            }
-            String everything = sb.toString();
-            String arg[] = everything.split(" ");
-            connection = arg[2];
-            dusername = arg[0];
-            password = arg[1];
+           String connection=null,dusername=null,password=null;
+        InputStream in = Login.class.getResourceAsStream("/config.txt");
+        BufferedReader reader=new BufferedReader(new InputStreamReader(in));
+        try {
             
-        } finally {
-            br.close();
+            String line=null;
+            System.out.println("sam");
+                while((line=reader.readLine())!=null){
+                    String[] arg = line.split(" ");
+                    dusername = arg[0];
+                    password = arg[1];
+                    connection = arg[2];
+                }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
            try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
