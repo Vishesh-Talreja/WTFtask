@@ -5,14 +5,18 @@
             <url>src/java/Complete_Task.java</url>
             <bookmark id="1">
                 <name/>
-                <line>156</line>
+                <line>150</line>
                 <key/>
             </bookmark>
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/Aashish/Documents/NetBeansProjects/WTFtask/web/WTF-task.sql</file>
+            <file>file:/C:/Users/Aashish/Documents/NetBeansProjects/WTFtask/web/task_login.jsp</file>
             <file>file:/C:/Users/Aashish/Documents/NetBeansProjects/WTFtask/src/java/Check_Email.java</file>
+            <file>file:/C:/Users/Aashish/Documents/NetBeansProjects/WTFtask/src/java/Add_Task.java</file>
+            <file>file:/C:/Users/Aashish/Documents/NetBeansProjects/WTFtask/web/user_home_new.jsp</file>
         </group>
     </open-files>
 </project-private>

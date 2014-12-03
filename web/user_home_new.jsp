@@ -107,7 +107,7 @@
                 if(getTaskSet.getString("RECUR").equals("weekly") ||getTaskSet.getString("RECUR").equals("monthly") ) {
                     LocalDate task_date = formatter.parseLocalDate( getTaskSet.getString("DUEDATE"));
                     if (curr_date.isAfter(task_date)) {
-                        System.out.println("overdue mila");
+                        //System.out.println("overdue mila");
                         String curr_task_date = task_date.toString();
                         String new_task_date = "";
                         if (getTaskSet.getString("RECUR").equals("weekly")) {
@@ -124,20 +124,20 @@
                         updateTask.executeUpdate(updateTaskDate);
                         ResultSet taskStatusSet = updateTask.executeQuery("SELECT * FROM WTFTASKALLOCATION WHERE TASKID = "+taskid);
                         taskStatusSet.next();
-                        System.out.println("before check pending");
+                        //System.out.println("before check pending");
                         if(taskStatusSet.getString("STATUS").equalsIgnoreCase("Pending")) {
-                            System.out.println("nila nila");
+                            //System.out.println("nila nila");
                             String getPointsInfo = "SELECT * FROM WTFuser where USERNAME IN (SELECT USERNAME FROM WTFTASKALLOCATION WHERE TASKID="+taskid+")";
                             pointsInfoSet = pointsInfo.executeQuery(getPointsInfo);
                             pointsInfoSet.next();
-                            System.out.println("diff");
+                            //System.out.println("diff");
                             float user_points_possible = Float.parseFloat(pointsInfoSet.getString("POINTPOSSIBLE"));
                             float task_points = Float.parseFloat(taskpoints);
-                            System.out.println("PREVIOUS POINTS "+user_points_possible+" TASK POINTS "+task_points);
+                            //System.out.println("PREVIOUS POINTS "+user_points_possible+" TASK POINTS "+task_points);
                             user_points_possible = user_points_possible - task_points;
-                            System.out.println("NEW POINTS "+user_points_possible);
+                            //System.out.println("NEW POINTS "+user_points_possible);
                             pointsInfo.executeUpdate("UPDATE IS2560.WTFuser SET POINTPOSSIBLE = '"+user_points_possible+"' WHERE USERNAME IN (SELECT USERNAME FROM WTFTASKALLOCATION WHERE TASKID = "+taskid+")");
-                            System.out.println("hogaya");
+                            //System.out.println("hogaya");
                         }
                         String updateTaskStatus = "UPDATE IS2560.WTFtaskallocation SET STATUS='Pending',USERNAME='null' WHERE TASKID="+taskid;
                         updateTask.executeUpdate(updateTaskStatus);
@@ -522,20 +522,22 @@
                                                  }
                                                  
                                                  int weekupdatedInt=Integer.parseInt(weekupdated);
-                                               
-                                                 if ((week==1&&weekupdatedInt!=0)||(week==1&&weekupdatedInt!=1))
+                                                 System.out.println("Week updated ="+weekupdatedInt+" week "+week);
+                                                 System.out.println("byad");
+                                                 if ((week >= 1 && weekupdatedInt >= 4))
                                                  {
+                                                    System.out.println("yes");
                                                     String s5="UPDATE WTFuser SET WEEKUPDATED = '0' where USERNAME = '"+user+"'"; 
                                                     s3.executeUpdate(s5);
                                                     weekupdatedInt=0;
                                                  }
+                                                 
                                                  if(weekupdatedInt<week)
                                                  {
-                                                   out.println("<div class='modal show' data-backdrop='static'>");
+                                                   out.println("<div id='updatePoints' class='modal show' data-backdrop='static'>");
                                                    out.println("<div class='modal-dialog'>");
                                                    out.println("<div class='modal-content'>");
                                                    out.println("<div class='modal-body'>");
-                                                   
                                                    out.println("<br><br><h4 align='center' class='modal-title'>First things first, you need to update your weekly points!</h4><br>");                                 
                                                    out.println("<form class='form-inline' align='center'><div class='form-group'><input type='hidden' name='weekupdated' id='week' value = '"+week+"'/><input class='form-control' style='width:33%;margin-left:33%' name='weeklypoint' id='weeklypoints' placeholder='weekly points'/><br><button style='width:20%;margin-left:40%' type ='button' id='weeklyupdate' href='#' class='form-control btn btn-primary'onclick='UpdatePoints()' align='right'>Update</button></div></form>");
                                                    out.println("</div></div>");

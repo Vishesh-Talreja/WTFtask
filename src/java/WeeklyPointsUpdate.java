@@ -72,7 +72,7 @@ public class WeeklyPointsUpdate extends HttpServlet {
         try {
             
             String line=null;
-            System.out.println("sam");
+            //System.out.println("sam");
                 while((line=reader.readLine())!=null){
                     String[] arg = line.split(" ");
                     dusername = arg[0];
@@ -88,7 +88,7 @@ public class WeeklyPointsUpdate extends HttpServlet {
            Connection conn = null;
             Statement st = null;
             Statement st2 = null;
-          
+           
            try {
            conn = DriverManager.getConnection(connection,dusername,password);
            String query ="Select * from WTFuser where USERNAME='"+main_username+"'";
@@ -106,9 +106,12 @@ public class WeeklyPointsUpdate extends HttpServlet {
            {
                inputPoints = inputPoints + (points -pointsDone);
            }
+           System.out.println(week+" asasas");
            weeklyPoints = Float.toString(inputPoints);
-           String query1="UPDATE WTFuser SET WEEKLYPOINTS = '"+weeklyPoints+"',WEEKUPDATED='"+week+"',WEEKLYPOINTSDONE='0' where USERNAME='"+main_username+"'";
-           st.executeUpdate(query1);
+           String query1="UPDATE WTFuser SET WEEKUPDATED='"+week+"',WEEKLYPOINTS = '"+weeklyPoints+"',WEEKLYPOINTSDONE='0' where USERNAME='"+main_username+"'";
+           int rows = st.executeUpdate(query1);
+           System.out.println(week +"asasas 2");
+           System.out.println(rows+" rows");
 
            }
              catch(SQLException ex)

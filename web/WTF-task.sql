@@ -130,4 +130,4 @@ INSERT INTO WTFtaskallocation VALUES (6,'null','Pending');
 INSERT INTO WTFtaskallocation VALUES (7,'null','Pending');
 INSERT INTO WTFtaskallocation VALUES (8,'null','Pending');
 
-SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = 'akanade'
+SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = 'akanade';
