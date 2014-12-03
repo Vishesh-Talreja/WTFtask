@@ -91,51 +91,59 @@
          //the due dates of each task in the database one by one, compares it to the system date and if it is past the system date, adds the designated amount of days to the due date.
          String connectionURL="jdbc:derby://localhost:1527/WTFtask";
          Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-         boolean flag = false;
          try {
-            
             Statement getTask = conn.createStatement();
             Statement updateTask = conn.createStatement();
+            Statement pointsInfo = conn.createStatement();
             String getTasksQuery = "SELECT * FROM WTFtasks";
             ResultSet getTaskSet = getTask.executeQuery(getTasksQuery);
-            ResultSet updateTaskSet;
+            ResultSet updateTaskSet, pointsInfoSet;
             int taskid;
+            String taskpoints;
             while(getTaskSet.next()) {
                 taskid = getTaskSet.getInt("TASKID");
+                taskpoints = getTaskSet.getString("ALLOTEDTASKPOINTS");
                 //System.out.println("THE ID IS "+taskid);
                 if(getTaskSet.getString("RECUR").equals("weekly") ||getTaskSet.getString("RECUR").equals("monthly") ) {
-                    
                     LocalDate task_date = formatter.parseLocalDate( getTaskSet.getString("DUEDATE"));
                     if (curr_date.isAfter(task_date)) {
-                        flag = true;
+                        System.out.println("overdue mila");
                         String curr_task_date = task_date.toString();
                         String new_task_date = "";
                         if (getTaskSet.getString("RECUR").equals("weekly")) {
-                            //System.out.println("GOING TO ADD BY 7 "+getTaskSet.getString("TASKNAME"));
                             task_date = task_date.plusDays(7);
                             new_task_date = task_date.toString(); 
                             //System.out.println("ADDED 7 days to "+getTaskSet.getString("TASKNAME")+ "OLD TASK DATE WAS "+ curr_task_date +" NEW DUE DATE IS " + new_task_date); 
                         }
                         else if (getTaskSet.getString("RECUR").equals("monthly")) {
-                            //System.out.println("GOING TO ADD BY 30 "+getTaskSet.getString("TASKNAME"));
                             task_date = task_date.plusDays(30);
                             new_task_date = task_date.toString();
                             //System.out.println("ADDED 30 days to "+getTaskSet.getString("TASKNAME")+ "OLD TASK DATE WAS "+ curr_task_date +" NEW DUE DATE IS " + new_task_date); 
                         }
-                        System.out.println("THE ID IS "+taskid);
                         String updateTaskDate = "UPDATE IS2560.WTFtasks SET DUEDATE='"+ new_task_date +"' WHERE DUEDATE= '"+ curr_task_date +"'";
                         updateTask.executeUpdate(updateTaskDate);
-                        String updateTaskStatus = "UPDATE IS2560.WTFtaskallocation SET STATUS='Pending' WHERE TASKID="+taskid;
-                        updateTask.executeQuery(updateTaskStatus);
+                        ResultSet taskStatusSet = updateTask.executeQuery("SELECT * FROM WTFTASKALLOCATION WHERE TASKID = "+taskid);
+                        taskStatusSet.next();
+                        System.out.println("before check pending");
+                        if(taskStatusSet.getString("STATUS").equalsIgnoreCase("Pending")) {
+                            System.out.println("nila nila");
+                            String getPointsInfo = "SELECT * FROM WTFuser where USERNAME IN (SELECT USERNAME FROM WTFTASKALLOCATION WHERE TASKID="+taskid+")";
+                            pointsInfoSet = pointsInfo.executeQuery(getPointsInfo);
+                            pointsInfoSet.next();
+                            System.out.println("diff");
+                            float user_points_possible = Float.parseFloat(pointsInfoSet.getString("POINTPOSSIBLE"));
+                            float task_points = Float.parseFloat(taskpoints);
+                            System.out.println("PREVIOUS POINTS "+user_points_possible+" TASK POINTS "+task_points);
+                            user_points_possible = user_points_possible - task_points;
+                            System.out.println("NEW POINTS "+user_points_possible);
+                            pointsInfo.executeUpdate("UPDATE IS2560.WTFuser SET POINTPOSSIBLE = '"+user_points_possible+"' WHERE USERNAME IN (SELECT USERNAME FROM WTFTASKALLOCATION WHERE TASKID = "+taskid+")");
+                            System.out.println("hogaya");
+                        }
+                        String updateTaskStatus = "UPDATE IS2560.WTFtaskallocation SET STATUS='Pending',USERNAME='null' WHERE TASKID="+taskid;
+                        updateTask.executeUpdate(updateTaskStatus);
                     }
-                    else
-                        flag = false;
-                }
-                
+                }     
             }
-            if (flag == false)
-                //System.out.println("No tasks to update");
-            //System.out.println("END WHILE");
             getTaskSet.close();
             getTask.close();
          }
@@ -482,7 +490,7 @@
                         <!-- Friends panel-->
                         <div class="col-md-6">
                             <div class="panel panel-default" >
-                                <div class="panel-heading" align="center"><b>Friend list and Weekly points</b></div>
+                                <div class="panel-heading" align="center"><b>Friend list</b></div>
                                 <div class="panel-body" style="height:20rem; overflow:auto">
                                     <table class="table table-hover">
                                         <tr>
@@ -502,11 +510,10 @@
                                         String sql5;
                                         String weekupdated=null;
                                         sql5 ="SELECT * FROM WTFuser where USERNAME = '"+user+"'";
-                                          System.out.println("weeklypoints");
-                                          System.out.println(weekupdated);
+                                          
                
                                             try{
-                                                System.out.println("inside try");
+                                                
                                                 Statement s3 = conn11.createStatement();
                                                 Statement s4 = conn11.createStatement();
                                                 ResultSet rs3 = s3.executeQuery(sql5);
@@ -524,11 +531,19 @@
                                                  }
                                                  if(weekupdatedInt<week)
                                                  {
-                                                   out.println("<form><input type='hidden' name='weekupdated' id='week' value = '"+week+"'/><input name='weeklypoint' id='weeklypoints' placeholder='weekly points'/><button type ='button' id='weeklyupdate' href='#' class='btn btn-primary'onclick='UpdatePoints()' align='right'>Update</button></form></td>");  
+                                                   out.println("<div class='modal show' data-backdrop='static'>");
+                                                   out.println("<div class='modal-dialog'>");
+                                                   out.println("<div class='modal-content'>");
+                                                   out.println("<div class='modal-body'>");
+                                                   
+                                                   out.println("<br><br><h4 align='center' class='modal-title'>First things first, you need to update your weekly points!</h4><br>");                                 
+                                                   out.println("<form class='form-inline' align='center'><div class='form-group'><input type='hidden' name='weekupdated' id='week' value = '"+week+"'/><input class='form-control' style='width:33%;margin-left:33%' name='weeklypoint' id='weeklypoints' placeholder='weekly points'/><br><button style='width:20%;margin-left:40%' type ='button' id='weeklyupdate' href='#' class='form-control btn btn-primary'onclick='UpdatePoints()' align='right'>Update</button></div></form>");
+                                                   out.println("</div></div>");
+                                                     
                                                  }
                                                  else
                                                  {
-                                                     out.println("<form><input name='weeklypoint' placeholder='weekly points' disabled/><button type ='submit' id='weeklyupdate' href='#' class='btn btn-primary' align='center' disabled>Update</button></form></tr>"); 
+                                                     //out.println("<form><input name='weeklypoint' placeholder='weekly points' disabled/><button type ='submit' id='weeklyupdate' href='#' class='btn btn-primary' align='center' disabled>Update</button></form></tr>"); 
                                                  }
                                                 
                                             }
@@ -695,44 +710,37 @@
                                                     out.println("<td>"+taskSet.getString("TASKPOINTS")+"</td>");
                                                     out.println("<td>"+taskSet.getString("DUEDATE")+"</td>");
                                                     if (statusSet.getString("STATUS").equalsIgnoreCase("Complete")) {
-                                                        out.println("<td><span class='glyphicon glyphicon-ok' style='color:green'></span></td>");
-                                                        
+                                                        out.println("<td><span class='glyphicon glyphicon-ok' style='color:green'></span></td>"); 
                                                     }
                                                     else {
                                                         out.println("<td><span class='glyphicon glyphicon-exclamation-sign' style='color:red'></span></td>");  
                                                     }
-                                                    
                                                     if (statusSet.getString("username").equalsIgnoreCase("null")) {
-                                                        out.println("<td>"+statusSet.getString("username")+"&nbsp;&nbsp;<button onclick='assign(this)' class='btn btn-success'>Assign to me</button></td>");
+                                                        out.println("<td><button onclick='assign(this)' class='btn btn-success'>Assign to me</button></td>");
                                                     }
                                                     else {
                                                         out.println("<td>"+statusSet.getString("username")+"</td>");
                                                     }
-
-                                                    if (statusSet.getString("STATUS").equalsIgnoreCase("Complete")){
-                                                        
-                                                        out.println("<td><a data-toggle='modal' data-id='"+taskSet.getString("TASKID")+"' title='Add this item' class='open-AddBookDialog btn btn-success' href='#reusetask'>Reuse Task</a></td>");
-                                                        
-
-                                                     }
-                                                    else
-                                                    {
-                                                        out.println("<td><button class='btn btn-primary' disabled>Reuse Task</button></td>");
+                                                    if (taskSet.getString("recur").equalsIgnoreCase("none")) {
+                                                        if (statusSet.getString("STATUS").equalsIgnoreCase("Complete")){
+                                                            out.println("<td><a data-toggle='modal' data-id='"+taskSet.getString("TASKID")+"' title='Add this item' class='open-AddBookDialog btn btn-success' href='#reusetask'>Reuse Task</a></td>");
+                                                        }
+                                                        else {
+                                                            out.println("<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>");
+                                                        }
                                                     }
-                                         
-                                                    
-                                                    out.println("<td value='table data button'><button type='button' id='d"+id+"' value='scamy'  onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
-
+                                                    else {
+                                                        out.println("<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>");
+                                                    }
+                                                    //out.println("<td><button type='button' id='d"+id+"' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
                                                     if(date1.before(date))
                                                     {
-                                                        out.println("<td value='table data button'><button type='button' id='e"+id+"' value='scam' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-star'></span></td>");
+                                                        out.println("<td><button type='button' id='e"+id+"' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-star'></span></td>");
                                                     }
                                                     else
                                                     {
-                                                        out.println("<td value='table data button'><button type='button' id='e"+id+"' value='scam' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
+                                                        out.println("<td><button type='button' id='e"+id+"' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
                                                     }
-
-                                                    
                                                     out.println("</tr>");
                                                     id++;
                                                     statusSet.close();
@@ -863,11 +871,11 @@
                             </div></br></br>
                             <input type="hidden" class="form-control input-md" name = "mainuser" id="mainuser" value="<%=request.getAttribute("username")%>">
                             <input type="hidden" class="form-control input-md" name = "mainuser_firstname" id="mainuser_firstname" value="<%=request.getAttribute("Name")%>">
-                            <input type="hidden" class="form-control input-md" name = "searched_username" id="searched_username" >
+                            <input type="hidden" class="form-control input-md" name = "searched_username" id="searched_username" ><br>
                             <button class="btn btn-success"  type="disable" id="addfriend" disabled >Add</button>
                         </div><br>
 
-                        <div id="searchUpdate" style="color:red;"></div>
+                        <div id="searchUpdate" style="color:red;"></div><br>
                         <a align="center" id="Invite" href="#" >Can't find your friend? Invite them!</a>  
                     </form>
                     <form id="inviteForm" class="form-inline" align="center" method="get" action = "Add_Friend" >
@@ -905,21 +913,22 @@
     </div>
     <!-- End add friend modal-->  
     
-    
+    <!-- Change chart display modal-->
     <div id="chartdisplay" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="border-radius:20px;">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><br><br>
                     <form>
-                    <input type="hidden" class="form-control input-md" name = "mainuser" id="mainuser" value="<%=request.getAttribute("username")%>">
-                     </form>
+                        <input type="hidden" class="form-control input-md" name = "mainuser" id="mainuser" value="<%=request.getAttribute("username")%>">
+                    </form>
                     <div id="chartContainer" style="height: 500px; width: 100%;"> </div> 
                  </div>
             </div>
         </div>
-    </div>
+    </div><!-- End chart display modal -->
     
+    <!-- Change due date modal -->               
     <div id="reusetask" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="border-radius:20px;">
             <div class="modal-content">
@@ -928,20 +937,25 @@
                     <div class="modal-body">
                         <input type="hidden" name="bookId" id="bookId" value=""/>
                         <input type="hidden" class="form-control input-md" name = "mainuser" id="mainuser1" value="<%=request.getAttribute("username")%>">
+                        <h3 align="center">Enter the new due date</h3><br>
+                        <div class="hero-unit">
+                            <div class="input-group date" id="example1" style="width:33%;margin-left:33%" >
+                                <input  type="text" class="form-control"  placeholder="Due date"  id="example1"> <br>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div> <br>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" id="reuseupdated" style="width:20%;margin-left:40%" onclick="reusetask1()">Reuse</button>
+                        </div>
                     </div>
-                     <div class="hero-unit">
-                         <label>DueDate</label><input  type="text" class="form-control"  placeholder="click to show datepicker"  id="example1" align="middle" width="20%" height="20%" ></br>
-                     </div>
-                     <div class="form-group">
-                         <button type="submit" class="btn btn-primary" id="reuseupdated" onclick="reusetask1()">Reuse</button>
-                     </div>
+                     
                  </div>
             </div>
         </div>
-    </div>
-                  
-                     
-                     
+    </div><!-- End Change due date modal -->
+                               
     <!-- modal for adding new tasks-->
     <div id="addtaskmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
         <div class="modal-dialog">
@@ -951,34 +965,42 @@
                     <br><br>
                     <h3 class="modal-title" align="center">Add a task</h3>
                     <br>
-                    <form id="addtaskForm" class="form-inline" align="center" method="get" action="Add_Task">
+                    <form class="form-inline" align="center">
                         <div class="form-group">
-                            <input type="text" class="form-control" name="taskname" Placeholder="Task name" /> 
+                            <input type="text" class="form-control" id="tname" name="taskname" Placeholder="Task name" /> 
                             <br>
                         </div>
                         <br><br>
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Points" name="taskpoints"/>
+                            <input type="text" class="form-control" id="tpoints" placeholder="Points" name="taskpoints"/>
                         </div>
                         <br><br>
                         <div class="form-group">
-                            <input type="hidden" class="form-control"  name="user" value = "<%=request.getAttribute("username")%>"/>
-                        </div>
-                        
-                        <div class="form-group">
-                            <input type="hidden" class="form-control" id="Name" name="Name" value = "<%=request.getAttribute("Name")%>"/>
-                        </div>
-                        
-                        <div class="form-group">
-                            <div class="col-lg-12 col-xs-12">
-                                <div class="input-group date" id="duedate">
-                                    <input type="text" class="form-control"   name="duedate" Placeholder="Due date" />
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div>  
+                            <div class="radio">
+                                <label>
+                                    <b>Due:</b>
+                                </label>
                             </div>
-                        </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="due" id="date" onclick="switchIT(this)">
+                                     Date
+                                     <div class="input-group date" id="duedate" >
+                                        <input type="text" class="form-control" id="due-date" name="duedate" Placeholder="Due date" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>  
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="due" id="day" onclick="switchIT(this)">
+                                    Day
+                                    <input type="number" class="form-control" id="duedays" name="duedays" min="0" Placeholder="Due days" />
+                                </label>
+                            </div>
+                        </div>                 
                         <br><br>
                         <div class="form-group">
                             <div class="radio">
@@ -1003,12 +1025,11 @@
                                 </label>
                             </div>
                         </div>
-                        <br><br>
-                        <div id="somediv"  style="color:red;"></div>
-                        <div id="content"></div>
+                        <br>
                         <br>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Add task</button><br><br>
+                            <div id="errorMessageContainer" style="color:red"></div><br>
+                            <button type="button" class="btn btn-primary" onclick="addTask()">Add task</button><br><br>
                         </div>
                         <br>
                     </form>
@@ -1018,10 +1039,8 @@
     </div>
     <!-- end add task modal-->                                                         
     
+    
   
-    
-    
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
@@ -1030,55 +1049,124 @@
     <script type="text/javascript" src="dist/js/bootstrapValidator.min.js"></script>
 
     <script>
-           
-                
-            $('#myTab a').click(function (e) {
-		  e.preventDefault();
-		  $(this).tab('show');
-            })
-      
+
+        //This code toggles between the two tabs namely "home" and "tasks" on the homepage      
+        $('#myTab a').click(function (e) {
+              e.preventDefault();
+              $(this).tab('show');
+        })
         
-	i = 0;
-        //Here we simply obtain the current system date
-	var date = new Date();
-        date.setDate(date.getDate());
+        //Here we set the two duedate options as hidden initially
+        $('#duedate').hide();
+        $('#duedays').hide();
         
+        // Here we add the created task to the database
+        function addTask() {
+            var flag = 0;
+            var taskname = $("#tname").val();
+            var taskpoints = $("#tpoints").val();
+            var due_date = $("#due-date").val();
+            var duedays = $("#duedays").val();
+            var username = '<%=user%>';
+            var name = '<%=Name%>';
+            var recur;
+            if(document.getElementById("weekly").checked) {
+                recur = 'weekly';
+            }
+            else if(document.getElementById("monthly").checked) {
+                recur = 'monthly';
+            }
+            else if(document.getElementById("none").checked) {
+                recur = 'none';
+            }
+            else
+                flag = 1;
+            if(taskname === "" || taskpoints === "") {
+                $("#errorMessageContainer").text("incomplete taskname or taskpoints");
+            }
+            else {
+                if(due_date === "" && duedays === "") {
+                    $("#errorMessageContainer").text("incomplete duedate and duedays");
+                }
+                else
+                    if(flag == 0) {
+                        $("#errorMessageContainer").text("");
+                        if (due_date === "") {
+                            var someDate = new Date();
+                            var millisecondOffset = duedays * 24 * 60 * 60 * 1000;
+                            someDate.setTime(someDate.getTime() + millisecondOffset); 
+                            var dd = someDate.getDate();
+                            var mm = someDate.getMonth() + 1;
+                            var y = someDate.getFullYear();
+                            due_date = y + '-'+ mm + '-'+ dd;
+                            alert(due_date);
+                        }
+                        $.get('Add_Task',"&Name="+name+"&user="+username+"&taskname="+taskname+"&taskpoints="+taskpoints+"&duedate="+due_date+"&recur="+recur,function(ResponseText){ 
+                            if(ResponseText==="true")
+                                alert("Added task "+taskname+" "+taskpoints+" "+due_date+" "+recur+" "+username+" "+name); 
+                        })
+                        location.reload();
+                    }
+                    else
+                        $("#errorMessageContainer").text("recur value missing");
+            }   
+        }
+        
+        
+        function switchIT(selection){
+            var scam = $(selection).attr('id');
+            if (scam === 'date') {
+                $('#duedate').show();
+                $('#duedays').val("");
+                $('#duedays').hide(); 
+            }
+            else if (scam === 'day') {
+                $('#duedays').show();
+                $('#duedate').children(":first").val("");
+                $('#duedate').hide();
+            }
+        }
+        
+        //Here
         $(document).on("click", ".open-AddBookDialog", function () {
             var myBookId = $(this).data('id');
-            console.log(myBookId);
             $(".modal-body #bookId").val( myBookId );
             $('#example1').datepicker({
-                    format: "dd/mm/yyyy"
-                });  
+                    format: "dd/mm/yyyy",
+                    startDate:'+0D'
+                    
             });
-    /**function editTask(task) {
-            var id=$(task).attr('id');
-            //alert(id);
-             $('#example1').datepicker({
-                    format: "dd/mm/yyyy"
-                });  
-        }**/
+            $('#example1').on('changeDate', function(ev){
+                    $(this).datepicker('hide');
+                });
+            
+        });
+    
+        //Here
         function UpdatePoints(){
             var points=$("#weeklypoints").val();
             var weekupdated=$("#week").val();
-             var mainuser=$(".modal-body #mainuser1").val();
-             $.get('WeeklyPointsUpdate',"&week="+weekupdated+"&mainuser="+mainuser+"&points="+points,function(ResponseText){ 
-               console.log("yes exited");
-        })
-        location.reload();
+            var mainuser=$(".modal-body #mainuser1").val();
+            $.get('WeeklyPointsUpdate',"&week="+weekupdated+"&mainuser="+mainuser+"&points="+points,function(ResponseText){ 
+               
+            })
+            location.reload();
         }
+        
+        //Here
         function reusetask1(){
             var id=$(".modal-body #bookId").val();
             console.log(id);
             var mainuser=$(".modal-body #mainuser1").val();
-            var duedate=$(".hero-unit #example1").val();
-           $.get('ReuseTask',"&taskid="+id+"&mainuser="+mainuser+"&duedate="+duedate,function(ResponseText){ 
+            var duedate=$(".hero-unit #example1").children(":first").val();
+            alert(duedate);
+            /*$.get('ReuseTask',"&taskid="+id+"&mainuser="+mainuser+"&duedate="+duedate,function(ResponseText){ 
                console.log("yes exited");
-        })
-        location.reload();
-    };
-    
+            })*/
+            //location.reload();
+        };
         
+        //Here the selected task is deleted from the database
         function deleteTask(task) {
             var id, name, points, duedate;
             id = $(task).attr('id');
@@ -1093,8 +1181,8 @@
             });
         }
         
-        function assign(assignButton) {
-            
+        //Here the user is assigned to the selected task
+        function assign(assignButton) { 
             var username, name, points, duedate;
             name = $(assignButton).parent().parent().children(":eq(0)").text();
             points = $(assignButton).parent().parent().children(":eq(1)").text();
@@ -1102,7 +1190,6 @@
             username = '<%=user%>';
             //alert(name + " " + points + " " +duedate + " " + username);
             $.get('AssignTask','&taskName='+name+"&taskPoints="+points+'&taskDueDate='+duedate+'&username='+username,function(ResponseText) {
-                
                 if (ResponseText == "true") {
                     $(assignButton).parent().text(username);
                     location.reload();
@@ -1110,15 +1197,12 @@
                 else {
                     alert("diff");
                 }
-            });
-            
-            
+            });   
         }
         
         //Here the datepicker is initialized with past dates disabled and hide on date select
 	 $(function () {
-                $("#duedate").datepicker({startDate: date});
-                
+                $("#duedate").datepicker({startDate:'+0D'});
                 $('#duedate').on('changeDate', function(ev){
                     $(this).datepicker('hide');
                 });
@@ -1187,7 +1271,7 @@
               var chart = new CanvasJS.Chart("chartContainer", {
                                        
                                 title:{
-                                text:"Graphical Representaion"   
+                                text:"The performance so far..."   
                                 },
                                 axisY:{
                                   title:"Points"   
@@ -1266,8 +1350,7 @@
         
         $("#showaddtaskmodal").click(function() {	
                 document.forms["addtaskForm"].reset();
-                $("#somediv").text("");
-                $("#content").text("");
+                $("#errorMessageContainer").text("");
 	});
         
         $("#showaddfriendmodal").click(function(){
@@ -1288,9 +1371,7 @@
         $(document).ready(function() {
             $('.carousel').carousel('pause');
             // Bootstrap validator code for add task form.
-            $('#addtaskForm').bootstrapValidator({
-                    
-                    
+            /*$('#addtaskForm').bootstrapValidator({
                     fields: {
 			taskname: {
                         	validators: {
@@ -1321,16 +1402,16 @@
                                 },
                             }
                         },
-                        duedate : {
+                        due : {
                             validators: {
                                 notEmpty: {
-                                    message: 'Dats is required'
+                                    message: 'Due date is required'
                                 },
                             }
                         },
                     }
             });
-                
+             */   
             //Bootstrap validator code for add friend form.
             $('#inviteForm').bootstrapValidator({
                 container:'tooltip',

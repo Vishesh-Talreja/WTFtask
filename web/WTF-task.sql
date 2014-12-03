@@ -43,12 +43,12 @@ FOREIGN KEY(mainusername) REFERENCES WTFuser(username),
 CONSTRAINT primary_key_friends PRIMARY KEY (mainusername,friendname)
 );
 
-
+UPDATE IS2560.WTFtaskallocation SET STATUS='Pending',USERNAME='null' WHERE TASKID=1
 
 select * from WTFuser;
 select * from WTFtasks;
 select * from WTFtaskallocation;
-select FRIENDNAME from WTFFriends where Mainusername='akanade';
+select * from WTFFriends;
 
 UPDATE WTFtaskallocation SET status = 'Pending',username='vatlreja'where TaskId=7;
 
@@ -58,6 +58,11 @@ DROP TABLE WTFuser;
 DROP TABLE WTFtasks;
 DROP TABLE WTFtaskallocation;
 DROP TABLE WTFFriends;
+
+UPDATE IS2560.WTFtaskallocation SET STATUS='Pending',USERNAME='null' WHERE TASKID=9;
+
+UPDATE WTFTASKS
+SET DUEDATE = '2014-11-24' WHERE TASKID = 9;
 
 UPDATE WTFtaskallocation
 SET username='null';
@@ -124,7 +129,5 @@ INSERT INTO WTFtaskallocation VALUES (5,'null','Pending');
 INSERT INTO WTFtaskallocation VALUES (6,'null','Pending');
 INSERT INTO WTFtaskallocation VALUES (7,'null','Pending');
 INSERT INTO WTFtaskallocation VALUES (8,'null','Pending');
-
-
 
 SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = 'akanade'
