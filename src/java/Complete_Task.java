@@ -97,11 +97,11 @@ public class Complete_Task extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
         response.setContentType("text/html;charset=UTF-8");
-        String Tname=request.getParameter("Tname");
-        String Tpoints=request.getParameter("Tpoints");
-        String name=request.getParameter("Name").replaceAll(" ","");
-        name = name.toLowerCase();
-        String user=request.getParameter("user").replaceAll(" ","");
+        String Tname=request.getParameter("taskName");
+        String Tpoints=request.getParameter("taskPoints");
+        //String name=request.getParameter("Name").replaceAll(" ","");
+        //name = name.toLowerCase();
+        String user=request.getParameter("username").replaceAll(" ","");
         user = user.toLowerCase();
         Connection conn=null;
         Statement stmt=null;
@@ -186,10 +186,7 @@ public class Complete_Task extends HttpServlet {
                 stmt.executeUpdate(updateQuery);
                 stmt.executeUpdate("UPDATE IS2560.WTFTASKALLOCATION SET USERNAME='null' WHERE TASKID="+id);
             }
-            request.setAttribute("Name", name);
-            request.setAttribute("username",user);
-            RequestDispatcher rd=request.getRequestDispatcher("user_home_new.jsp");
-            rd.forward(request, response);
+            response.getWriter().write("true");
            }
            catch(SQLException ex)
            {
