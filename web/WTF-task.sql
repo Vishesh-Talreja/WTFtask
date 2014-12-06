@@ -112,6 +112,7 @@ Delete from WTFFriends
 INSERT INTO WTFuser VALUES ('talreja', 'vishesh', 'vtalreja', 'vtalreja@indiana.edu', 'firewaterthunder','0','0','0','0','0');
 INSERT INTO WTFuser VALUES ('rajagopalan', 'vinay', 'vinaraja', 'vinaraja@indiana.edu', 'firewaterthunder','0','0','0','0','0');
 INSERT INTO WTFuser VALUES ('kanade', 'aashish', 'akanade', 'akanade@indiana.edu', 'firewaterthunder','0','0','0','0','0');
+INSERT INTO WTFuser VALUES ('kothari', 'maulik', 'mkothari', 'mkothari@indiana.edu', 'firewaterthunder','0','0','0','0','0');
 
 INSERT INTO WTFFriends VALUES('akanade','vtalreja');
 INSERT INTO WTFFriends VALUES('akanade','vinaraja');

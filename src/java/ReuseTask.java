@@ -57,6 +57,44 @@ public class ReuseTask extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    //this is the Juint test it returns true if the the task could be reused or else it returns false
+    public boolean JUNIT(int id)
+    {
+        String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+      Connection conn = null ;
+      Statement st2 = null;
+      try {
+            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+             String query2 ="UPDATE WTFtaskallocation SET status = 'Pending',username='null' where TaskId="+id;;
+             st2=conn.createStatement();
+             int r=st2.executeUpdate(query2);
+             if(r==1)
+             {
+                 System.out.println(r);
+                 return true;
+             }
+             else 
+             {
+                 return false;
+             }
+             
+      }
+       catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+      finally{
+          try{
+              st2.close();
+             conn.close(); 
+          }
+          catch (SQLException ex) {
+               Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          
+      }
+        
+    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

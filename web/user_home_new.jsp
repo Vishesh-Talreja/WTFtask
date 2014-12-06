@@ -466,7 +466,7 @@
                                         
                                      %>
                                     </table>
-                                  
+                                 
                                 </div>
                             </div>
                         </div> <!-- End Friends panel-->
@@ -655,7 +655,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><br><br>
                     <h3 class="modal-title" align="center">Add a Friend</h3></br>
-                    <form id ="searchForm" class="form-inline" align="center" method="get" action="New_friend">
+                    <form id ="searchForm" class="form-inline" align="center">
                         <div class="form-group">
                             <div class="col-md-10 col-xs-10">
                                 <input type="text" name="searchname" id="searchname" class="form-control input-md" Placeholder="Search..." required>
@@ -666,7 +666,7 @@
                             <input type="hidden" class="form-control input-md" name = "mainuser" id="mainuser" value="<%=request.getAttribute("username")%>">
                             <input type="hidden" class="form-control input-md" name = "mainuser_firstname" id="mainuser_firstname" value="<%=request.getAttribute("Name")%>">
                             <input type="hidden" class="form-control input-md" name = "searched_username" id="searched_username" ><br>
-                            <button class="btn btn-success"  type="disable" id="addfriend" disabled >Add</button>
+                            <button  type="button" class="btn btn-success"  type="disable" id="addfriend" disabled onclick="Addfriend()">Add</button>
                         </div><br>
 
                         <div id="searchUpdate" style="color:red;"></div><br>
@@ -906,7 +906,16 @@
             }   
         }
         
-        
+        function Addfriend(){
+            var mainuser=$("#mainuser").val();
+            var firstname=$("#mainuser_firstname").val();
+            var searched=$("#searched_username").val();
+             $.get('New_friend',"&mainuser="+mainuser+"&mainuser_firstname="+firstname+"&searched_username="+searched,function(ResponseText){ 
+               
+            })
+            location.reload();
+            
+        }
         function switchIT(selection){
             var scam = $(selection).attr('id');
             if (scam === 'date') {
