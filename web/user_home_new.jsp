@@ -498,7 +498,6 @@
                                         //This piece of code is used to extract the current system date
                                         Calendar cal1 = Calendar.getInstance();
                                         int week=cal1.get(Calendar.DAY_OF_WEEK_IN_MONTH);
-                                        //int week = 1;
                                         int year1 = cal1.get(Calendar.YEAR);
                                         int month1 = cal1.get(Calendar.MONTH)+1;
                                         int day1 = cal1.get(Calendar.DAY_OF_MONTH);
@@ -534,6 +533,7 @@
                                                  
                                                  if(weekupdatedInt<week)
                                                  {
+                                                   System.out.println("MODAL CALL HUA");
                                                    out.println("<div id='updatePoints' class='modal show' data-backdrop='static'>");
                                                    out.println("<div class='modal-dialog'>");
                                                    out.println("<div class='modal-content'>");
