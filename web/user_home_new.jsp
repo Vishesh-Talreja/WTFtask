@@ -58,7 +58,7 @@
   <body>
           
       <%
-         //This piece of code is used to extract the current system date
+         //This piece of code is used for calendar testability. It reads a variable from a config.txt and if it is set to yes, it advances the system date by the specified number of days.
          String change_date = (String)request.getAttribute("change_date");
          String number_of_days = (String)request.getAttribute("number_of_days");
          int days = Integer.parseInt(number_of_days);
@@ -78,7 +78,7 @@
       
       <%
          
-         //This piece of code is used to reset the due date for a recurring task whose due date has already passed. THis code extracts 
+         //This piece of code is used to reset the due date for a recurring task whose due date has already passed. This code extracts 
          //the due dates of each task in the database one by one, compares it to the system date and if it is past the system date, adds the designated amount of days to the due date.
          String connectionURL="jdbc:derby://localhost:1527/WTFtask";
          Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
@@ -143,39 +143,13 @@
 			
     </div>
     <div class="col-md-8 col-xs-12">
-
-        <%
-             /*This block of java code would check the values returned from various servlets 
-            and based on that will display a particular alert message*/
-             if ((String)request.getAttribute("send")=="yes")
-                {
-                    out.println("<div class='alert alert-success alert-dismissible' role='alert'>");
-                    out.println("<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>");
-                    out.println("<strong>Success!&nbsp;</strong>&nbsp;Your friend <strong>"+request.getAttribute("rname")+"</strong>&nbsp;has been invited.");
-                    out.println("</div>");
-                }
-             if ((String)request.getAttribute("added_friend")=="true")
-             {
-                 out.println("<div class='alert alert-success alert-dismissible' role='alert'>");
-                 out.println("<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>");
-                 out.println("<strong>Success!&nbsp;</strong>&nbsp;Your friend <strong>"+request.getAttribute("FName")+"</strong>&nbsp;has been added.");
-                 out.println("</div>");
-             }
-             if ((String)request.getAttribute("added")=="yes")
-                {
-                    out.println("<div class='alert alert-success alert-dismissible' role='alert'>");
-                    out.println("<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>");
-                    out.println("<strong>&nbsp;Success! "+request.getAttribute("TName")+"</strong>&nbsp;has been added.");
-                    out.println("</div>");
-                }
-        %>
         
-<!-- Top bar -->                 
+    <!-- Top bar -->                 
         <div class="row" style="height:8rem;background-color:#7f7f7f">
             <img src="img/logo_nav.gif" align="center" style="height:100%;padding-left:1rem;"></img>
             <div style="float:right;padding-top:3rem;padding-right:3rem;color:white">Signed in as <b id="identity"><%=request.getAttribute("Name")%></b></div>
         </div>
-	
+	<div id="alert-box"></div>
         <!-- Spacing row -->
         <div class="row" style="height:1rem;"></div>
 		
@@ -360,7 +334,7 @@
                                     <table class="table table-hover">
                                         <tr>
                                      <%
-                                        //This piece of code is used to extract the current system date
+                                        //This piece of code is used to update the weekly points goal of the user
                                         int week=cal.get(Calendar.DAY_OF_WEEK_IN_MONTH);
                                         String connectionURL1="jdbc:derby://localhost:1527/WTFtask";
                                         Connection conn11 = DriverManager.getConnection(connectionURL1, "IS2560","IS2560");
@@ -446,7 +420,7 @@
                         <!-- Extra panel-->
                         <div class="col-md-6" style="height:20rem;">
                                 <%
-                                //This piece of code is used to update the individual progress bar of the logged in user. I); It wll extract the task completion statistics of the user such as
+                                //This piece of code is used to update the individual progress bar of the logged in user. It wll extract the task completion statistics of the user such as
                                 //total tasks assigned and tasks completed, calcuate the percentage of tasks completed and accordingly update the progress bar.
                                 Connection conn4 = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
                                 int totalTasks = 0;
@@ -876,6 +850,7 @@
                         }
                         $.get('Add_Task',"&Name="+name+"&user="+username+"&taskname="+taskname+"&taskpoints="+taskpoints+"&duedate="+due_date+"&recur="+recur+"&currdate="+currdate,function(ResponseText){ 
                             location.reload();
+                            alert("task added successfully")
                         })
                         
                     }
@@ -883,17 +858,17 @@
                         $("#errorMessageContainer").text("recur value missing");
             }   
         }
-        
+        //This function passes the necesaary information to the Add_Friend servlet
         function Addfriend(){
             var mainuser=$("#mainuser").val();
             var firstname=$("#mainuser_firstname").val();
             var searched=$("#searched_username").val();
-             $.get('New_friend',"&mainuser="+mainuser+"&mainuser_firstname="+firstname+"&searched_username="+searched,function(ResponseText){ 
+             $.get('New_friend',"&mainuser="+mainuser+"&mainuser_firstname="+firstname+"&searched_username="+searched,function(ResponseText){
                location.reload();
+               alert("friend added successfully!");
             })
-            
-            
         }
+        //This function handles the javascript for switching between the date field and the number field while entering the due date for a new task
         function switchIT(selection){
             var scam = $(selection).attr('id');
             if (scam === 'date') {
@@ -908,14 +883,13 @@
             }
         }
         
-        //Here
+        //This function fetches the new due date for a task selected for reuse
         $(document).on("click", ".open-AddBookDialog", function () {
             var myBookId = $(this).data('id');
             $(".modal-body #bookId").val( myBookId );
             $('#example1').datepicker({
                     format: "dd/mm/yyyy",
                     startDate:'+0D'
-                    
             });
             $('#example1').on('changeDate', function(ev){
                     $(this).datepicker('hide');
@@ -923,7 +897,7 @@
             
         });
     
-        //Here
+        //This function adds the weekly points goal to the database
         function UpdatePoints(){
             var points=$("#weeklypoints").val();
             var weekupdated=$("#week").val();
@@ -934,13 +908,14 @@
             
         }
         
-        //Here
+        //This funcion updates the task as reused with a new due date in the database
         function reusetask1(){
             var id=$(".modal-body #bookId").val();
             var mainuser=$(".modal-body #mainuser1").val();
             var duedate=$(".hero-unit #example1").children(":first").val();
             $.get('ReuseTask',"&taskid="+id+"&mainuser="+mainuser+"&duedate="+duedate,function(ResponseText){ 
                location.reload();
+               alert("task reused successfully!");
             })
           
         };
@@ -969,6 +944,7 @@
             $.get('Complete_Task','&taskName='+name+"&taskPoints="+points+'&taskDueDate='+duedate+'&username='+username,function(ResponseText) {
                 if (ResponseText == "true") {
                     location.reload();
+                    alert("task completed successfully!");
                 }
                 else {
                     alert("An error occured. Please contact the developers.");
@@ -988,6 +964,7 @@
                 if (ResponseText == "true") {
                     $(assignButton).parent().text(username);
                     location.reload();
+                    alert("task assigned successfully!");
                 }
                 else {
                     alert("An error occured. Please contact the developers");
@@ -1001,7 +978,7 @@
                 $('#duedate').on('changeDate', function(ev){
                     $(this).datepicker('hide');
                 });
-            });
+         });
             
           //This function displays a chart showing the progress of all your friends in terms of points.  
           function chartdisplay(){
@@ -1011,82 +988,68 @@
              var list2=[];
              var i=0;
              $.get('DisplayChart',"&mainuser="+mainuser,function(ResponseText){
-               $.each(ResponseText, function(index, item)
-               {
-                   
-                 $.each(item,function(index,data){
-                    if(i===1)
-                    {
-                    list.push(data);
-                    }
-                    else if(i===2)
-                    {
-                        list1.push(data);
-               
-                    }
-                    else
-                    {
-                        list2.push(data);
-                    }
-                    
-                })
-                i++;
-               })
-               var datapointsgraph=[[]];
-               var datapointsgraph2=[[]];
-               var data=[[]];
-               var j=0;
-               for (i=0;i<list.length;i++)
-               {
-                   datapointsgraph[j]={
-                       
-                       label:list1[i],y:Number(list2[i])
+                   $.each(ResponseText, function(index, item)
+                   {
+                     $.each(item,function(index,data){
+                        if(i===1) {
+                        list.push(data);
+                        }
+                        else if(i===2) {
+                            list1.push(data);
+                        }
+                        else {
+                            list2.push(data);
+                        }
+                    })
+                    i++;
+                   })
+                   var datapointsgraph=[[]];
+                   var datapointsgraph2=[[]];
+                   var data=[[]];
+                   var j=0;
+                   for (i=0;i<list.length;i++) {
+                       datapointsgraph[j]={
+                           label:list1[i],y:Number(list2[i])
+                       }
+                       j++;
                    }
-                   j++;
-               }
-               var k=0;
-                for (i=0;i<list.length;i++)
-               {
-                   datapointsgraph2[k]={
-                       
-                       label:list1[i],y:Number(list[i]-list2[i])
-                       
+                   var k=0;
+                    for (i=0;i<list.length;i++) {
+                       datapointsgraph2[k]={
+                           label:list1[i],y:Number(list[i]-list2[i])
+                       }
+                       k++;
                    }
-                   k++;
-               }
-              var chart = new CanvasJS.Chart("chartContainer", {
-                                       
-                                title:{
-                                text:"The performance so far..."   
-                                },
-                                axisY:{
-                                  title:"Points"   
-                                },
-                                data: [
-                                {        
-                                  type: "stackedColumn",
-                                  toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
-                                  name: "Points Completed",
-                                  showInLegend: "true",
-                                  color:"#04B404",
-                                  dataPoints: datapointsgraph
-                                },  {        
-                                  type: "stackedColumn",
-                                  toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
-                                  name: "Points Remaining",
-                                  showInLegend: "true",
-                                  color:"#DF013A",
-                                  dataPoints: datapointsgraph2
-                                }            
-                                ]
-                                
-                                
-                              })
+                  var chart = new CanvasJS.Chart("chartContainer", {
 
-     chart.render();
-              
-    })
-  }; 
+                    title:{
+                    text:"The performance so far..."   
+                    },
+                    axisY:{
+                      title:"Points"   
+                    },
+                    data: [
+                    {        
+                      type: "stackedColumn",
+                      toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
+                      name: "Points Completed",
+                      showInLegend: "true",
+                      color:"#04B404",
+                      dataPoints: datapointsgraph
+                    },  {        
+                      type: "stackedColumn",
+                      toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
+                      name: "Points Remaining",
+                      showInLegend: "true",
+                      color:"#DF013A",
+                      dataPoints: datapointsgraph2
+                    }            
+                    ]
+                 })
+                 chart.render();            
+             })
+          }; 
+          
         //Here the entered name is validated from the database via an ajax call to determine if the said person exists.
 	$("#SearchButton").click(function(){
            var searchname = $("#searchname").val();
