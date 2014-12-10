@@ -67,12 +67,10 @@ public class Search extends HttpServlet {
                 rs1 = st1.executeQuery(query1);
                 boolean flag = rs1.next();
                 if (flag == true){
-                     System.out.println("inside waste");
                     return true;
                 }
             }
             else {
-                System.out.println("Either first or last");
                 String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+searched_user+"'";//query to get searched user list by firstname
                  st1 = conn.createStatement();
                  rs1 = st1.executeQuery(query1);
@@ -133,18 +131,29 @@ public class Search extends HttpServlet {
         String main_username = request.getParameter("mainuser");
         main_username = main_username.toLowerCase();        
         String username = "";
-        String connection=null,dusername=null,password=null;
+        String connection=null,dusername=null,password=null,change_date = null, number_of_days= null;
         InputStream in = Login.class.getResourceAsStream("/config.txt");
         BufferedReader reader=new BufferedReader(new InputStreamReader(in));
         try {
             
             String line=null;
-            System.out.println("sam");
                 while((line=reader.readLine())!=null){
                     String[] arg = line.split(" ");
                     dusername = arg[0];
+                    String user_arg[] = dusername.split("=");
+                    dusername = user_arg[1];
                     password = arg[1];
+                    String pass_arg[] = password.split("=");
+                    password = pass_arg[1];
                     connection = arg[2];
+                    String conn_arg[] = connection.split("=");
+                    connection = conn_arg[1];
+                    change_date = arg[3];
+                    String cd_arg[] = change_date.split("=");
+                    change_date = cd_arg[1];
+                    number_of_days = arg[4];
+                    String nbd_arg[] = number_of_days.split("=");
+                    number_of_days = nbd_arg[1];
                 }
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -166,13 +175,9 @@ public class Search extends HttpServlet {
                 }
             }
             if(isWhiteSpace) {
-               // System.out.println("WHITE SPACE DETECTED");
-               // System.out.println("Full name");
                 String[] parts = searched_user.split(" ");
                 String first_name = parts[0];
                 String last_name = parts[1];
-               // System.out.println(first_name);
-                //System.out.println(last_name);
                 String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+first_name+"' AND LASTNAME = '"+last_name+"'";//query that obtains the set of searched user
                 st = conn.createStatement();
                 rs = st.executeQuery(query1);
@@ -181,19 +186,16 @@ public class Search extends HttpServlet {
                     username=rs.getString("username");
                     if (username.equals(main_username))
                     {
-                        System.out.println("Inside if 9");
                         response.getWriter().write("false1&"+username);
                     }
                     else
                     {
                     response.getWriter().write("true&"+username);
-                    System.out.println(username);
                     }
                 }
                 
             }
             else {
-                System.out.println("Either first or last");
                 String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+searched_user+"'";//query to get searched user list by firstname
                 st = conn.createStatement();
                 rs = st.executeQuery(query1);
@@ -201,11 +203,8 @@ public class Search extends HttpServlet {
                 if(flag1 == true) { 
                     
                     username=rs.getString("username");
-                    System.out.println(username);
-                     System.out.println(main_username);
                     if (username.equals(main_username))
                     {
-                        System.out.println("Inside if1");
                         response.getWriter().write("false1&"+username);
                     }
                     else
@@ -224,7 +223,6 @@ public class Search extends HttpServlet {
                         username=rs.getString("username");
                         if (username.equals(main_username))
                         {
-                         System.out.println("Inside if");
                         response.getWriter().write("false1&"+username);
                         }
                        else

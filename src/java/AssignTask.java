@@ -102,19 +102,31 @@ public class AssignTask extends HttpServlet {
         String taskName = request.getParameter("taskName");
         String taskPoints = request.getParameter("taskPoints").replaceAll(" ","");
         String taskDueDate = request.getParameter("taskDueDate").replaceAll(" ","");
+        String currDate = request.getParameter("currDate").replaceAll(" ","");
         String userName = request.getParameter("username").replaceAll(" ","");
-        String connection=null,username=null,password=null;
+        String connection=null,username=null,password=null,change_date = null, number_of_days= null;
         InputStream in = Login.class.getResourceAsStream("/config.txt");
         BufferedReader reader=new BufferedReader(new InputStreamReader(in));
         try {
             
             String line=null;
-            System.out.println("sam");
                 while((line=reader.readLine())!=null){
                     String[] arg = line.split(" ");
                     username = arg[0];
+                    String user_arg[] = username.split("=");
+                    username = user_arg[1];
                     password = arg[1];
+                    String pass_arg[] = password.split("=");
+                    password = pass_arg[1];
                     connection = arg[2];
+                    String conn_arg[] = connection.split("=");
+                    connection = conn_arg[1];
+                    change_date = arg[3];
+                    String cd_arg[] = change_date.split("=");
+                    change_date = cd_arg[1];
+                    number_of_days = arg[4];
+                    String nbd_arg[] = number_of_days.split("=");
+                    number_of_days = nbd_arg[1];
                 }
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -138,12 +150,9 @@ public class AssignTask extends HttpServlet {
                 Date d2 = dateFormat.parse(DueDate);
                 long diff1 = d2.getTime() - d1.getTime();
                 Date d3 = new Date();
-                dateFormat.format(d3);
-                long diff2 = d3.getTime() - d1.getTime();
-                System.out.println(diff1);
-                System.out.println(diff2);
-                System.out.println(diff1/2);
-                if((diff2>diff1/2))
+                d3 = dateFormat.parse(currDate);
+                long diff2 = d3.getTime() - d2.getTime();
+                if((diff2>=diff1/2))
                 {
                     isTaskDoneEarly=true;
                 }
@@ -151,8 +160,6 @@ public class AssignTask extends HttpServlet {
             } catch (ParseException ex) {
                 Logger.getLogger(AssignTask.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println(id);
-            System.out.println(userName +" "+taskPoints+" "+taskName);
             String assignTask = "UPDATE IS2560.WTFTASKALLOCATION SET USERNAME='"+userName+"' WHERE TASKID="+id;
             st.executeUpdate(assignTask);
             String getPointsPossible = "SELECT * FROM WTFuser where username ='"+userName+"'";
@@ -160,17 +167,14 @@ public class AssignTask extends HttpServlet {
             pointsSet.next();
             float points = Float.parseFloat(pointsSet.getString("POINTPOSSIBLE"));
             points = points + Float.parseFloat(taskPoints);
-            System.out.println(points);
             String newtaskPoints = Float.toString(points);
             String updatePointsPossible = "UPDATE IS2560.WTFuser SET POINTPOSSIBLE ='"+newtaskPoints+"' WHERE USERNAME='"+userName+"'";
             int rows = st.executeUpdate(updatePointsPossible);
             String updateAllotedPoints ="UPDATE WTFtasks SET ALLOTEDTASKPOINTS ='"+taskPoints+"' WHERE TASKID="+id;
             st.executeUpdate(updateAllotedPoints);
-            System.out.println(rows);
             float totalPoints = 0;
             float reducedPoints = (20*Float.parseFloat(taskPoints))/100;
             float decreasePoints = Float.parseFloat(taskPoints)-reducedPoints;
-            System.out.println(reducedPoints);
             if(isTaskDoneEarly==true)
             {    
                 String newtaskPoint = "UPDATE WTFtasks SET TASKPOINTS='"+decreasePoints+"' WHERE TASKID="+id;
@@ -191,7 +195,6 @@ public class AssignTask extends HttpServlet {
                 rs1.close();
                 st2.close();
             }
-            System.out.println(totalPoints);
             String alterTpoints="SELECT * FROM WTFtasks where TASKID <>"+id;
             rs = st.executeQuery(alterTpoints);
             while(rs.next())

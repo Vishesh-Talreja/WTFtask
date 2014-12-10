@@ -90,18 +90,29 @@ public class Check_Username extends HttpServlet {
         Map<String, String> options = new LinkedHashMap<String, String>();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        String connection=null,username=null,password=null;
+        String connection=null,username=null,password=null,change_date = null, number_of_days= null;
         InputStream in = Login.class.getResourceAsStream("/config.txt");
         BufferedReader reader=new BufferedReader(new InputStreamReader(in));
         try {
             
             String line=null;
-            System.out.println("sam");
                 while((line=reader.readLine())!=null){
                     String[] arg = line.split(" ");
                     username = arg[0];
+                    String user_arg[] = username.split("=");
+                    username = user_arg[1];
                     password = arg[1];
+                    String pass_arg[] = password.split("=");
+                    password = pass_arg[1];
                     connection = arg[2];
+                    String conn_arg[] = connection.split("=");
+                    connection = conn_arg[1];
+                    change_date = arg[3];
+                    String cd_arg[] = change_date.split("=");
+                    change_date = cd_arg[1];
+                    number_of_days = arg[4];
+                    String nbd_arg[] = number_of_days.split("=");
+                    number_of_days = nbd_arg[1];
                 }
         } catch (Exception e) {
             // TODO Auto-generated catch block

@@ -97,59 +97,65 @@ public class deleteTask extends HttpServlet {
         response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
         response.setCharacterEncoding("UTF-8"); // You want world domination, huh?
         //Recieve input from form
-        //System.out.println("inside deleteTask");
         String taskName = request.getParameter("taskName");
         String taskPoints = request.getParameter("taskPoints");
         String taskDueDate = request.getParameter("taskDueDate");
-        String connection=null,username=null,password=null;
+        String connection=null,username=null,password=null,change_date = null, number_of_days= null;
         InputStream in = Login.class.getResourceAsStream("/config.txt");
         BufferedReader reader=new BufferedReader(new InputStreamReader(in));
         try {
-            
             String line=null;
-            System.out.println("sam");
                 while((line=reader.readLine())!=null){
                     String[] arg = line.split(" ");
                     username = arg[0];
+                    String user_arg[] = username.split("=");
+                    username = user_arg[1];
                     password = arg[1];
+                    String pass_arg[] = password.split("=");
+                    password = pass_arg[1];
                     connection = arg[2];
+                    String conn_arg[] = connection.split("=");
+                    connection = conn_arg[1];
+                    change_date = arg[3];
+                    String cd_arg[] = change_date.split("=");
+                    change_date = cd_arg[1];
+                    number_of_days = arg[4];
+                    String nbd_arg[] = number_of_days.split("=");
+                    number_of_days = nbd_arg[1];
                 }
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         try (PrintWriter out = response.getWriter()){
-        
-        try{
+            try{
+                Connection conn = DriverManager.getConnection(connection,username,password);
+                String getTaskId = "SELECT * FROM WTFtasks where TASKNAME = '"+taskName+"' AND TASKPOINTS='"+taskPoints+"' AND DUEDATE='"+taskDueDate+"'";
+                String deleteTaskQuery = "DELETE FROM WTFtasks where TASKNAME = '"+taskName+"' AND TASKPOINTS='"+taskPoints+"'";
+                Statement st = conn.createStatement();
+                ResultSet taskSet = st.executeQuery(getTaskId);
+                boolean flag = taskSet.next();
+                if (flag ==true) {
+                    int id = taskSet.getInt("TaskID");
+                    String deleteTaskAllocationQuery = "DELETE FROM WTFtaskallocation where TASKID="+id;
+                    st.executeUpdate(deleteTaskAllocationQuery);
+                    int rows = st.executeUpdate(deleteTaskQuery);
+                    if (rows != 0)
+                        response.getWriter().write("true");
+                    else
+                        response.getWriter().write("false");
+                }
+                else {
+                    response.getWriter().write("task not found");
+                }
+                taskSet.close();
+                st.close();
+                conn.close();
 
-            Connection conn = DriverManager.getConnection(connection,username,password);
-            String getTaskId = "SELECT * FROM WTFtasks where TASKNAME = '"+taskName+"' AND TASKPOINTS='"+taskPoints+"' AND DUEDATE='"+taskDueDate+"'";
-            String deleteTaskQuery = "DELETE FROM WTFtasks where TASKNAME = '"+taskName+"' AND TASKPOINTS='"+taskPoints+"'";
-            Statement st = conn.createStatement();
-            ResultSet taskSet = st.executeQuery(getTaskId);
-            boolean flag = taskSet.next();
-            if (flag ==true) {
-                int id = taskSet.getInt("TaskID");
-                String deleteTaskAllocationQuery = "DELETE FROM WTFtaskallocation where TASKID="+id;
-                st.executeUpdate(deleteTaskAllocationQuery);
-                int rows = st.executeUpdate(deleteTaskQuery);
-                if (rows != 0)
-                    response.getWriter().write("true");
-                else
-                    response.getWriter().write("false");
             }
-            else {
-                response.getWriter().write("task not found");
+            catch(SQLException ex) {
+                out.print("Connection Failed!");
             }
-            taskSet.close();
-            st.close();
-            conn.close();
-            
-        }
-        catch(SQLException ex)
-        {
-            out.print("Connection Failed!");
-        }
         } 
     }
 

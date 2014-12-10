@@ -104,11 +104,10 @@ public class Add_Task extends HttpServlet {
         String Tname=request.getParameter("taskname");
         String Tpoints=request.getParameter("taskpoints").replaceAll(" ","");
         String Tduedate=request.getParameter("duedate").replaceAll(" ","");
-        System.out.println("AREEEE DUE DATE TO "+Tduedate+" HAIII");
+        String CreateDate=request.getParameter("currdate").replaceAll(" ","");
         String recur = request.getParameter("recur").replace(" "," ");
-        //System.out.println("The task is selected to recur "+recur+"!!!!!!!");
         //This piece of code extracts the database paqrameters from the file config.txt
-        String connection=null,username=null,password=null;
+        String connection=null,username=null,password=null,change_date = null, number_of_days= null;
         InputStream in = Login.class.getResourceAsStream("/config.txt");
         BufferedReader reader=new BufferedReader(new InputStreamReader(in));
         try {
@@ -117,8 +116,20 @@ public class Add_Task extends HttpServlet {
                 while((line=reader.readLine())!=null){
                     String[] arg = line.split(" ");
                     username = arg[0];
+                    String user_arg[] = username.split("=");
+                    username = user_arg[1];
                     password = arg[1];
+                    String pass_arg[] = password.split("=");
+                    password = pass_arg[1];
                     connection = arg[2];
+                    String conn_arg[] = connection.split("=");
+                    connection = conn_arg[1];
+                    change_date = arg[3];
+                    String cd_arg[] = change_date.split("=");
+                    change_date = cd_arg[1];
+                    number_of_days = arg[4];
+                    String nbd_arg[] = number_of_days.split("=");
+                    number_of_days = nbd_arg[1];
                 }
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -128,10 +139,6 @@ public class Add_Task extends HttpServlet {
         try{
             Connection conn = DriverManager.getConnection(connection, username,password);
             Statement stmt=conn.createStatement();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date();
-            String CreateDate;
-            CreateDate = dateFormat.format(date);
             String query3 = "INSERT INTO IS2560.WTFtasks (TASKNAME,TASKPOINTS,DUEDATE,CREATEDDATE,ALLOTEDTASKPOINTS,OWNER,RECUR) VALUES ('"+Tname+"','"+Tpoints+"','"+Tduedate+"','"+CreateDate+"','0' ,'"+user+"','"+recur+"')";
             stmt.executeUpdate(query3);                                             //Insert task details into database
             String query4 = "SELECT * FROM IS2560.WTFtasks WHERE TASKNAME='"+Tname+"'";
@@ -139,7 +146,6 @@ public class Add_Task extends HttpServlet {
             rs.next();
             //logger.debug("Add Task Database Connected");
             int id = rs.getInt("TaskID");
-            
             //Assign each member to this task with designated points            
             String query6;
             query6 = "INSERT INTO WTFTASKALLOCATION VALUES ("+id+",'"+null+"','Pending')";

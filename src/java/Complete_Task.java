@@ -7,14 +7,6 @@ import java.io.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.text.SimpleDateFormat;
-import java.util.Date;
- 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Hours;
-import org.joda.time.Minutes;
-import org.joda.time.Seconds;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,7 +18,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -97,29 +88,40 @@ public class Complete_Task extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
         response.setContentType("text/html;charset=UTF-8");
-        String Tname=request.getParameter("Tname");
-        String Tpoints=request.getParameter("Tpoints");
-        String name=request.getParameter("Name").replaceAll(" ","");
-        name = name.toLowerCase();
-        String user=request.getParameter("user").replaceAll(" ","");
+        String Tname=request.getParameter("taskName");
+        String Tpoints=request.getParameter("taskPoints");
+        //String name=request.getParameter("Name").replaceAll(" ","");
+        //name = name.toLowerCase();
+        String user=request.getParameter("username").replaceAll(" ","");
         user = user.toLowerCase();
         Connection conn=null;
         Statement stmt=null;
         ResultSet rs = null;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date task_date = new Date();
-        String connection=null,username=null,password=null;
+        String connection=null,username=null,password=null,change_date = null, number_of_days= null;
         InputStream in = Login.class.getResourceAsStream("/config.txt");
         BufferedReader reader=new BufferedReader(new InputStreamReader(in));
         try {
             
             String line=null;
-            System.out.println("sam");
                 while((line=reader.readLine())!=null){
                     String[] arg = line.split(" ");
                     username = arg[0];
+                    String user_arg[] = username.split("=");
+                    username = user_arg[1];
                     password = arg[1];
+                    String pass_arg[] = password.split("=");
+                    password = pass_arg[1];
                     connection = arg[2];
+                    String conn_arg[] = connection.split("=");
+                    connection = conn_arg[1];
+                    change_date = arg[3];
+                    String cd_arg[] = change_date.split("=");
+                    change_date = cd_arg[1];
+                    number_of_days = arg[4];
+                    String nbd_arg[] = number_of_days.split("=");
+                    number_of_days = nbd_arg[1];
                 }
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -186,10 +188,7 @@ public class Complete_Task extends HttpServlet {
                 stmt.executeUpdate(updateQuery);
                 stmt.executeUpdate("UPDATE IS2560.WTFTASKALLOCATION SET USERNAME='null' WHERE TASKID="+id);
             }
-            request.setAttribute("Name", name);
-            request.setAttribute("username",user);
-            RequestDispatcher rd=request.getRequestDispatcher("user_home_new.jsp");
-            rd.forward(request, response);
+            response.getWriter().write("true");
            }
            catch(SQLException ex)
            {

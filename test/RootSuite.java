@@ -11,7 +11,7 @@ import org.junit.runners.Suite;
  * @author visheshtalreja
  */
 @org.junit.runner.RunWith(org.junit.runners.Suite.class)
-@org.junit.runners.Suite.SuiteClasses({Check_EmailTest.class, Check_UsernameTest.class, Validate_AssigneeTest.class, Complete_TaskTest.class, LoginTest.class, Add_TaskTest.class, Add_FriendTest.class, New_friendTest.class, RegistrationTest.class, DisplayChartTest.class, SearchTest.class, LogoutTest.class})
+@org.junit.runners.Suite.SuiteClasses({Check_EmailTest.class, Check_UsernameTest.class, Validate_AssigneeTest.class, Complete_TaskTest.class, LoginTest.class, Add_TaskTest.class, Add_FriendTest.class, New_friendTest.class, RegistrationTest.class, DisplayChartTest.class, SearchTest.class})
 public class RootSuite {
 
     @org.junit.BeforeClass

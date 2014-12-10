@@ -8,14 +8,13 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
+<%@ page import="java.lang.ArithmeticException" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.io.*" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="javax.servlet.*" %>
 <%@ page import="java.text.*" %>
-<%@ page import="javax.servlet.http.Cookie;" %>
 <%@ page import="java.util.Calendar.*" %>
-<%@ page import="javax.servlet.http.Cookie" %>
 <%@ page import="org.joda.time.format.*" %>
 <%@ page import="org.joda.time.LocalDate" %>
 
@@ -57,32 +56,24 @@
 	</style>	
   </head>
   <body>
-      
-      
-      <%
-        /*String userName = null;
-        Cookie[] cookies = request.getCookies();
-        if(cookies !=null){
-        for(Cookie cookie : cookies){
-            if(cookie.getName().equals("user")) userName = cookie.getValue();
-        }
-        }
-        if(userName == null) response.sendRedirect("task_login.jsp");
-        */
-      %>
-      
-      
-      
+          
       <%
          //This piece of code is used to extract the current system date
+         String change_date = (String)request.getAttribute("change_date");
+         String number_of_days = (String)request.getAttribute("number_of_days");
+         int days = Integer.parseInt(number_of_days);
          Calendar cal = Calendar.getInstance(); 
+         if(change_date.equalsIgnoreCase("yes")) {
+             cal.setTime(new Date());
+             cal.add(Calendar.DATE,days);
+         }
          int year = cal.get(Calendar.YEAR);
          int month = cal.get(Calendar.MONTH)+1;
          int day = cal.get(Calendar.DAY_OF_MONTH);
          String currdate = Integer.toString(year)+"-"+Integer.toString(month)+"-"+Integer.toString(day);
          DateTimeFormatter formatter = DateTimeFormat.forPattern( "yyyy-MM-dd" );
          LocalDate curr_date = formatter.parseLocalDate( currdate );
-    
+         //System.out.println("THE CURRENT DATE IS "+ curr_date);
       %>
       
       <%
@@ -103,41 +94,32 @@
             while(getTaskSet.next()) {
                 taskid = getTaskSet.getInt("TASKID");
                 taskpoints = getTaskSet.getString("ALLOTEDTASKPOINTS");
-                //System.out.println("THE ID IS "+taskid);
                 if(getTaskSet.getString("RECUR").equals("weekly") ||getTaskSet.getString("RECUR").equals("monthly") ) {
                     LocalDate task_date = formatter.parseLocalDate( getTaskSet.getString("DUEDATE"));
+                    
                     if (curr_date.isAfter(task_date)) {
-                        //System.out.println("overdue mila");
                         String curr_task_date = task_date.toString();
                         String new_task_date = "";
                         if (getTaskSet.getString("RECUR").equals("weekly")) {
                             task_date = task_date.plusDays(7);
                             new_task_date = task_date.toString(); 
-                            //System.out.println("ADDED 7 days to "+getTaskSet.getString("TASKNAME")+ "OLD TASK DATE WAS "+ curr_task_date +" NEW DUE DATE IS " + new_task_date); 
                         }
                         else if (getTaskSet.getString("RECUR").equals("monthly")) {
                             task_date = task_date.plusDays(30);
                             new_task_date = task_date.toString();
-                            //System.out.println("ADDED 30 days to "+getTaskSet.getString("TASKNAME")+ "OLD TASK DATE WAS "+ curr_task_date +" NEW DUE DATE IS " + new_task_date); 
                         }
                         String updateTaskDate = "UPDATE IS2560.WTFtasks SET DUEDATE='"+ new_task_date +"' WHERE DUEDATE= '"+ curr_task_date +"'";
                         updateTask.executeUpdate(updateTaskDate);
                         ResultSet taskStatusSet = updateTask.executeQuery("SELECT * FROM WTFTASKALLOCATION WHERE TASKID = "+taskid);
                         taskStatusSet.next();
-                        //System.out.println("before check pending");
                         if(taskStatusSet.getString("STATUS").equalsIgnoreCase("Pending")) {
-                            //System.out.println("nila nila");
                             String getPointsInfo = "SELECT * FROM WTFuser where USERNAME IN (SELECT USERNAME FROM WTFTASKALLOCATION WHERE TASKID="+taskid+")";
                             pointsInfoSet = pointsInfo.executeQuery(getPointsInfo);
                             pointsInfoSet.next();
-                            //System.out.println("diff");
                             float user_points_possible = Float.parseFloat(pointsInfoSet.getString("POINTPOSSIBLE"));
                             float task_points = Float.parseFloat(taskpoints);
-                            //System.out.println("PREVIOUS POINTS "+user_points_possible+" TASK POINTS "+task_points);
                             user_points_possible = user_points_possible - task_points;
-                            //System.out.println("NEW POINTS "+user_points_possible);
                             pointsInfo.executeUpdate("UPDATE IS2560.WTFuser SET POINTPOSSIBLE = '"+user_points_possible+"' WHERE USERNAME IN (SELECT USERNAME FROM WTFTASKALLOCATION WHERE TASKID = "+taskid+")");
-                            //System.out.println("hogaya");
                         }
                         String updateTaskStatus = "UPDATE IS2560.WTFtaskallocation SET STATUS='Pending',USERNAME='null' WHERE TASKID="+taskid;
                         updateTask.executeUpdate(updateTaskStatus);
@@ -188,105 +170,7 @@
                 }
         %>
         
-
-                        
-                    
-                    
-        <!-- View owned tasks carousel
-        <div class="row">
-        <div class="col-md-8">
-            <div class="col-md-6 col-md-offset-3 text-center"><h4><a  href="#myCarousel1" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>&nbsp;Tasks You Own&nbsp;<a  href="#myCarousel1" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a></h4></div>
-            <div class="col-md-12 col-xs-12">
-                <div class="carousel slide" id="myCarousel1">
-                    <div class="carousel-inner">
-                        <%  
-                        /*This block of java code displays the tasks the user owns, here it 
-                          first connects to the database and then displays them in the form of thumbnails
-
-                        //String user2 = (String)request.getAttribute("username");
-                        String sql7,sql10;
-                        String connectionURL2="jdbc:derby://localhost:1527/WTFtask";
-                        
-                        sql7 ="SELECT * FROM WTFtasks WHERE OWNER  = '"+user+"'";
-                        try {
-                            Connection conn2 = DriverManager.getConnection(connectionURL2, "IS2560","IS2560");
-                            Statement s6 = conn2.createStatement();
-                            ResultSet rs8 = s6.executeQuery(sql7);
-                            
-                            
-                            int count2 = 0;
-
-                            while(rs8.next()){
-                                      Statement s15 = conn2.createStatement();
-                                      sql10= "SELECT STATUS FROM WTFtaskallocation WHERE TASKID = "+rs8.getString("TASKID")+"";
-                                      ResultSet rs10 = s15.executeQuery(sql10);
-                                      if(rs10.next())
-                                      {
-                                      if(count2==0)
-                                      {    
-                                      out.println("<div class='item active'>");
-                                      }
-                                      else
-                                      {
-                                         out.println("<div class='item'>"); 
-                                      }
-                                      String duedate1=rs8.getString("DUEDATE");
-                                      Date date2 = dateFormat.parse(duedate1);
-                                      out.println("<div class='col-lg-2 col-xs-12' >");
-                                      if(rs10.getString("STATUS").equalsIgnoreCase("Complete"))
-                                      {
-                                          out.println("<div class='thumbnail' style = 'background-color:#A9F5A9;color:white;' align='center'>");
-                                      }
-                                      else
-                                      {
-                                      if(date2.before(date)){
-                                          out.println("<div class='thumbnail' style = 'background-color:#F5A9A9;color:white;' align='center'>");
-                                      }
-                                      else
-                                      { 
-                                          out.println("<div class='thumbnail' style = 'background-color:#E6E6E6;color:white;' align='center'>");
-                                      }
-                                      }
-                                      out.println("<div class='caption'>");
-                                      out.println("<h3>"+rs8.getString("TASKNAME")+"</h3>");
-                                      out.println("<p>POINTS: "+rs8.getString("TASKPOINTS")+"<br>DUE-DATE: "+rs8.getString("DUEDATE")+"</p>");
-                                      if(rs10.getString("STATUS").equalsIgnoreCase("Complete"))
-                                      {
-                                          out.println("<p><form method = 'get' action = 'Complete_Task'><button type ='submit' disabled='disabled' id='login' href='#' class='btn btn-primary' align='center'>Remind</button></form></p>");
-                                      }
-                                      else
-                                      {
-                                          out.println("<p><form method = 'get' action = 'Complete_Task'><button type ='submit' id='login' href='#' class='btn btn-primary' align='center'>Remind</button></form></p>");
-                                      }
-                                      out.println("</div></div></div></div>");
-                                      count2++;
-                                      }
-                                      rs10.close();
-                                      s15.close();
-
-                              }
-                              rs8.close();
-                              s6.close();
-                              conn2.close();
-                          }
-                          catch (SQLException e) {
-                              e.printStackTrace();
-                          }
-                        */
-                          %>
-                    </div>
-                </div>
-            </div>  
-        </div>
-            
-                    
-                    
-        </div>-->
-
-                         
-                         
-        
-        <!-- Top bar -->                 
+<!-- Top bar -->                 
         <div class="row" style="height:8rem;background-color:#7f7f7f">
             <img src="img/logo_nav.gif" align="center" style="height:100%;padding-left:1rem;"></img>
             <div style="float:right;padding-top:3rem;padding-right:3rem;color:white">Signed in as <b id="identity"><%=request.getAttribute("Name")%></b></div>
@@ -359,18 +243,12 @@
                                         </tr>
                                         <%
                                             /*This block of java code displays the tasks the user has to complete, here it 
-                                              first connects to the database and then displays them in the form of thumbnails*/
-                                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                            Date date = new Date();
+                                              first connects to the database and then displays them*/
                                             String user = (String)request.getAttribute("username");
                                             String Name = (String)request.getAttribute("Name");
-                                            System.out.println(user+" "+Name);
                                             String sql,sql3;
-
                                             sql3 ="SELECT TASKID,STATUS FROM WTFtaskallocation where USERNAME = '"+user+"'";
-                                            int task_year,task_month,task_day;
                                             try {
-
                                                 Statement s = conn.createStatement();
                                                 Statement s1 = conn.createStatement();
                                                 Statement s2 = conn.createStatement();
@@ -380,24 +258,15 @@
                                                     sql = "SELECT * FROM WTFtasks where TASKID ="+rs2.getInt("TASKID");
                                                     ResultSet rs = s.executeQuery(sql);
                                                     while (rs.next()) {
-                                                          //String date[] = rs.getString("DUEDATE").split("-");
-                                                          //task_year = Integer.parseInt(date[0]);
-                                                          //task_month = Integer.parseInt(date[1]);
-                                                          //task_day = Integer.parseInt(date[2]);
-                                                          //if (year == task_year && month == task_month && day == task_day) {
-                                                          
-                                                          String duedate=rs.getString("DUEDATE");
-                                                          Date date1 = dateFormat.parse(duedate);
                                                           if(rs2.getString("STATUS").equalsIgnoreCase("Pending"))
                                                           {    
                                                           out.println("<tr>");
                                                           out.println("<td>"+rs.getString("TASKNAME")+"</td>");
                                                           out.println("<td>"+rs.getString("ALLOTEDTASKPOINTS")+"</td>");
                                                           out.println("<td>"+rs.getString("DUEDATE")+"</td>");
-                                                          out.println("<td><form method = 'get' action = 'Complete_Task'><input type='hidden' name='Tname' value = '"+rs.getString("TASKNAME")+"'/><input type='hidden' name='Tpoints' value = '"+rs.getString("ALLOTEDTASKPOINTS")+"'/><input type='hidden' name='Name' value = '"+Name+"'/><input type='hidden' name='user' value = '"+user+"'/><button type ='submit' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></td>");
+                                                          out.println("<td><button type='button' onclick='completeTask(this)' class='btn btn-success'>Wrap up</button></td>");
                                                           out.println("</tr>");
                                                           }
-
                                                       }
                                                       rs.close();
                                                   }
@@ -405,8 +274,7 @@
                                                   s.close();
                                                   s1.close();
                                                   s2.close();
-                                                  //conn.close();
-
+                                                  
                                               }
                                               catch (SQLException e) {
                                                   e.printStackTrace();
@@ -431,10 +299,7 @@
                                             <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                         </tr>
                                         <%
-                                            /*This block of java code displays the tasks the user has to complete, here it 
-                                              first connects to the database and then displays them in the form of thumbnails*/
-                                            
-                                            System.out.println(user+" "+Name);
+                                            /*This block of java code displays the tasks that are now overdue*/
                                             sql3 ="SELECT TASKID,STATUS FROM WTFtaskallocation where USERNAME = '"+user+"'";
                                             try {
 
@@ -448,14 +313,14 @@
                                                     ResultSet rs = s.executeQuery(sql);
                                                     while (rs.next()) {
                                                           String duedate=rs.getString("DUEDATE");
-                                                          Date date1 = dateFormat.parse(duedate);
-                                                          if(rs2.getString("STATUS").equalsIgnoreCase("Pending")&&date1.before(date))
+                                                          LocalDate due_date = formatter.parseLocalDate( duedate );
+                                                          if(rs2.getString("STATUS").equalsIgnoreCase("Pending")&&due_date.isBefore(curr_date))
                                                           {    
                                                           out.println("<tr>");
                                                           out.println("<td>"+rs.getString("TASKNAME")+"</td>");
                                                           out.println("<td>"+rs.getString("ALLOTEDTASKPOINTS")+"</td>");
                                                           out.println("<td>"+rs.getString("DUEDATE")+"</td>");
-                                                          out.println("<td><form method = 'get' action = 'Complete_Task'><input type='hidden' name='Tname' value = '"+rs.getString("TASKNAME")+"'/><input type='hidden' name='Tpoints' value = '"+rs.getString("ALLOTEDTASKPOINTS")+"'/><input type='hidden' name='Name' value = '"+Name+"'/><input type='hidden' name='user' value = '"+user+"'/><button type ='submit' id='login' href='#' class='btn btn-primary' align='center'>Wrap Up</button></form></td>");
+                                                          out.println("<td><button type='button' onclick='completeTask(this)' class='btn btn-success'>Wrap up</button></td>");
                                                           out.println("</tr>");
                                                           }
 
@@ -496,21 +361,13 @@
                                         <tr>
                                      <%
                                         //This piece of code is used to extract the current system date
-                                        Calendar cal1 = Calendar.getInstance();
-                                        int week=cal1.get(Calendar.DAY_OF_WEEK_IN_MONTH);
-                                        int year1 = cal1.get(Calendar.YEAR);
-                                        int month1 = cal1.get(Calendar.MONTH)+1;
-                                        int day1 = cal1.get(Calendar.DAY_OF_MONTH);
-                                        String currdate1 = Integer.toString(year1)+"-"+Integer.toString(month1)+"-"+Integer.toString(day1);
-                                        DateTimeFormatter formatter1 = DateTimeFormat.forPattern( "yyyy-MM-dd" );
-                                        LocalDate curr_date1 = formatter1.parseLocalDate( currdate1 );
+                                        int week=cal.get(Calendar.DAY_OF_WEEK_IN_MONTH);
                                         String connectionURL1="jdbc:derby://localhost:1527/WTFtask";
                                         Connection conn11 = DriverManager.getConnection(connectionURL1, "IS2560","IS2560");
                                         String sql5;
                                         String weekupdated=null;
                                         sql5 ="SELECT * FROM WTFuser where USERNAME = '"+user+"'";
                                           
-               
                                             try{
                                                 
                                                 Statement s3 = conn11.createStatement();
@@ -519,21 +376,16 @@
                                                  while(rs3.next()){
                                                     weekupdated=rs3.getString("WEEKUPDATED");
                                                  }
-                                                 
                                                  int weekupdatedInt=Integer.parseInt(weekupdated);
-                                                 System.out.println("Week updated ="+weekupdatedInt+" week "+week);
-                                                 System.out.println("byad");
-                                                 if ((week >= 1 && weekupdatedInt >= 4))
+                                                 if ((weekupdatedInt > 5))
                                                  {
-                                                    System.out.println("yes");
                                                     String s5="UPDATE WTFuser SET WEEKUPDATED = '0' where USERNAME = '"+user+"'"; 
                                                     s3.executeUpdate(s5);
                                                     weekupdatedInt=0;
                                                  }
                                                  
-                                                 if(weekupdatedInt<week)
+                                                 if(weekupdatedInt<week ||(weekupdatedInt==5 && week==1)||(weekupdatedInt==4 && week==1))
                                                  {
-                                                   System.out.println("MODAL CALL HUA");
                                                    out.println("<div id='updatePoints' class='modal show' data-backdrop='static'>");
                                                    out.println("<div class='modal-dialog'>");
                                                    out.println("<div class='modal-content'>");
@@ -542,10 +394,6 @@
                                                    out.println("<form class='form-inline' align='center'><div class='form-group'><input type='hidden' name='weekupdated' id='week' value = '"+week+"'/><input class='form-control' style='width:33%;margin-left:33%' name='weeklypoint' id='weeklypoints' placeholder='weekly points'/><br><button style='width:20%;margin-left:40%' type ='button' id='weeklyupdate' href='#' class='form-control btn btn-primary'onclick='UpdatePoints()' align='right'>Update</button></div></form>");
                                                    out.println("</div></div>");
                                                      
-                                                 }
-                                                 else
-                                                 {
-                                                     //out.println("<form><input name='weeklypoint' placeholder='weekly points' disabled/><button type ='submit' id='weeklyupdate' href='#' class='btn btn-primary' align='center' disabled>Update</button></form></tr>"); 
                                                  }
                                                 
                                             }
@@ -557,7 +405,7 @@
                                               }
                                        
                                             /*This piece of java code connects to the database and then displays the friends of the
-                                            user that is logged on on a separate modal*/
+                                            user that is logged on*/
 
                                             out.println("<tr><th>Name</th><th>Points alloted</th><th>Points completed</th></tr>");
                                             String selectFriends,selectUser,sql6;
@@ -590,7 +438,7 @@
                                         
                                      %>
                                     </table>
-                                  
+                                 
                                 </div>
                             </div>
                         </div> <!-- End Friends panel-->
@@ -617,17 +465,20 @@
                                         boolean completed = completeSet.next();
                                         if (completed == true) {
                                             completedTasks = Integer.parseInt(completeSet.getString(1));
-                                            //System.out.println(completedTasks);
-                                            //System.out.println(totalTasks);
-                                            percentage = (int)((completedTasks*100)/totalTasks);
-                                            //System.out.println(percentage);
-
+                                            try {
+                                                if (totalTasks == 0) {
+                                                    percentage = 0;
+                                                }
+                                                else {
+                                                    percentage = (int)((completedTasks*100)/totalTasks);
+                                                }
+                                            }  catch(ArithmeticException e) {
+                                                   e.printStackTrace();
+                                            }
                                         }
                                         completeSet.close();
                                     }
-                                    else { 
-                                        //System.out.println("no tasks assigned");
-                                    }
+                                    
                                     totalSet.close();
                                     getProgress.close();
                                     conn4.close();
@@ -686,10 +537,8 @@
                                             <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                         </tr>
                                         <%  
-                                            /*This piece of java code connects to the database and then displays the friends of the
-                                            user that is logged on on a separate modal*/
+                                            /*This piece of code displays the master task list*/
 
-                                            //String user1 = (String)request.getAttribute("username");
                                             String selectTasks, getStatus;
                                             String connectionURL11="jdbc:derby://localhost:1527/WTFtask";
                                             selectTasks ="SELECT * FROM WTFtasks";
@@ -701,12 +550,11 @@
                                                 ResultSet taskSet = selectTasksStatement.executeQuery(selectTasks);
                                                 while(taskSet.next())
                                                 {
-                                                    
                                                     getStatus = "SELECT * FROM WTFTASKALLOCATION WHERE TASKID="+taskSet.getInt("TASKID");
                                                     ResultSet statusSet = getStatusStatement.executeQuery(getStatus);
                                                     statusSet.next();
                                                     String duedate=taskSet.getString("DUEDATE");
-                                                    Date date1 = dateFormat.parse(duedate);
+                                                    LocalDate due_date = formatter.parseLocalDate( duedate );
                                                     out.println("<tr value='table row'>");
                                                     out.println("<td>"+taskSet.getString("TASKNAME")+"</td>");
                                                     out.println("<td>"+taskSet.getString("TASKPOINTS")+"</td>");
@@ -734,8 +582,7 @@
                                                     else {
                                                         out.println("<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>");
                                                     }
-                                                    //out.println("<td><button type='button' id='d"+id+"' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
-                                                    if(date1.before(date))
+                                                    if(due_date.isBefore(curr_date))
                                                     {
                                                         out.println("<td><button type='button' id='e"+id+"' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-star'></span></td>");
                                                     }
@@ -780,82 +627,6 @@
                                 
   <div class="col-md-2 col-xs-0"></div>
   
-  
-  
-  
-  
-    
-    <!-- Modal for showing friends
-    <div id="displayfriendmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" style="border-radius:20px;">
-            <div class="modal-content">
-                <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><br><br>
-                        <h3 class="modal-title" align="center">Your Friends</h3></br>
-                        <%  
-                            /*This piece of java code connects to the database and then displays the friends of the
-                            user that is logged on on a separate modal
-
-                            //String user1 = (String)request.getAttribute("username");
-                            String sql4,sql5,sql6;
-                            String connectionURL1="jdbc:derby://localhost:1527/WTFtask";
-                            sql4 ="SELECT * FROM WTFFriends where MAINUSERNAME = '"+user+"'";
-                            try {
-                                Connection conn1 = DriverManager.getConnection(connectionURL1, "IS2560","IS2560");
-                                Statement s4 = conn1.createStatement();
-                                Statement s5 = conn1.createStatement();
-                                ResultSet rs3 = s4.executeQuery(sql4);
-                                int count1=0;
-                                while(rs3.next())
-                                {
-                                    sql5="SELECT * from WTFuser where USERNAME='"+rs3.getString("FRIENDNAME")+"'";
-                                    ResultSet rs4 = s5.executeQuery(sql5);
-                                    rs4.next();
-                                    count1++;
-                                    out.println("<div class='row'>");
-                                    out.println("<div class='col-md-6' align='center'>");
-                                    out.println("<div class='event' align='left'>");
-                                    out.println("<span>#00"+count1+"</span>");
-                                    out.println("<div class='info'>");
-                                    out.println("<br />"+rs4.getString("FIRSTNAME")+" "+rs4.getString("LASTNAME")+"</div></div></div>");
-                                    boolean flag1=rs3.next();
-                                    if(flag1==true)
-                                    {    
-                                        sql6="SELECT * from WTFuser where USERNAME='"+rs3.getString("FRIENDNAME")+"'";
-                                        ResultSet rs5 = s5.executeQuery(sql6);
-                                        rs5.next();
-                                        count1++;
-                                        out.println("<div class='col-md-6' align='center'>");
-                                        out.println("<div class='event' align='left'>");
-                                        out.println("<span>#00"+count1+"</span>");
-                                        out.println("<div class='info'>");
-                                        out.println("<br />"+rs5.getString("FIRSTNAME")+" "+rs5.getString("LASTNAME")+"</div></div></div></div>");
-                                        rs5.close();
-                                    }
-                                    else
-                                    {
-                                        out.println("</div>");
-                                    }
-                                    rs4.close();
-
-                                }
-                                s5.close();
-                                rs3.close();
-                                s4.close();
-                                conn1.close();
-
-                            }
-                            catch(SQLException e)
-                            {
-                                e.printStackTrace();
-                            }*/
-                        %>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End show friends modal-->
-
     <!-- Modal for adding and inviting new friends-->
     <div id="addfriendmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="border-radius:20px;">
@@ -863,7 +634,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><br><br>
                     <h3 class="modal-title" align="center">Add a Friend</h3></br>
-                    <form id ="searchForm" class="form-inline" align="center" method="get" action="New_friend">
+                    <form id ="searchForm" class="form-inline" align="center">
                         <div class="form-group">
                             <div class="col-md-10 col-xs-10">
                                 <input type="text" name="searchname" id="searchname" class="form-control input-md" Placeholder="Search..." required>
@@ -874,7 +645,7 @@
                             <input type="hidden" class="form-control input-md" name = "mainuser" id="mainuser" value="<%=request.getAttribute("username")%>">
                             <input type="hidden" class="form-control input-md" name = "mainuser_firstname" id="mainuser_firstname" value="<%=request.getAttribute("Name")%>">
                             <input type="hidden" class="form-control input-md" name = "searched_username" id="searched_username" ><br>
-                            <button class="btn btn-success"  type="disable" id="addfriend" disabled >Add</button>
+                            <button  type="button" class="btn btn-success"  type="disable" id="addfriend" disabled onclick="Addfriend()">Add</button>
                         </div><br>
 
                         <div id="searchUpdate" style="color:red;"></div><br>
@@ -1069,6 +840,7 @@
             var taskpoints = $("#tpoints").val();
             var due_date = $("#due-date").val();
             var duedays = $("#duedays").val();
+            var currdate = '<%= curr_date %>';
             var username = '<%=user%>';
             var name = '<%=Name%>';
             var recur;
@@ -1101,20 +873,27 @@
                             var mm = someDate.getMonth() + 1;
                             var y = someDate.getFullYear();
                             due_date = y + '-'+ mm + '-'+ dd;
-                            alert(due_date);
                         }
-                        $.get('Add_Task',"&Name="+name+"&user="+username+"&taskname="+taskname+"&taskpoints="+taskpoints+"&duedate="+due_date+"&recur="+recur,function(ResponseText){ 
-                            if(ResponseText==="true")
-                                alert("Added task "+taskname+" "+taskpoints+" "+due_date+" "+recur+" "+username+" "+name); 
+                        $.get('Add_Task',"&Name="+name+"&user="+username+"&taskname="+taskname+"&taskpoints="+taskpoints+"&duedate="+due_date+"&recur="+recur+"&currdate="+currdate,function(ResponseText){ 
+                            location.reload();
                         })
-                        location.reload();
+                        
                     }
                     else
                         $("#errorMessageContainer").text("recur value missing");
             }   
         }
         
-        
+        function Addfriend(){
+            var mainuser=$("#mainuser").val();
+            var firstname=$("#mainuser_firstname").val();
+            var searched=$("#searched_username").val();
+             $.get('New_friend',"&mainuser="+mainuser+"&mainuser_firstname="+firstname+"&searched_username="+searched,function(ResponseText){ 
+               location.reload();
+            })
+            
+            
+        }
         function switchIT(selection){
             var scam = $(selection).attr('id');
             if (scam === 'date') {
@@ -1150,22 +929,20 @@
             var weekupdated=$("#week").val();
             var mainuser=$(".modal-body #mainuser1").val();
             $.get('WeeklyPointsUpdate',"&week="+weekupdated+"&mainuser="+mainuser+"&points="+points,function(ResponseText){ 
-               
+               location.reload();
             })
-            location.reload();
+            
         }
         
         //Here
         function reusetask1(){
             var id=$(".modal-body #bookId").val();
-            console.log(id);
             var mainuser=$(".modal-body #mainuser1").val();
             var duedate=$(".hero-unit #example1").children(":first").val();
-            alert(duedate);
-            /*$.get('ReuseTask',"&taskid="+id+"&mainuser="+mainuser+"&duedate="+duedate,function(ResponseText){ 
-               console.log("yes exited");
-            })*/
-            //location.reload();
+            $.get('ReuseTask',"&taskid="+id+"&mainuser="+mainuser+"&duedate="+duedate,function(ResponseText){ 
+               location.reload();
+            })
+          
         };
         
         //Here the selected task is deleted from the database
@@ -1175,29 +952,45 @@
             name = $(task).parent().parent().children(":eq(0)").text();
             points = $(task).parent().parent().children(":eq(1)").text();
             duedate = $(task).parent().parent().children(":eq(2)").text();
-            //alert(name + " " + points + " " +duedate);
             $.get('deleteTask','&taskName='+name+"&taskPoints="+points+'&taskDueDate='+duedate,function(ResponseText) {
                 if (ResponseText == "true") {
                     $(task).parent().parent().remove();
                 }
             });
         }
+        //This function serves as a jQuery call to the Complete_Task servlet
+        function completeTask(task)
+        {
+            var username, name, points, duedate;
+            name = $(task).parent().parent().children(":eq(0)").text();
+            points = $(task).parent().parent().children(":eq(1)").text();
+            duedate = $(task).parent().parent().children(":eq(2)").text();
+            username = '<%=user%>';
+            $.get('Complete_Task','&taskName='+name+"&taskPoints="+points+'&taskDueDate='+duedate+'&username='+username,function(ResponseText) {
+                if (ResponseText == "true") {
+                    location.reload();
+                }
+                else {
+                    alert("An error occured. Please contact the developers.");
+                }
+            });
+        }    
         
         //Here the user is assigned to the selected task
         function assign(assignButton) { 
-            var username, name, points, duedate;
+            var username, name, points, duedate, currDate;
+            currDate = '<%= curr_date %>';
             name = $(assignButton).parent().parent().children(":eq(0)").text();
             points = $(assignButton).parent().parent().children(":eq(1)").text();
             duedate = $(assignButton).parent().parent().children(":eq(2)").text();
             username = '<%=user%>';
-            //alert(name + " " + points + " " +duedate + " " + username);
-            $.get('AssignTask','&taskName='+name+"&taskPoints="+points+'&taskDueDate='+duedate+'&username='+username,function(ResponseText) {
+            $.get('AssignTask','&taskName='+name+"&taskPoints="+points+'&taskDueDate='+duedate+'&username='+username+'&currDate='+currDate,function(ResponseText) {
                 if (ResponseText == "true") {
                     $(assignButton).parent().text(username);
                     location.reload();
                 }
                 else {
-                    alert("diff");
+                    alert("An error occured. Please contact the developers");
                 }
             });   
         }
@@ -1213,7 +1006,6 @@
           //This function displays a chart showing the progress of all your friends in terms of points.  
           function chartdisplay(){
              var mainuser = $("#mainuser").val();
-             console.log(mainuser);
              var list =[];
              var list1=[];
              var list2=[];
@@ -1240,9 +1032,6 @@
                 })
                 i++;
                })
-               console.log(list);
-               console.log(list1);
-               console.log(list2);
                var datapointsgraph=[[]];
                var datapointsgraph2=[[]];
                var data=[[]];
@@ -1253,23 +1042,18 @@
                        
                        label:list1[i],y:Number(list2[i])
                    }
-                   //console.log(datapoints[j]);
                    j++;
                }
                var k=0;
                 for (i=0;i<list.length;i++)
                {
-                   //console.log(list[i]-list2[i]);
                    datapointsgraph2[k]={
                        
                        label:list1[i],y:Number(list[i]-list2[i])
                        
                    }
-                   //console.log(datapoints[j]);
                    k++;
                }
-               //var z=datapointsgraph[0].y;
-               //var q=datapointsgraph[1].y;
               var chart = new CanvasJS.Chart("chartContainer", {
                                        
                                 title:{
@@ -1296,19 +1080,7 @@
                                 }            
                                 ]
                                 
-                                /**legend:{
-                                  cursor:"pointer",
-                                  itemclick: function(e) {
-                                    if (typeof (e.dataSeries.visible) ===  "undefined" || e.dataSeries.visible) {
-                                            e.dataSeries.visible = false;
-                                    }
-                                    else
-                                    {
-                                      e.dataSeries.visible = true;
-                                    }
-                                    chart.render();
-                                  }
-                                }**/
+                                
                               })
 
      chart.render();
@@ -1339,15 +1111,8 @@
           }
            });
         });
-	
-                
-        //This code removes the added friend in the add task modal
-	function removeFriend(item) {
-		$(item).remove();
-                document.getElementById("add").disabled = false;
-	}	
         
-        //Show/hide and forms and reset values on close.
+        //Show/hide forms and reset values on close.
 	$("#inviteForm").hide();
         
         $("#showaddtaskmodal").click(function() {	
@@ -1372,48 +1137,6 @@
         
         $(document).ready(function() {
             $('.carousel').carousel('pause');
-            // Bootstrap validator code for add task form.
-            /*$('#addtaskForm').bootstrapValidator({
-                    fields: {
-			taskname: {
-                        	validators: {
-				notEmpty: {
-                                    message: 'Task name is required'
-                                },
-                                regexp: {
-                                    regexp: /^[a-zA-Z ]+$/,
-                                    message: 'Alphabets only'
-                                },
-                                }
-                        },
-                        taskpoints: {
-                            validators: {
-				notEmpty: {
-                                    message: 'Task points are required'
-				},
-				regexp: {
-                                    regexp: /^[0-9]+$/,
-                                    message: 'Numbers only'
-				},
-                            }
-                        },
-                        recur: {
-                            validators: {
-                                notEmpty: {
-                                    message: 'Required'
-                                },
-                            }
-                        },
-                        due : {
-                            validators: {
-                                notEmpty: {
-                                    message: 'Due date is required'
-                                },
-                            }
-                        },
-                    }
-            });
-             */   
             //Bootstrap validator code for add friend form.
             $('#inviteForm').bootstrapValidator({
                 container:'tooltip',
@@ -1463,7 +1186,3 @@
     </script>
   </body>
 </html>
-
-
-
-

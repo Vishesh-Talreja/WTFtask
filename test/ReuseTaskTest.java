@@ -14,11 +14,11 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author visheshtalreja
+ * @author vinay
  */
-public class New_friendTest {
+public class ReuseTaskTest {
     
-    public New_friendTest() {
+    public ReuseTaskTest() {
     }
     
     @BeforeClass
@@ -37,17 +37,20 @@ public class New_friendTest {
     public void tearDown() {
     }
 
-
     /**
-     * Test of doGet method, of class New_friend.
+     * Test of doGet method, of class ReuseTask.
      */
-  @Test
+    @Test
     public void testDoGet() throws Exception {
         System.out.println("doGet");
-        New_friend instance = new New_friend();
-        boolean flag= instance.JUNIT("akanade","phirlika");
-        assertEquals(true,flag);
+        ReuseTask instance = new ReuseTask();   
+        boolean flag=true;
+       flag= instance.JUNIT(3);
+       System.out.println(flag); 
+       assertEquals(true,flag);
         
     }
+
+   
     
 }

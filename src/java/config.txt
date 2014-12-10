@@ -1,1 +1,1 @@
-IS2560 IS2560 jdbc:derby://localhost:1527/WTFtask
+database_username=IS2560 database_password=IS2560 database_url=jdbc:derby://localhost:1527/WTFtask change_date=no number_of_days=15

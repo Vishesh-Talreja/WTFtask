@@ -7,12 +7,8 @@
 import java.io.*;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
 import java.sql.*;
 import java.sql.DriverManager;
-import java.util.*;
-import javax.servlet.http.Cookie;
-import java.util.logging.Level;
 //import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -93,18 +89,29 @@ public class Login extends HttpServlet {
         Statement st =null;
         ResultSet rs =null;
         response.setContentType("text/html;charset=UTF-8");
-        String connection=null,username=null,password=null;
+        String connection=null,username=null,password=null,change_date = null, number_of_days= null;
         InputStream in = Login.class.getResourceAsStream("/config.txt");
         BufferedReader reader=new BufferedReader(new InputStreamReader(in));
         try {
             
             String line=null;
-            System.out.println("sam");
                 while((line=reader.readLine())!=null){
                     String[] arg = line.split(" ");
                     username = arg[0];
+                    String user_arg[] = username.split("=");
+                    username = user_arg[1];
                     password = arg[1];
+                    String pass_arg[] = password.split("=");
+                    password = pass_arg[1];
                     connection = arg[2];
+                    String conn_arg[] = connection.split("=");
+                    connection = conn_arg[1];
+                    change_date = arg[3];
+                    String cd_arg[] = change_date.split("=");
+                    change_date = cd_arg[1];
+                    number_of_days = arg[4];
+                    String nbd_arg[] = number_of_days.split("=");
+                    number_of_days = nbd_arg[1];
                 }
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -145,6 +152,8 @@ public class Login extends HttpServlet {
                     //out.println("Welcome "+rs.getString("FirstName"));
                     request.setAttribute("Name",rs.getString("FirstName"));
                     request.setAttribute("username",rs.getString("username"));
+                    request.setAttribute("change_date",change_date);
+                    request.setAttribute("number_of_days",number_of_days);
                     //logger.debug("Login Successful");
                     RequestDispatcher rd=request.getRequestDispatcher("user_home_new.jsp");
                     rd.include(request, response);
