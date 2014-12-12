@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,40 +54,41 @@ public class WeeklyPointsUpdate extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-        public boolean JUNIT(String week,String weeklyPoints,String main_username)
+    public boolean JUNIT(String week,String weeklyPoints,String main_username) throws SQLException
     {
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
-      Connection conn = null ;
-      Statement st2 = null;
-      try {
-            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-             String query2 ="UPDATE WTFuser SET WEEKUPDATED='"+week+"',WEEKLYPOINTS = '"+weeklyPoints+"',WEEKLYPOINTSDONE='0' where USERNAME='"+main_username+"'";
-             st2=conn.createStatement();
-             int r=st2.executeUpdate(query2);
-             if(r==1)
-             {
-                 return true;
-             }
-             else 
-             {
-                 return false;
-             }
-             
-      }
-       catch (SQLException ex) {
+        Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+        Statement st2 = null;
+        conn.setAutoCommit(false);
+        Savepoint spt1 = conn.setSavepoint("svpt1");
+        try {
+           String query2 ="UPDATE WTFuser SET WEEKUPDATED='"+week+"',WEEKLYPOINTS = '"+weeklyPoints+"',WEEKLYPOINTSDONE='0' where USERNAME='"+main_username+"'";
+           st2=conn.createStatement();
+           int rows=st2.executeUpdate(query2);
+           if(rows == 1)
+           {
+               conn.rollback(spt1);
+               conn.commit();
+               return true;
+           }
+           else 
+           {
+               return false;
+           }     
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             return false;
         }
-      finally{
-          try{
-              st2.close();
-             conn.close(); 
+          finally{
+                  try{
+                      st2.close();
+                      conn.close(); 
+                  }
+                  catch (SQLException ex) {
+                       Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                  }     
           }
-          catch (SQLException ex) {
-               Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
-          
-      }
         
     }
     @Override

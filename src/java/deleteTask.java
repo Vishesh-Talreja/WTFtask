@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.sql.Savepoint;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -43,32 +46,45 @@ public class deleteTask extends HttpServlet {
             
         }
     }
-    public boolean JUNIT(boolean flag)
+    public boolean JUNIT(int id) throws SQLException
     {
-        String user="vtalreja";
-        user = user.toLowerCase();
-        String friend = "akanade";
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
-        Connection conn;
+        Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+        Statement st = conn.createStatement();
+        conn.setAutoCommit(false);
+        Savepoint spt1 = conn.setSavepoint("svpt1");
         try {
-            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-            String query1 = "SELECT * FROM WTFFriends where mainusername = '"+user+"' and friendname = '"+friend+"'";
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(query1);
-            boolean flag1 = rs.next();
-            st.close();
-            conn.close();
-            if(flag1==true)
-            {
-                return true;
+            String query = "DELETE FROM WTFtaskallocation WHERE TASKID= "+id;
+            String query1 = "DELETE FROM WTFtasks WHERE TASKID= "+id;
+            int allocation_rows = st.executeUpdate(query);
+            if (allocation_rows == 1) {
+                int task_rows = st.executeUpdate(query1);
+                if( task_rows == 1)
+                {
+                    conn.rollback(spt1);
+                    conn.commit();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
-            {
                 return false;
-            }
+            
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
+        }
+        finally {
+            try{
+                      st.close();
+                      conn.close(); 
+                  }
+                  catch (SQLException ex) {
+                       Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                  }     
         }
     }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

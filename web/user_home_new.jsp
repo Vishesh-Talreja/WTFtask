@@ -442,13 +442,13 @@
                                     String getProgressQuery = "SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = '"+user+"'";
                                     ResultSet totalSet = getProgress.executeQuery(getProgressQuery);
                                     boolean assigned = totalSet.next();
-                                    if (assigned == true) {
+                                    if (assigned) {
                                         totalTasks = Integer.parseInt(totalSet.getString(1));
 
                                         getProgressQuery = "SELECT COUNT(*) FROM WTFTASKALLOCATION WHERE USERNAME = '"+user+"' AND STATUS = 'Complete'";
                                         ResultSet completeSet = getProgress.executeQuery(getProgressQuery);
                                         boolean completed = completeSet.next();
-                                        if (completed == true) {
+                                        if (completed) {
                                             completedTasks = Integer.parseInt(completeSet.getString(1));
                                             try {
                                                 if (totalTasks == 0) {

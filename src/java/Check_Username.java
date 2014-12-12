@@ -40,31 +40,28 @@ public class Check_Username extends HttpServlet {
         
     }
     
-    public boolean JUNIT(boolean flag)
+    public boolean JUNIT(boolean flag) throws SQLException
     {
         String user="test@indiana.edu";
         user = user.toLowerCase();
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
-        Connection conn;
+        Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+        Statement st = conn.createStatement();
+        ResultSet rs = null;
         try {
-            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
             String query1 = "SELECT * FROM WTFuser where username = '"+user+"'";
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(query1);
-            boolean flag1 = rs.next();
-            st.close();
-            conn.close();
-            if(flag1==false)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            rs = st.executeQuery(query1);
+            boolean result = rs.next();
+            
+            return (!result);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
+        }
+        finally {
+            rs.close();
+            st.close();
+            conn.close();
         }
     }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

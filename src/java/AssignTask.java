@@ -125,13 +125,21 @@ public class AssignTask extends HttpServlet {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        Connection conn = null;
+        Statement st = null;
+        try {
+            conn = DriverManager.getConnection(connection,username,password);
+            st = conn.createStatement();
+        } catch (SQLException ex) {
+            Logger.getLogger(AssignTask.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         try (PrintWriter out = response.getWriter()){
         
         try{
             boolean isTaskDoneEarly=false;
-            Connection conn = DriverManager.getConnection(connection,username,password);
+            
             String getTaskId = "SELECT * FROM WTFtasks where TASKNAME = '"+taskName+"' AND TASKPOINTS='"+taskPoints+"' AND DUEDATE='"+taskDueDate+"'";
-            Statement st = conn.createStatement();
             ResultSet taskSet = st.executeQuery(getTaskId);
             taskSet.next();
             int id = taskSet.getInt("TaskID");
@@ -211,20 +219,25 @@ public class AssignTask extends HttpServlet {
                 st2.close();
             }
             
-            st.close();
+            
             taskSet.close();
-            conn.close();
+            
             if (rows == 1)
                 response.getWriter().write("true");     //The task is assigned.
             else
-                response.getWriter().write("false");    //The task is not assigned.
-            
-            
-            
+                response.getWriter().write("false");    //The task is not assigned.    
         }
         catch(SQLException ex)
         {
             out.print("Connection Failed!");
+        }
+        finally {
+            try {
+                st.close();
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(AssignTask.class.getName()).log(Level.SEVERE, null, ex);
+            }       
         }
         } 
     }

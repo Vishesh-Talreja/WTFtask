@@ -62,34 +62,27 @@ public class Search extends HttpServlet {
                 String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+first_name+"' AND LASTNAME = '"+last_name+"'";//query that obtains the set of searched user
                 st1 = conn.createStatement();
                 rs1 = st1.executeQuery(query1);
-                boolean flag = rs1.next();
-                if (flag == true){
-                    return true;
-                }
+                boolean result = rs1.next();
+                return result;
             }
             else {
                 String query1="SELECT * FROM WTFuser where FIRSTNAME = '"+searched_user+"'";//query to get searched user list by firstname
                  st1 = conn.createStatement();
                  rs1 = st1.executeQuery(query1);
-                boolean flag1 = rs1.next();
-                if(flag1 == true) { 
-                   
-                    return true;
+                boolean firstname_result = rs1.next();
+                if(firstname_result) { 
+                    return firstname_result;
                 }
                 else {
                     String query2="SELECT * FROM WTFuser where LASTNAME = '"+searched_user+"'";//query to get searched user list by Lastname
                     st1 = conn.createStatement();
                     rs1 = st1.executeQuery(query2);
-                    boolean flag2 = rs1.next();
-                    if (flag2 == true) { 
-                        return true;
-                    }
+                    boolean lastname_result = rs1.next();
+                    return lastname_result;
                    
                   // st1.close();//connection close
                 }
-            
            }
-            return false;
       }
       catch (SQLException ex) {
             ex.printStackTrace();

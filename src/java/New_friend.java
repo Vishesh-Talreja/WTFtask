@@ -46,40 +46,36 @@ public class New_friend extends HttpServlet {
     public boolean JUNIT(String mainusername,String searchedusername)
     {
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
-      Connection conn = null ;
-      Statement st1 = null;
-       ResultSet rs2 = null;
-      try {
+        Connection conn = null ;
+        Statement st1 = null;
+        ResultSet rs2 = null;
+        try {
             conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-             Statement st=conn.createStatement(); 
-             String query2 = "SELECT FRIENDNAME FROM WTFFriends where MAINUSERNAME='"+mainusername+"'";
-             st1 = conn.createStatement();
+            Statement st=conn.createStatement(); 
+            String query2 = "SELECT FRIENDNAME FROM WTFFriends where MAINUSERNAME='"+mainusername+"'";
+            st1 = conn.createStatement();
             rs2 = st.executeQuery(query2);
-             while(rs2.next())
-             {
-                 String friendname=rs2.getString("FRIENDNAME");
-                 if(friendname.equals(searchedusername))
-                 {
-                     return false;
-                 }
-             }
-             
-      }
-       catch (SQLException ex) {
+            while(rs2.next()) {
+                String friendname=rs2.getString("FRIENDNAME");
+                if(friendname.equals(searchedusername)) {
+                    return false;
+                }
+            }
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             return false;
         }
-      finally{
-          try{
-              st1.close();
-              rs2.close();
-             conn.close(); 
-          }
-          catch (SQLException ex) {
-               Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        finally{
+            try {
+                st1.close();
+                rs2.close();
+                conn.close(); 
             }
-          
-      }
+            catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         return true;
     }
 

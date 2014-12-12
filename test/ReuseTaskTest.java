@@ -45,7 +45,8 @@ public class ReuseTaskTest {
         System.out.println("doGet");
         ReuseTask instance = new ReuseTask();   
         boolean flag=true;
-       flag= instance.JUNIT(3);
+        String duedate = "2014-12-05";
+       flag= instance.JUNIT(3,duedate);
        System.out.println(flag); 
        assertEquals(true,flag);
         

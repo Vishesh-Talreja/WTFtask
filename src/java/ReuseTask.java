@@ -51,19 +51,23 @@ public class ReuseTask extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     //this is the Juint test it returns true if the the task could be reused or else it returns false
-    public boolean JUNIT(int id)
+    public boolean JUNIT(int id, String duedate)
     {
-        String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
-      Connection conn = null ;
-      Statement st2 = null;
+       String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+       Connection conn = null ;
+       Statement st2 = null;
       try {
             conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-             String query2 ="UPDATE WTFtaskallocation SET status = 'Pending',username='null' where TaskId="+id;;
+             String query2 ="UPDATE WTFtaskallocation SET status = 'Pending',username='null' where TaskId="+id;
              st2=conn.createStatement();
-             int r=st2.executeUpdate(query2);
-             if(r==1)
+             int allocation_rows = st2.executeUpdate(query2);
+             int task_rows;
+             if(allocation_rows == 1)
              {
-                 return true;
+                 task_rows = st2.executeUpdate("UPDATE WTFtasks SET duedate = '"+duedate+"' where TaskId="+id);
+                 if(task_rows == 1)
+                    return true;
+                 else return false;
              }
              else 
              {
