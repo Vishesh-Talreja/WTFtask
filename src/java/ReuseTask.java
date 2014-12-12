@@ -96,9 +96,9 @@ public class ReuseTask extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
         response.setCharacterEncoding("UTF-8");
-        String main_username = request.getParameter("mainuser");
-        String taskid = request.getParameter("taskid");
-        String duedate = request.getParameter("duedate");
+        String main_username = request.getParameter("mainuser");//Give sthe main user fromn the ajax call in the front end to let the system know who is reusing the task
+        String taskid = request.getParameter("taskid");//Gives the task id for task that is supposed to be reused
+        String duedate = request.getParameter("duedate");//The new duedate that is to be assigned to the task
         String[] due= duedate.split("/");
         StringBuilder sb1=new StringBuilder();
         sb1.append(due[1]);
@@ -110,6 +110,7 @@ public class ReuseTask extends HttpServlet {
         main_username = main_username.toLowerCase();
         int id=Integer.parseInt(taskid);
         String connection=null,dusername=null,password=null,change_date = null, number_of_days= null;
+        //helps you connect to the database by taking input from the config file.
         InputStream in = Login.class.getResourceAsStream("/config.txt");
         BufferedReader reader=new BufferedReader(new InputStreamReader(in));
         try {
@@ -144,10 +145,10 @@ public class ReuseTask extends HttpServlet {
             Statement st2 = null;
             try {
                 conn = DriverManager.getConnection(connection,dusername,password);
-                String query1="UPDATE WTFtaskallocation SET status = 'Pending',username='null' where TaskId="+id;
+                String query1="UPDATE WTFtaskallocation SET status = 'Pending',username='null' where TaskId="+id;//first makes the task pending and makes the task unassigned
                 st = conn.createStatement();
                 st.executeUpdate(query1);
-                String query2="UPDATE WTFtasks SET Duedate= '"+date+"'where TaskId="+id ;
+                String query2="UPDATE WTFtasks SET Duedate= '"+date+"'where TaskId="+id ;//reassigns the task to the present user with the new date
                 st2=conn.createStatement();
                 st2.executeUpdate(query2);
             }

@@ -54,6 +54,7 @@ public class WeeklyPointsUpdate extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    //Juint test that test whether the query is working fine on each update.
     public boolean JUNIT(String week,String weeklyPoints,String main_username) throws SQLException
     {
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
@@ -96,12 +97,13 @@ public class WeeklyPointsUpdate extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
         response.setCharacterEncoding("UTF-8");
-        String main_username = request.getParameter("mainuser");
-        String week = request.getParameter("week");
-        String weeklyPoints = request.getParameter("points");
+        String main_username = request.getParameter("mainuser");//takes input from ajax call to specify who the mai user is.
+        String week = request.getParameter("week");//shows the week in which the points was updated
+        String weeklyPoints = request.getParameter("points");//Shows the weekly points required by each user
         main_username = main_username.toLowerCase();
         String connection=null,dusername=null,dpassword=null,change_date = null, number_of_days= null;
         InputStream in = Login.class.getResourceAsStream("/config.txt");
+        //helps you create data base connection by reading the config file
         BufferedReader reader=new BufferedReader(new InputStreamReader(in));
         try {
             String line=null;
@@ -134,7 +136,7 @@ public class WeeklyPointsUpdate extends HttpServlet {
             Statement st2 = null;
             try {
                 conn = DriverManager.getConnection(connection,dusername,dpassword);
-                String query ="Select * from WTFuser where USERNAME='"+main_username+"'";
+                String query ="Select * from WTFuser where USERNAME='"+main_username+"'";//quer that selects the user whos weekly points needed to be updated
                 st = conn.createStatement();
                 ResultSet newPoints = st.executeQuery(query);
                 newPoints.next();
@@ -148,7 +150,7 @@ public class WeeklyPointsUpdate extends HttpServlet {
                     inputPoints = inputPoints + (points -pointsDone);
                 }
                 weeklyPoints = Float.toString(inputPoints);
-                String query1="UPDATE WTFuser SET WEEKUPDATED='"+week+"',WEEKLYPOINTS = '"+weeklyPoints+"',WEEKLYPOINTSDONE='0' where USERNAME='"+main_username+"'";
+                String query1="UPDATE WTFuser SET WEEKUPDATED='"+week+"',WEEKLYPOINTS = '"+weeklyPoints+"',WEEKLYPOINTSDONE='0' where USERNAME='"+main_username+"'";//query that updates the weekly points of the user
                 int rows = st.executeUpdate(query1);
             }
             catch(SQLException ex) {

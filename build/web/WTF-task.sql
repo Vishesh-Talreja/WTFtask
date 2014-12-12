@@ -121,8 +121,8 @@ INSERT INTO WTFFriends VALUES('vtalreja','vinaraja');
 INSERT INTO WTFFriends VALUES('vinaraja','akanade');
 INSERT INTO WTFFriends VALUES('vinaraja','vtalreja');
 
-INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Cook Lunch', '50','0','12/10/2014','10/21/2014','none', 'vinaraja');
-INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Get groceries', '70','0', '12/12/2014','10/23/2014','none', 'vtalreja');
+INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Cook Lunch', '50','0','12/21/2014','12/08/2014','none', 'vinaraja');
+INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Get groceries', '70','0', '12/13/2014','10/03/2014','none', 'vtalreja');
 INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Bathroom Cleaning', '150','0', '12/05/2014','12/03/2014','none', 'vinarja');
 INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Garbage Disposal', '20','0', '12/12/2014','10/27/2014','none', 'akanade');
 INSERT INTO WTFtasks(Taskname,Taskpoints,AllotedTaskpoints,Duedate,CreatedDate,recur,owner) VALUES ('Pay rent', '80','0', '12/11/2014','10/28/2014','monthly', 'vinaraja');

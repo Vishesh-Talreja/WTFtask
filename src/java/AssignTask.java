@@ -153,7 +153,7 @@ public class AssignTask extends HttpServlet {
                 Date d3 = new Date();
                 d3 = dateFormat.parse(currDate);
                 long diff2 = d3.getTime() - d1.getTime();
-                if((diff2>diff1/2))
+                if((diff2<diff1/2))
                 {
                     isTaskDoneEarly=true;
                 }
