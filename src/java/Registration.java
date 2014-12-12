@@ -38,7 +38,7 @@ public class Registration extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    public boolean JUNIT(boolean flag)
+    public boolean JUNIT(boolean flag) throws SQLException
     {
         String Fname="TEST";
         Fname = Fname.toLowerCase();
@@ -50,31 +50,28 @@ public class Registration extends HttpServlet {
         user = user.toLowerCase();
         String pass="test";
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
+        Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+        Statement stmt=conn.createStatement();
+        ResultSet rs = null;
         try {
-            Connection conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
-            Statement stmt=conn.createStatement();
+            
             String query2 = "INSERT INTO IS2560.WTFuser (LASTNAME,FIRSTNAME,USERNAME,EMAIL,PASSWORD) VALUES ('"+Lname+"','"+Fname+"','"+user+"','"+Email+"','"+pass+"')";
             stmt.executeUpdate(query2);
             String query1 = "SELECT * FROM WTFuser where username = '"+user+"'";
-            ResultSet rs = stmt.executeQuery(query1);
-            boolean flag1 = rs.next();
-            if (flag1 == true)
+            rs = stmt.executeQuery(query1);
+            boolean result = rs.next();
+            if (result)
                 stmt.executeUpdate("DELETE FROM IS2560.WTFuser WHERE username='test'");
-            stmt.close();
-            rs.close();
-            conn.close();  
-            if(flag1==true)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return result;
             
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
+        }
+        finally {
+            stmt.close();
+            rs.close();
+            conn.close();
         }
     }
     /*This functions takes inputs from the user registration form and then inputs it into the databse

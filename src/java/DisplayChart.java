@@ -7,13 +7,11 @@ import com.google.gson.Gson;
 import java.io.*;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
 import java.sql.*;
 import java.sql.DriverManager;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -108,7 +106,6 @@ public class DisplayChart extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
           String main_username = request.getParameter("mainuser");
         main_username = main_username.toLowerCase();
-        System.out.println(main_username);
         ArrayList<String> pointsearnedlist=new ArrayList<String>();//Arraylist that stores points earned for each user
         ArrayList<String> pointspossiblelist=new ArrayList<String>();//Arraylist that stores points possible for each user
         ArrayList<String> list=new ArrayList<String>();
@@ -155,7 +152,6 @@ public class DisplayChart extends HttpServlet {
             String query4="SELECT * FROM WTFuser where USERNAME='"+main_username+"'";//query that obtains the set of searched user
             Statement st2 = conn.createStatement();
             ResultSet rs3 = st2.executeQuery(query4);
-            System.out.println("outside  if");
             if(rs3.next())
             {
                 String l=rs3.getString("firstname");
@@ -163,22 +159,17 @@ public class DisplayChart extends HttpServlet {
                 pointspossiblelist.add(rs3.getString("pointpossible"));
                 firstnamelist.add(rs3.getString("firstname"));
             }
-            // System.out.println(rs);
             while(rs.next())
             {
-                //System.out.println("inside while");
                 String b=rs.getString("friendname");
-                //System.out.println(b);
                 list.add(b);
             }
             for(String b:list)
             {
-                System.out.println(b);
                 String username=b;
                 String query2="SELECT * FROM WTFuser where USERNAME='"+username+"'";//query that obtains the set of searched user
                 Statement st1 = conn.createStatement();
                 ResultSet rs1 = st1.executeQuery(query2);
-                System.out.println(b);
                 if(rs1.next())
                 {
                String pointsearned=rs1.getString("pointearned");

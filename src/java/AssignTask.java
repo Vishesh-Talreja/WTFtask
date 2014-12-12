@@ -4,9 +4,6 @@
  * and open the template in the editor.
  */
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -14,17 +11,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.sql.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -151,8 +144,8 @@ public class AssignTask extends HttpServlet {
                 long diff1 = d2.getTime() - d1.getTime();
                 Date d3 = new Date();
                 d3 = dateFormat.parse(currDate);
-                long diff2 = d3.getTime() - d2.getTime();
-                if((diff2>=diff1/2))
+                long diff2 = d3.getTime() - d1.getTime();
+                if((diff2>diff1/2))
                 {
                     isTaskDoneEarly=true;
                 }

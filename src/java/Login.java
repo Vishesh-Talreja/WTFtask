@@ -39,32 +39,31 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         
     }
-    public boolean JUNIT(boolean flag)
+    public boolean JUNIT(boolean flag) throws SQLException
     {
         String user="vtalreja";
         user = user.toLowerCase();
         String pass="firewaterthunder";
         String connectionURL = "jdbc:derby://localhost:1527/WTFtask";
         Connection conn;
+        conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+        Statement st = conn.createStatement();
+        ResultSet rs = null;
         try {
-            conn = DriverManager.getConnection(connectionURL, "IS2560","IS2560");
+            
             String query1 = "SELECT * FROM WTFuser where username = '"+user+"'";
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(query1);
-            boolean flag1 = rs.next();
-            st.close();
-            conn.close();
-            if(flag1==true)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            rs = st.executeQuery(query1);
+            boolean result = rs.next();
+            return result;
+            
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
+        }
+        finally {
+            rs.close();
+            st.close();
+            conn.close();
         }
     }
 

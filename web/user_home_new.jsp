@@ -340,6 +340,7 @@
                                         Connection conn11 = DriverManager.getConnection(connectionURL1, "IS2560","IS2560");
                                         String sql5;
                                         String weekupdated=null;
+                                        float lastWeekPoints = 0;
                                         sql5 ="SELECT * FROM WTFuser where USERNAME = '"+user+"'";
                                           
                                             try{
@@ -349,17 +350,26 @@
                                                 ResultSet rs3 = s3.executeQuery(sql5);
                                                  while(rs3.next()){
                                                     weekupdated=rs3.getString("WEEKUPDATED");
+                                                    lastWeekPoints = Float.parseFloat(rs3.getString("WEEKLYPOINTS"));
                                                  }
                                                  int weekupdatedInt=Integer.parseInt(weekupdated);
+                                                 
                                                  if ((weekupdatedInt > 5))
                                                  {
                                                     String s5="UPDATE WTFuser SET WEEKUPDATED = '0' where USERNAME = '"+user+"'"; 
                                                     s3.executeUpdate(s5);
                                                     weekupdatedInt=0;
                                                  }
-                                                 
-                                                 if(weekupdatedInt<week ||(weekupdatedInt==5 && week==1)||(weekupdatedInt==4 && week==1))
+                                                 if(weekupdatedInt<week ||(weekupdatedInt==5 && week<51)||(weekupdatedInt==4 && week<4))
                                                  {
+                                                   int delay = 0;
+                                                   if(weekupdatedInt < week) 
+                                                        delay = week - weekupdatedInt;
+                                                   else if(weekupdatedInt == 4 || weekupdatedInt == 5)
+                                                       delay = week;
+                                                   lastWeekPoints = lastWeekPoints*delay;
+                                                   if(!(week == weekupdatedInt))
+                                                    s3.executeUpdate("UPDATE WTFuser SET WEEKLYPOINTS = '"+lastWeekPoints+"' where USERNAME = '"+user+"'");
                                                    out.println("<div id='updatePoints' class='modal show' data-backdrop='static'>");
                                                    out.println("<div class='modal-dialog'>");
                                                    out.println("<div class='modal-content'>");
@@ -377,11 +387,12 @@
                                               catch (Exception e) {
                                                   e.printStackTrace();
                                               }
+                                              
                                        
                                             /*This piece of java code connects to the database and then displays the friends of the
                                             user that is logged on*/
 
-                                            out.println("<tr><th>Name</th><th>Points alloted</th><th>Points completed</th></tr>");
+                                            out.println("<tr><th>Name</th><th>Points allotted</th><th>Points completed</th></tr>");
                                             String selectFriends,selectUser,sql6;
                                             String connectionURL10="jdbc:derby://localhost:1527/WTFtask";
                                             selectFriends ="SELECT * FROM WTFFriends where MAINUSERNAME = '"+user+"'";
@@ -498,7 +509,8 @@
                                 <div class="panel-body" style="height:50rem; overflow:auto">
                                     <span class='glyphicon glyphicon-ok' style='color:green'></span> : Complete&nbsp;&nbsp;
                                     <span class='glyphicon glyphicon-exclamation-sign' style='color:red'></span> : Pending&nbsp;&nbsp;
-                                    <span class='glyphicon glyphicon-star'></span> : Overdue
+                                    <span class='glyphicon glyphicon-star'></span> : Overdue&nbsp;&nbsp;
+                                    <span class='glyphicon glyphicon-refresh'></span> : Recurring
                                     <br><br>
                                     <table class="table table-hover table-responsive">
                                         <tr>
@@ -558,11 +570,17 @@
                                                     }
                                                     if(due_date.isBefore(curr_date))
                                                     {
-                                                        out.println("<td><button type='button' id='e"+id+"' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-star'></span></td>");
+                                                        if(!taskSet.getString("recur").equalsIgnoreCase("none"))
+                                                            out.println("<td><button type='button' id='e"+id+"' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-star'></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-refresh'></span></td>");
+                                                        else
+                                                            out.println("<td><button type='button' id='e"+id+"' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-star'></span></td>");
                                                     }
                                                     else
                                                     {
-                                                        out.println("<td><button type='button' id='e"+id+"' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
+                                                        if(!taskSet.getString("recur").equalsIgnoreCase("none"))
+                                                            out.println("<td><button type='button' id='e"+id+"' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-refresh'></span></td>");
+                                                        else
+                                                            out.println("<td><button type='button' id='e"+id+"' onclick='editTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-edit'></span></button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='d"+id+"' value='scamy' onclick='deleteTask(this)' style='border:none;background-color:white;color:black'><span class='glyphicon glyphicon-trash'></span></button></td>");
                                                     }
                                                     out.println("</tr>");
                                                     id++;
@@ -670,6 +688,7 @@
                         <input type="hidden" class="form-control input-md" name = "mainuser" id="mainuser" value="<%=request.getAttribute("username")%>">
                     </form>
                     <div id="chartContainer" style="height: 500px; width: 100%;"> </div> 
+                  
                  </div>
             </div>
         </div>
